@@ -205,3 +205,6 @@ nrow(dataexcluded)
 # Included data
 dataincluded <- datacareless %>% filter(as.numeric(`Duration (in seconds)`) >= durtm/2 & (pattern.blocks <= 2 |is.na(pattern.blocks)) & S2 == 2)
 nrow(dataincluded)
+write_csv2(dataincluded, "Data/S1-data.csv")
+write_rds(dataincluded, "Data/S1-data.RDS")
+write_csv2(data.frame(dataincluded$gid), "Data/Recontact-List.csv")
