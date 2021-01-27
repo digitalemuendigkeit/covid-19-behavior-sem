@@ -5,3 +5,5 @@ S1-data-recontact is the data cleaned from speeders and the worst satisficers (>
 S1-data-qualcl is the data cleaned from speeders and the worst satisficers (> 2 blocks straightlining or diagonal lining). The next step is the examination of data distribution.
 
 S1-data-nd is the data cleaned from the variables exhibiting worst nonnormality (absolute skewness and/or absolute kurtosis >= 5). The next step is the treatment of missing data.
+
+S1-data-nm is the data cleaned from variables containing missing data (all colleagues questions).
