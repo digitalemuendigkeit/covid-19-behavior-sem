@@ -202,9 +202,14 @@ view(dataexcluded[,c(1, 144:148)])
 nrow(dataexcluded)
 # 120 sets excluded
 
-# Included data
+# Included data for recontact
 dataincluded <- datacareless %>% filter(Duration..in.seconds. >= durtm/2 & (pattern.blocks <= 2 |is.na(pattern.blocks)) & S2 == 2)
 nrow(dataincluded)
-write_csv2(dataincluded, "Data/S1-data.csv")
-write_rds(dataincluded, "Data/S1-data.RDS")
+write_csv2(dataincluded, "Data/S1-data-recontact.csv")
+write_rds(dataincluded, "Data/S1-data-recontact.RDS")
 write_csv2(data.frame(dataincluded$gid), "Data/Recontact-List.csv")
+
+# Data for working on, 875 responses
+s1dataqualcl <- (datacareless %>% filter(Duration..in.seconds. >= durtm/2 & (pattern.blocks <= 2 |is.na(pattern.blocks))))[,c(3, 145, 143, 6, 8, 4, 5, 7, 9:142)]
+write_csv2(s1dataqualcl, "Data/S1-data-qualcl.csv")
+write_rds(s1dataqualcl, "Data/S1-data-qualcl.RDS")
