@@ -1,5 +1,5 @@
 library(tidyverse)
-remotes::install_github("digitalemuendigkeit/seminr", ref = "model-viz")
+remotes::install_github("digitalemuendigkeit/seminr", ref = "model-viz", force = TRUE)
 library(seminr)
 
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
@@ -45,3 +45,4 @@ sumfs <- summary(model$first_stage_model)
 bootmodel <- bootstrap_model(model, nboot = 5000)
 saveRDS(bootmodel, "SEM COVID-19/model-boot-co-1.RDS")
 summary(bootmodel)
+
