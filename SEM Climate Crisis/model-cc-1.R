@@ -35,9 +35,78 @@ sm <- relationships(
 )
 
 
-model <- estimate_pls(data, mm, sm)
-#plot(model)
-saveRDS(model, "SEM Climate Crisis/model-cc-1.RDS")
-#model <- readRDS("SEM Climate Crisis/model-cc-1.RDS")
-bootmodel <- bootstrap_model(model, nboot = 5000)
-saveRDS(bootmodel, "SEM Climate Crisis/model-boot-cc-1.RDS")
+#model <- estimate_pls(data, mm, sm)
+#saveRDS(model, "SEM Climate Crisis/model-cc-1.RDS")
+model <- readRDS("SEM Climate Crisis/model-cc-1.RDS")
+plot(model)
+#bootmodel <- bootstrap_model(model, nboot = 5000)
+#saveRDS(bootmodel, "SEM Climate Crisis/model-boot-cc-1.RDS")
+bootmodel <- read_rds("SEM Climate Crisis/model-boot-cc-1.RDS")
+plot(bootmodel)
+
+# Models for estimation of convergent validity for formative constructs
+# Perceived Self-Efficacy
+mmpse <- constructs(
+  composite("Perceived Self-Efficacy Formative", multi_items("CCRB", 1:3), mode_B),
+  composite("Perceived Self-Efficacy Reflective", single_item("CCRB10"))
+)
+smpse <- relationships(
+  paths(from = "Perceived Self-Efficacy Formative", to = "Perceived Self-Efficacy Reflective")
+)
+rapse <- estimate_pls(data, mmpse, smpse)
+saveRDS(rapse, "SEM Climate Crisis/rapse-cc-1.RDS")
+
+# Perceived Response Efficacy
+mmpre <- constructs(
+  composite("Perceived Response Efficacy Formative", multi_items("CCRB", 4:6), mode_B),
+  composite("Perceived Response Efficacy Reflective", single_item("CCRB11"))
+)
+smpre <- relationships(
+  paths(from = "Perceived Response Efficacy Formative", to = "Perceived Response Efficacy Reflective")
+)
+rapre <- estimate_pls(data, mmpre, smpre)
+saveRDS(rapre, "SEM Climate Crisis/rapre-cc-1.RDS")
+
+# Perceived Response Costs
+mmprc <- constructs(
+  composite("Perceived Response Costs Formative", multi_items("CCRB", 7:9), mode_B),
+  composite("Perceived Response Costs Reflective", single_item("CCRB12"))
+)
+smprc <- relationships(
+  paths(from = "Perceived Response Costs Formative", to = "Perceived Response Costs Reflective")
+)
+raprc <- estimate_pls(data, mmprc, smprc)
+saveRDS(raprc, "SEM Climate Crisis/raprc-cc-1.RDS")
+
+# Descriptive Norm
+mmdn <- constructs(
+  composite("Descriptive Norm Formative", multi_items("CCRB", 7:9), mode_B),
+  composite("Descriptive Norm Reflective", single_item("CCRB12"))
+)
+smdn <- relationships(
+  paths(from = "Descriptive Norm Formative", to = "Descriptive Norm Reflective")
+)
+radn <- estimate_pls(data, mmdn, smdn)
+saveRDS(radn, "SEM Climate Crisis/radn-cc-1.RDS")
+
+# Injunctive Norm
+mmin <- constructs(
+  composite("Injunctive Norm Formative", multi_items("CCRB", 7:9), mode_B),
+  composite("Injunctive Norm Reflective", single_item("CCRB12"))
+)
+smin <- relationships(
+  paths(from = "Injunctive Norm Formative", to = "Injunctive Norm Reflective")
+)
+rain <- estimate_pls(data, mmin, smin)
+saveRDS(rain, "SEM Climate Crisis/rain-cc-1.RDS")
+
+# Behavioral Intention
+mmbi <- constructs(
+  composite("Behavioral Intention Formative", multi_items("CCRB", 7:9), mode_B),
+  composite("Behavioral Intention Reflective", single_item("CCRB12"))
+)
+smbi <- relationships(
+  paths(from = "Behavioral Intention Formative", to = "Behavioral Intention Reflective")
+)
+rabi <- estimate_pls(data, mmbi, smbi)
+saveRDS(rabi, "SEM Climate Crisis/rabi-cc-1.RDS")
