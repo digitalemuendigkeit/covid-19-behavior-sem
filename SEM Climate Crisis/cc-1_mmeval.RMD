@@ -19,19 +19,24 @@ sumfsbo <- summary(bootmodel$first_stage_model)
 ```
 
 # Model plots
-## Original Estimate Model
+## Original Estimate Path Model
+This is the original estimate path model.
 ```{r plot model, echo=FALSE}
 plot(model, title = "Original Estimate Model", theme = seminr_theme_smart())
 ```
-## Bootstrapped Model
+
+## Bootstrapped Path Model
+This is the bootstrapped path model.
 ```{r plot bootmodel, echo=FALSE}
 plot(bootmodel, title = "Bootstrapped Model")
 ```
-# Measurement Model Only
+
+## Measurement Model Only
+This is a path model showing only the measurement model components.
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, measurement_only = TRUE)
 ```
-```{r eval-df, echo = FALSE}
+```{r eval-df, echo = FALSE, include=FALSE}
 # Base DF
 evalmm <- data.frame(Construct = model$mmMatrix[,1],
                            Type = ifelse(grepl("HOCA", model$mmMatrix[,3]),
@@ -48,9 +53,9 @@ evalmm <- data.frame(Construct = model$mmMatrix[,1],
 # forevalmmcc1
 
 ```
+
 # Evaluation of the reflective measurement model
-Loadings should be 
-```{r ref-eval, echo = FALSE}
+```{r ref-eval prep, echo = FALSE, include=FALSE}
 refevalmmbase <- evalmm %>% filter(Mode == "reflective") %>% rename(Indicator = Indicator.or.LOC) %>% 
   mutate(Type = NULL, Mode = NULL)
 refloadings <- c()
@@ -88,15 +93,26 @@ maxhtmtbase <- data.frame(Construct = boothtmt[,1], Max.HTMT =  boothtmt[,4]) %>
 maxhtmt <- evalmm[,c(1,4)] %>% filter(Indicator.or.LOC %in% unique(refevalmmbase$Construct)) %>%
   rbind(data.frame(Construct = unique(refevalmmbase$Construct[refevalmmbase$Construct %notin% evalmm$Indicator.or.LOC]),
                    Indicator.or.LOC = unique(refevalmmbase$Construct[refevalmmbase$Construct %notin% evalmm$Indicator.or.LOC]))) %>%
-  left_join(maxhtmtbase) %>% 
+  left_join(maxhtmtbase, ) %>% 
   mutate(Construct = Indicator.or.LOC, Indicator.or.LOC = NULL)
 
 # Make final data frame
 refevalmm <- refevalmmbase %>% cbind(Loadings = refloadings) %>% left_join(cicr) %>% left_join(maxhtmt[,c(1,3)])
+```
+```{r ref-eval, echo=FALSE}
 datatable(refevalmm) %>%
   formatRound(3:6,
               digits = 3)
 ```
+
+## Convergent validity
+Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
+
+## Internal consistency reliability
+Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
+
+## Discriminant validity
+Discriminant validity is evaluated using the hetereotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
 
 ```{r ref-eval-HTMT,echo=FALSE}
 #If there are problems with the HTMT, here is a detailed table
@@ -105,3 +121,85 @@ datatable(boothtmt) %>%
               digits = 3)
 ```
 
+# Evaluation of the formative measurement model
+```{r for-eval prep, echo = FALSE, include=FALSE}
+forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Indicator.or.LOC) %>% 
+  mutate(Type = NULL, Mode = NULL)
+```
+## Convergent validity
+To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
+
+### Perceived Self-Efficacy
+```{r for-eval rapse, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+rapse <- readRDS("rapse-cc-1.RDS")
+plot(rapse, title = "Redundancy Analysis Perceived Self-Efficacy", theme = seminr_theme_create(plot.adj = FALSE))
+sumrapse <- summary(rapse)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvpse <- data.frame(Construct = "Perceived Self-Efficacy", 'C.V.R^2' = sumrapse$paths[1], 'C.V.PC' = sumrapse$paths[3])
+```
+
+### Perceived Response Efficacy
+```{r for-eval rapre, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+rapre <- readRDS("rapre-cc-1.RDS")
+plot(rapre, title = "Redundancy Analysis Perceived Response Efficacy", theme = seminr_theme_create(plot.adj = FALSE))
+sumrapre <- summary(rapre)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvpre <- data.frame(Construct = "Perceived Response Efficacy", 'C.V.R^2' = sumrapre$paths[1], 'C.V.PC' = sumrapre$paths[3])
+```
+
+```{r for-eval raprc, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+raprc <- readRDS("raprc-cc-1.RDS")
+plot(raprc, title = "Redundancy Analysis Perceived Response Costs", theme = seminr_theme_create(plot.adj = FALSE))
+sumraprc <- summary(raprc)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvprc <- data.frame(Construct = "Perceived Response Costs", 'C.V.R^2' = sumraprc$paths[1], 'C.V.PC' = sumraprc$paths[3])
+```
+
+```{r for-eval radn, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+radn <- readRDS("radn-cc-1.RDS")
+plot(radn, title = "Redundancy Analysis Descriptive Norm", theme = seminr_theme_create(plot.adj = FALSE))
+sumradn <- summary(radn)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1], 'C.V.PC' = sumradn$paths[3])
+```
+
+```{r for-eval rain, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+rain <- readRDS("rain-cc-1.RDS")
+plot(rain, title = "Redundancy Analysis Injunctive Norm", theme = seminr_theme_create(plot.adj = FALSE))
+sumrain <- summary(rain)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvin <- data.frame(Construct = "Injunctive Norm", 'C.V.R^2' = sumrain$paths[1], 'C.V.PC' = sumrain$paths[3])
+```
+
+```{r for-eval rabi, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+rabi <- readRDS("rabi-cc-1.RDS")
+plot(rabi, title = "Redundancy Analysis Behavioral Intention", theme = seminr_theme_create(plot.adj = FALSE))
+sumrabi <- summary(rabi)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvbi <- data.frame(Construct = "Behavioral Intention", 'C.V.R^2' = sumrabi$paths[1], 'C.V.PC' = sumrabi$paths[3])
+```
+```{r for-eval cv,echo=FALSE, include=FALSE}
+# put together all dataframes, this has also to be done manually
+forevalci <- bind_rows(cvpse, cvpre, cvprc, cvdn, cvin, cvbi)
+
+```
+
+
+
+```{r for-eval, echo=FALSE}
+datatable(forevalmm) %>%
+  formatRound(3:6,
+              digits = 3)
+```

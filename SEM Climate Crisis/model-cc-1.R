@@ -80,7 +80,7 @@ saveRDS(raprc, "SEM Climate Crisis/raprc-cc-1.RDS")
 
 # Descriptive Norm
 mmdn <- constructs(
-  composite("Descriptive Norm Formative", multi_items("CCRB", 7:9), mode_B),
+  composite("Descriptive Norm Formative", multi_items("CCDN", 7:9), mode_B),
   composite("Descriptive Norm Reflective", single_item("CCRB12"))
 )
 smdn <- relationships(
