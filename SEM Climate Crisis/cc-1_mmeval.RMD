@@ -122,7 +122,7 @@ datatable(refevalmm,
   formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL))
 ```
 
-```{r ref-eval-HTMT,echo=FALSE}
+```{r ref-eval-HTMT,echo=FALSE, include=FALSE}
 #If there are problems with the HTMT, here is a detailed table
 datatable(boothtmt,
           filter = 'top',
@@ -140,6 +140,7 @@ datatable(boothtmt,
 ```
 
 ## Results of the evaluation of the reflective measurement model
+All indicators show sufficient convergent validity, internal consistency reliability and discriminant validity. The hypothesized reflective measurement model and all its indicators can be retained.
 
 # Evaluation of the formative measurement model
 ```{r for-eval prep, echo = FALSE, include=FALSE}
@@ -328,6 +329,23 @@ datatable(forevalmm,
 ```
 
 ## Results of the evaluation of the formative measurement model
+Convergent validity is insufficient for Perceived Self-Efficacy, Perceived Response Efficacy, Perceived Response Costs and Behavioral Intention. THere were no issues with collinearity as indicated by the VIF. Concerning significance and relevance, the weight for CCRB8 was very small and non-significant, and the loading was below 0.5. Therefore, CCRB8 should be discarded.
+For CCIN1, the weight was also insignificant (0 in the bootstrapping CI), but the loading was large and significant.
+To remedy the problems with convergent validity, we looked at the correlations of the indicators with the redundant reflective measure.
+
+```{r redundancy analyis, echo = FALSE, include=FALSE}
+# Perceived Self-Efficacy
+unlist(sumrapse$descriptives$correlations$items)[rapse$mmMatrix[4,2],rapse$mmMatrix[1:3,2]]
+# Perceived Response Efficacy
+unlist(sumrapre$descriptives$correlations$items)[rapre$mmMatrix[4,2],rapre$mmMatrix[1:3,2]]
+# Perceived Response Costs
+unlist(sumraprc$descriptives$correlations$items)[raprc$mmMatrix[4,2],raprc$mmMatrix[1:3,2]]
+# Behavioral Intention
+unlist(sumrabi$descriptives$correlations$items)[rabi$mmMatrix[4,2],rabi$mmMatrix[1:3,2]]
+```
+For Perceived Self-Efficacy, CCRB3 has the lowest correlation with the reflective measure (r = 0.386) and should be discarded. For Perceived Response Efficacy, CCRB6 (r = 0.523) will be discarded. For Perceived Response Costs, CCRB8 (r = 0.349) should be discarded on the basis of convergent validity, as well as significance and relevance. For Behavioral Intention, CCBI1 (r = 0.398) should be discarded.
+
+To sum up, CCRB3, CCRB6, CCRB8 and CCBI1 should be discarded
 
 # Evaluation of the formative higher-order constructs
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
@@ -442,5 +460,7 @@ datatable(forhocevalmm,
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL))
 ```
 ## Results of the formative higher-order constructs evaluation
+For the formative higher-order constructs, there are no issues with collinearity and all weights are significant and relevant. The formative higher-order constructs can be retained as hypothesized.
 
 # Results summary
+The reflective measurement model and formative higher-order constructs can be retained as-is. For the improvement of the formative measurement model, CCRB3, CCRB6, CCRB8 and CCBI1 should be discarded.
