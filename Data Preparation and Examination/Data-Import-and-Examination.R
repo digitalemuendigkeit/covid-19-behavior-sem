@@ -213,3 +213,36 @@ write_csv2(data.frame(dataincluded$gid), "Data/Recontact-List.csv")
 s1dataqualcl <- (datacareless %>% filter(Duration..in.seconds. >= durtm/2 & (pattern.blocks <= 2 |is.na(pattern.blocks))))[,c(3, 145, 143, 6, 8, 4, 5, 7, 9:142)]
 write_csv2(s1dataqualcl, "Data/S1-data-qualcl.csv")
 write_rds(s1dataqualcl, "Data/S1-data-qualcl.RDS")
+
+# Import data from survey 2 2
+# First 2 rows are descriptors
+# Next 3 rows are tests
+NameRD2 <- data.frame(read_csv("Data/S2-Raw-Data-20210208.csv"))
+RD2 <- read_csv("Data/S2-Raw-Data-20210208.csv", skip = 5, col_names = colnames(NameRD2))
+
+# Crop Data
+# From Descriptive Cols keep only Duration, RecordedDate, ResponseId, gid
+# Crop cols c(1:5,7,10:18)
+
+RD2Crop <- RD2[,-c(1:5,7,10:18)]
+
+# Find speeders, easier median method
+RD2CropC <- RD2Crop[RD2Crop$Duration..in.seconds. > median(RD2Crop$Duration..in.seconds.)/3,]
+
+# Merge data
+sdata <- s1dataqualcl %>% left_join(RD2CropC[,-c(1:3)])
+
+# Check: Find differences in age and gender
+sdatacheck <- sdata[!is.na(sdata$COB1),c(1,6:7,143:144)] %>%
+  mutate(AgeDiff = (SD1 != Chif2 & SD1 != Chif2 -1 ),
+         GenderDiff = SD2 != Chif3)
+view(sdatacheck %>% filter(AgeDiff == TRUE))
+# 18 implausible differences in age
+view(sdatacheck %>% filter(GenderDiff == TRUE))
+# 5 differences in gender, reported is the gender for the SEM survey
+
+`%notin%` <- Negate(`%in%`)
+# As changes in gender identity in the meantime are plausible, only respondents with implausible changes in age are removed
+sdataqualcl <- sdata %>% filter(ResponseId %notin% (sdatacheck %>% filter(AgeDiff == TRUE))$ResponseId)
+write_csv2(sdataqualcl, "Data/data-qualcl.csv")
+write_rds(sdataqualcl, "Data/data-qualcl.RDS")
