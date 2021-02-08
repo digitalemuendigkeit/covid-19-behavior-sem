@@ -1,5 +1,5 @@
 ---
-title: "Climate Crisis Iteration 1 Measurement Model Evaluation"
+title: "Template Measurement Model Evaluation"
 output: html_document
 ---
 
@@ -7,10 +7,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(seminr)
-library(DT)
-library(htmltools)
-model <- readRDS("model-cc-1.RDS")
-bootmodel <- readRDS("model-boot-cc-1.RDS")
+model <- readRDS()
+bootmodel <- readRDS()
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
@@ -153,7 +151,7 @@ To evaluate convergent validity, a redundancy analysis is conducted. The path co
 ```{r for-eval rapse, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-rapse <- readRDS("rapse-cc-1.RDS")
+rapse <- readRDS()
 plot(rapse, title = "Redundancy Analysis Perceived Self-Efficacy")
 sumrapse <- summary(rapse)
 # For the final dataframe, you should set a custom name and put the the name of the construct
@@ -164,7 +162,7 @@ cvpse <- data.frame(Construct = "Perceived Self-Efficacy", 'C.V.R^2' = sumrapse$
 ```{r for-eval rapre, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-rapre <- readRDS("rapre-cc-1.RDS")
+rapre <- readRDS()
 plot(rapre, title = "Redundancy Analysis Perceived Response Efficacy")
 sumrapre <- summary(rapre)
 # For the final dataframe, you should set a custom name and put the the name of the construct
@@ -174,7 +172,7 @@ cvpre <- data.frame(Construct = "Perceived Response Efficacy", 'C.V.R^2' = sumra
 ```{r for-eval raprc, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-raprc <- readRDS("raprc-cc-1.RDS")
+raprc <- readRDS()
 plot(raprc, title = "Redundancy Analysis Perceived Response Costs")
 sumraprc <- summary(raprc)
 # For the final dataframe, you should set a custom name and put the the name of the construct
@@ -184,7 +182,7 @@ cvprc <- data.frame(Construct = "Perceived Response Costs", 'C.V.R^2' = sumraprc
 ```{r for-eval radn, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-radn <- readRDS("radn-cc-1.RDS")
+radn <- readRDS()
 plot(radn, title = "Redundancy Analysis Descriptive Norm")
 sumradn <- summary(radn)
 # For the final dataframe, you should set a custom name and put the the name of the construct
@@ -194,7 +192,7 @@ cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1],
 ```{r for-eval rain, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-rain <- readRDS("rain-cc-1.RDS")
+rain <- readRDS()
 plot(rain, title = "Redundancy Analysis Injunctive Norm")
 sumrain <- summary(rain)
 # For the final dataframe, you should set a custom name and put the the name of the construct
@@ -204,7 +202,7 @@ cvin <- data.frame(Construct = "Injunctive Norm", 'C.V.R^2' = sumrain$paths[1], 
 ```{r for-eval rabi, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-rabi <- readRDS("rabi-cc-1.RDS")
+rabi <- readRDS()
 plot(rabi, title = "Redundancy Analysis Behavioral Intention")
 sumrabi <- summary(rabi)
 # For the final dataframe, you should set a custom name and put the the name of the construct
