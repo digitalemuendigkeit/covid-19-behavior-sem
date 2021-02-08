@@ -246,3 +246,9 @@ view(sdatacheck %>% filter(GenderDiff == TRUE))
 sdataqualcl <- sdata %>% filter(ResponseId %notin% (sdatacheck %>% filter(AgeDiff == TRUE))$ResponseId)
 write_csv2(sdataqualcl, "Data/data-qualcl.csv")
 write_rds(sdataqualcl, "Data/data-qualcl.RDS")
+
+# Data for market research institute - final responses
+S1GID <- data.frame(RDprel$gid)
+write_csv(S1GID, "Data/S1GID.csv")
+S2GID <- data.frame(RD2CropC$gid)
+write_csv(S2GID, "Data/S2GID.csv")
