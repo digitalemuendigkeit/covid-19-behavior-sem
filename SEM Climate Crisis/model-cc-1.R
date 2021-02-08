@@ -80,8 +80,8 @@ saveRDS(raprc, "SEM Climate Crisis/raprc-cc-1.RDS")
 
 # Descriptive Norm
 mmdn <- constructs(
-  composite("Descriptive Norm Formative", multi_items("CCDN", 7:9), mode_B),
-  composite("Descriptive Norm Reflective", single_item("CCRB12"))
+  composite("Descriptive Norm Formative", multi_items("CCDN", 1:2), mode_B),
+  composite("Descriptive Norm Reflective", single_item("CCDN4"))
 )
 smdn <- relationships(
   paths(from = "Descriptive Norm Formative", to = "Descriptive Norm Reflective")
@@ -91,8 +91,8 @@ saveRDS(radn, "SEM Climate Crisis/radn-cc-1.RDS")
 
 # Injunctive Norm
 mmin <- constructs(
-  composite("Injunctive Norm Formative", multi_items("CCRB", 7:9), mode_B),
-  composite("Injunctive Norm Reflective", single_item("CCRB12"))
+  composite("Injunctive Norm Formative", multi_items("CCIN", 1:2), mode_B),
+  composite("Injunctive Norm Reflective", single_item("CCIN4"))
 )
 smin <- relationships(
   paths(from = "Injunctive Norm Formative", to = "Injunctive Norm Reflective")
@@ -102,8 +102,8 @@ saveRDS(rain, "SEM Climate Crisis/rain-cc-1.RDS")
 
 # Behavioral Intention
 mmbi <- constructs(
-  composite("Behavioral Intention Formative", multi_items("CCRB", 7:9), mode_B),
-  composite("Behavioral Intention Reflective", single_item("CCRB12"))
+  composite("Behavioral Intention Formative", multi_items("CCBI", 1:3), mode_B),
+  composite("Behavioral Intention Reflective", single_item("CCBI4"))
 )
 smbi <- relationships(
   paths(from = "Behavioral Intention Formative", to = "Behavioral Intention Reflective")
