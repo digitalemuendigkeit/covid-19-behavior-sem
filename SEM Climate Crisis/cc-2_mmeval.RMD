@@ -464,4 +464,4 @@ datatable(forhocevalmm,
 For the formative higher-order constructs, there are no issues with collinearity and all weights are significant and relevant. The formative higher-order constructs can be retained as hypothesized.
 
 # Results summary
-The reflective measurement model and the formative higher-order constructs meet all quality criteria. With the formative measurement model, there are substantial problems with convergent validity. One way to remedy this would be to substitute the problematic formative constructs by the single-item reflective constructs used in the redundancy analysis.
+The reflective measurement model and the formative higher-order constructs meet all quality criteria. With the formative measurement model, there are substantial problems with convergent validity. One way to remedy this would be to substitute the problematic formative constructs by the single-item reflective constructs used in the redundancy analysis. Alternatively, the single indicators should refer to the respective measure that shows the highest intercorrelation with the single-indicator reflective constructs, overall.
