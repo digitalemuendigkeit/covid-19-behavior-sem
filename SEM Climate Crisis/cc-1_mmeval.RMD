@@ -12,7 +12,7 @@ library(DT)
 library(htmltools)
 # Load models and create summaries
 model <- readRDS("Models/model-cc-1.RDS")
-bootmodel <- readRDS("model-boot-cc-1.RDS")
+bootmodel <- readRDS("Models/model-boot-cc-1.RDS")
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
@@ -70,7 +70,8 @@ for (i in 1:nrow(refevalmmbase)){
 cicr <- data.frame(Construct = row.names(sumfs$reliability), 
                    AVE = as.numeric(sumfs$reliability[,3]), 
                    Calpha = as.numeric(sumfs$reliability[,1]),
-                   rhoC = as.numeric(sumfs$reliability[,2]))
+                   rhoC = as.numeric(sumfs$reliability[,2]),
+                   rhoA = as.numeric(sumfs$reliability[,4]))
 #Next step is HTMT
 boothtmtbase <- data.frame(Construct.Rel. = row.names(sumbomo$bootstrapped_HTMT),
                           Lower.CI = as.numeric(sumbomo$bootstrapped_HTMT[,5]),
@@ -108,7 +109,7 @@ refevalmm <- refevalmmbase %>% cbind(Loadings = refloadings) %>% left_join(cicr)
 Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
 
 ## Internal consistency reliability
-Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
+Cronbach's <font face="Symbol">a</font>, composite reliability <font face="Symbol">r</font><sub>c</sub> and construct reliability <font face="Symbol">r</font><sub>A</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
 
 ## Discriminant validity
 Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
@@ -120,19 +121,21 @@ datatable(refevalmm,
           rownames = FALSE,
           colnames = c("Loading" = 3,
                         "Cronbach\'s alpha" = 5, 
-                       "Composite reliability" = 6, 
-                       "1 in HTMT CI" = 7),
+                       "Composite reliability" = 6,
+                       "Construct reliability" = 7,
+                       "1 in HTMT CI" = 8),
           caption = 'Results of the reflective measurement model evaluation') %>%
-  formatRound(3:6,
+  formatRound(3:7,
               digits = 3) %>%
-  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.7), values = c('#ffe5e5', '#ffcccc', '#00'))) %>%
+  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.708), values = c('#ffcccc', '#ffe5e5', '#00'))) %>%
   formatStyle('AVE', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.95,0.999), values = c('#ffcccc', '#00', '#ffcccc', '#00'))) %>%
-  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.95,0.999), values = c('#ffcccc', '#00', '#ffcccc', '#00'))) %>%
+  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ffcccc', '#00','#ffe5e5',  '#ffcccc', '#00'))) %>%
+  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ffcccc', '#00', '#ffe5e5', '#ffcccc', '#00'))) %>%
+    formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ffcccc', '#00','#ffe5e5',  '#ffcccc', '#00'))) %>%
   formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL))
 ```
 
-```{r ref-eval-HTMT,echo=FALSE, include=FALSE}
+```{r ref-eval-HTMT,echo=FALSE}
 #If there are problems with the HTMT, here is a detailed table
 datatable(boothtmt,
           filter = 'top',
@@ -145,8 +148,8 @@ datatable(boothtmt,
           caption = 'Details of the bootstrapped HTMT ratios') %>%
   formatRound(3:4,
               digits = 3) %>%
-  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9), values = c('#00', '#ffcccc'))) %>%
-  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(1), values = c('#00', '#ffcccc')))
+  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ffcccc'))) %>%
+  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ffcccc')))
 ```
 
 ## Results of the evaluation of the reflective measurement model
@@ -333,7 +336,7 @@ datatable(forevalmm,
 ```
 
 ## Results of the evaluation of the formative measurement model
-Convergent validity is insufficient for Perceived Self-Efficacy, Perceived Response Efficacy, Perceived Response Costs and Behavioral Intention. THere were no issues with collinearity as indicated by the VIF. Concerning significance and relevance, the weight for CCRB8 was very small and non-significant, and the loading was below 0.5. Therefore, CCRB8 should be discarded.
+Convergent validity is insufficient for Perceived Self-Efficacy, Perceived Response Efficacy, Perceived Response Costs and Behavioral Intention. There were no issues with collinearity as indicated by the VIF. Concerning significance and relevance, the weight for CCRB8 was very small and non-significant, and the loading was below 0.5. Therefore, CCRB8 should be discarded.
 For CCIN1, the weight was also insignificant (0 in the bootstrapping CI), but the loading was large and significant.
 To remedy the problems with convergent validity, we looked at the correlations of the indicators with the redundant reflective measure.
 
