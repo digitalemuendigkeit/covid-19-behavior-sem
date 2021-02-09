@@ -127,12 +127,12 @@ datatable(refevalmm,
           caption = 'Results of the reflective measurement model evaluation') %>%
   formatRound(3:7,
               digits = 3) %>%
-  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.708), values = c('#ffcccc', '#ffe5e5', '#00'))) %>%
-  formatStyle('AVE', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ffcccc', '#00','#ffe5e5',  '#ffcccc', '#00'))) %>%
-  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ffcccc', '#00', '#ffe5e5', '#ffcccc', '#00'))) %>%
-    formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ffcccc', '#00','#ffe5e5',  '#ffcccc', '#00'))) %>%
-  formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL))
+  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.708), values = c('#ff9999', '#ffe5e5', '#00'))) %>%
+  formatStyle('AVE', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
+  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00', '#ffe5e5', '#ff9999', '#00'))) %>%
+    formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
+  formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
 ```{r ref-eval-HTMT,echo=FALSE}
@@ -148,8 +148,8 @@ datatable(boothtmt,
           caption = 'Details of the bootstrapped HTMT ratios') %>%
   formatRound(3:4,
               digits = 3) %>%
-  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ffcccc'))) %>%
-  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ffcccc')))
+  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
+  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999')))
 ```
 
 ## Results of the evaluation of the reflective measurement model
@@ -163,7 +163,6 @@ forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Ind
 ## Convergent validity
 To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
-### Perceived Self-Efficacy
 ```{r for-eval rapse, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
@@ -173,7 +172,6 @@ sumrapse <- summary(rapse)
 cvpse <- data.frame(Construct = "Perceived Self-Efficacy", 'C.V.R^2' = sumrapse$paths[1], 'C.V.PC' = sumrapse$paths[3])
 ```
 
-### Perceived Response Efficacy
 ```{r for-eval rapre, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
@@ -243,7 +241,7 @@ for (i in 1:length(unique(forevalbase$Construct))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+Indicator weights should be significant (t \$geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
 
 ```{r for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -301,7 +299,8 @@ forevalmm <- forevalbase %>%
   left_join(mmvif[,2:3]) %>%
   left_join(btwt[,-5]) %>%
   left_join(btld[,-5])
-
+colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
+colnames(forevalmm)[13] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
 ```{r for-eval, echo=FALSE}
@@ -313,26 +312,24 @@ datatable(forevalmm,
                         "CV pc" = 4, 
                        "Weight (original estimate)" = 6, 
                        "Weight (bootstrap mean)" = 7,
-                       "t (weight)" = 8,
                        "0 in CI (weight)" = 9,
                        "Loading (original estimate)" = 10,
                        "Loading (bootstrap mean)" = 11,
-                       "t (loading)" = 12,
                        "0 in CI (loading)" = 13),
           caption = 'Results of the formative measurement model evaluation') %>%
   formatRound(c(3:8, 10:12),
               digits = 3) %>%
-  formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.7), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(5), values = c('#00', '#ffcccc'))) %>%
-  formatStyle('Weight (original estimate)', backgroundColor = styleInterval(cuts = c(0), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Weight (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('t (weight)', backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('t (loading)', backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL)) %>%
-  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL))
+  formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
+  formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.7), values = c('#ff9999', '#00'))) %>%
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(5), values = c('#00', '#ff9999'))) %>%
+  formatStyle('Weight (original estimate)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Weight (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL)) %>%
+  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
 ## Results of the evaluation of the formative measurement model
@@ -437,7 +434,8 @@ forhocevalmm <- forhocevalbase %>%
   left_join(hocvif[,2:3]) %>%
   left_join(bthocwt[,-5]) %>%
   left_join(bthocld[,-5])
-
+colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
+colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
 ```{r hoc-for-eval, echo=FALSE}
@@ -447,24 +445,22 @@ datatable(forhocevalmm,
           rownames = FALSE,
           colnames = c("Weight (original estimate)" = 4, 
                        "Weight (bootstrap mean)" = 5,
-                       "t (weight)" = 6,
                        "0 in CI (weight)" = 7,
                        "Loading (original estimate)" = 8,
                        "Loading (bootstrap mean)" = 9,
-                       "t (loading)" = 10,
                        "0 in CI (loading)" = 11),
           caption = 'Results of the formative higher-order construct evaluation') %>%
   formatRound(c(3:6, 8:10),
               digits = 3) %>%
-  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(5), values = c('#00', '#ffcccc'))) %>%
-  formatStyle('Weight (original estimate)', backgroundColor = styleInterval(cuts = c(0), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Weight (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('t (weight)', backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('t (loading)', backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffcccc', '#00'))) %>%
-  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL)) %>%
-  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ffcccc', '#00'), default = NULL))
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(5), values = c('#00', '#ff9999'))) %>%
+  formatStyle('Weight (original estimate)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Weight (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forhocevalmm)[6], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL)) %>%
+  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 ## Results of the formative higher-order constructs evaluation
 For the formative higher-order constructs, there are no issues with collinearity and all weights are significant and relevant. The formative higher-order constructs can be retained as hypothesized.
