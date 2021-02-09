@@ -11,18 +11,18 @@ library(seminr)
 library(DT)
 library(htmltools)
 # Load models and create summaries
-model <- readRDS("Models/model-cc-2.RDS")
-bootmodel <- readRDS("Models/model-boot-cc-2.RDS")
+model <- readRDS()
+bootmodel <- readRDS()
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 # Load redundancy analysis models
-rapse <- readRDS("Models/rapse-cc-2.RDS")
-rapre <- readRDS("Models/rapre-cc-2.RDS")
-raprc <- readRDS("Models/raprc-cc-2.RDS")
-radn <- readRDS("Models/radn-cc-2.RDS")
-rain <- readRDS("Models/rain-cc-2.RDS")
-rabi <- readRDS("Models/rabi-cc-2.RDS")
+rapse <- readRDS()
+rapre <- readRDS()
+raprc <- readRDS()
+radn <- readRDS()
+rain <- readRDS()
+rabi <- readRDS()
 # Set seminr plot theme
 thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
 seminr_theme_set(thm)
@@ -70,8 +70,7 @@ for (i in 1:nrow(refevalmmbase)){
 cicr <- data.frame(Construct = row.names(sumfs$reliability), 
                    AVE = as.numeric(sumfs$reliability[,3]), 
                    Calpha = as.numeric(sumfs$reliability[,1]),
-                   rhoC = as.numeric(sumfs$reliability[,2]),
-                   rhoA = as.numeric(sumfs$reliability[,4]))
+                   rhoC = as.numeric(sumfs$reliability[,2]))
 #Next step is HTMT
 boothtmtbase <- data.frame(Construct.Rel. = row.names(sumbomo$bootstrapped_HTMT),
                           Lower.CI = as.numeric(sumbomo$bootstrapped_HTMT[,5]),
@@ -109,7 +108,7 @@ refevalmm <- refevalmmbase %>% cbind(Loadings = refloadings) %>% left_join(cicr)
 Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
 
 ## Internal consistency reliability
-Cronbach's <font face="Symbol">a</font>, composite reliability <font face="Symbol">r</font><sub>c</sub> and construct reliability <font face="Symbol">r</font><sub>A</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
+Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
 
 ## Discriminant validity
 Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
@@ -121,17 +120,15 @@ datatable(refevalmm,
           rownames = FALSE,
           colnames = c("Loading" = 3,
                         "Cronbach\'s alpha" = 5, 
-                       "Composite reliability" = 6,
-                       "Construct reliability" = 7,
-                       "1 in HTMT CI" = 8),
+                       "Composite reliability" = 6, 
+                       "1 in HTMT CI" = 7),
           caption = 'Results of the reflective measurement model evaluation') %>%
-  formatRound(3:7,
+  formatRound(3:6,
               digits = 3) %>%
-  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.708), values = c('#ff9999', '#ffe5e5', '#00'))) %>%
+  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.7), values = c('#ffe5e5', '#ff9999', '#00'))) %>%
   formatStyle('AVE', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
-  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00', '#ffe5e5', '#ff9999', '#00'))) %>%
-    formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
+  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.95,0.999), values = c('#ff9999', '#00', '#ff9999', '#00'))) %>%
+  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.95,0.999), values = c('#ff9999', '#00', '#ff9999', '#00'))) %>%
   formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
@@ -148,12 +145,11 @@ datatable(boothtmt,
           caption = 'Details of the bootstrapped HTMT ratios') %>%
   formatRound(3:4,
               digits = 3) %>%
-  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
+    formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
   formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999')))
 ```
 
 ## Results of the evaluation of the reflective measurement model
-All indicators show sufficient convergent validity, internal consistency reliability and discriminant validity. The hypothesized reflective measurement model and all its indicators can be retained.
 
 # Evaluation of the formative measurement model
 ```{r for-eval prep, echo = FALSE, include=FALSE}
@@ -331,25 +327,17 @@ datatable(forevalmm,
 ```
 
 ## Results of the evaluation of the formative measurement model
-There are no issues with collinearity as measured with VIF, and all indicators are significant and relevant. Convergent validity is established for Descriptive Norm and Injunctive Norm.
-For all other constructs, convergent validity could not be established. Indicator deletion led to worse or unchanged results:
-For Perceived Self-Efficacy, R² is now 0.328 (was 0.328) and the path coefficient is 0.573 (was 0.573).
-For Perceived Response Efficacy, R² = 0.353 (was 0.386) and path coefficient = 0.594 (was 0.621).
-For Perceived Response Costs, R² = 0.253 (was 0.281) and path coefficient = 0.503 (was 0.530).
-For Behavioral Intention, R² = 0.360 (was 0.406) and path coefficient = 0.600 (was 0.637).
 
 ```{r redundancy analyis, echo = FALSE, include=FALSE}
 # Perceived Self-Efficacy
-unlist(sumrapse$descriptives$correlations$items)[rapse$mmMatrix[3,2],rapse$mmMatrix[1:2,2]]
+unlist(sumrapse$descriptives$correlations$items)[rapse$mmMatrix[4,2],rapse$mmMatrix[1:3,2]]
 # Perceived Response Efficacy
-unlist(sumrapre$descriptives$correlations$items)[rapre$mmMatrix[3,2],rapre$mmMatrix[1:2,2]]
+unlist(sumrapre$descriptives$correlations$items)[rapre$mmMatrix[4,2],rapre$mmMatrix[1:3,2]]
 # Perceived Response Costs
-unlist(sumraprc$descriptives$correlations$items)[raprc$mmMatrix[3,2],raprc$mmMatrix[1:2,2]]
+unlist(sumraprc$descriptives$correlations$items)[raprc$mmMatrix[4,2],raprc$mmMatrix[1:3,2]]
 # Behavioral Intention
-unlist(sumrabi$descriptives$correlations$items)[rabi$mmMatrix[3,2],rabi$mmMatrix[1:2,2]]
+unlist(sumrabi$descriptives$correlations$items)[rabi$mmMatrix[4,2],rabi$mmMatrix[1:3,2]]
 ```
-Further indicator deletion is unlikely to improve convergent validity.
-What should happen to remedy this?
 
 # Evaluation of the formative higher-order constructs
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
@@ -361,7 +349,7 @@ forhocevalbase <- evalmm %>% filter(Mode == "higher-order") %>% rename(HOC = Con
 Convergent validity cannot be evaluated.
 
 ## Collinearity
-The variance inflation factor (VIF) should be < 5, ideally $\seq\ 3.
+The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
 ```{r hoc-for-eval col, echo = FALSE, include = FALSE}
 hocvif <- data.frame(HOC = character(),
                     LOC = character(),
@@ -460,8 +448,7 @@ datatable(forhocevalmm,
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
+
 ## Results of the formative higher-order constructs evaluation
-For the formative higher-order constructs, there are no issues with collinearity and all weights are significant and relevant. The formative higher-order constructs can be retained as hypothesized.
 
 # Results summary
-The reflective measurement model and the formative higher-order constructs meet all quality criteria. With the formative measurement model, there are substantial problems with convergent validity. One way to remedy this would be to substitute the problematic formative constructs by the single-item reflective constructs used in the redundancy analysis.

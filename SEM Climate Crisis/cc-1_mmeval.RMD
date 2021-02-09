@@ -224,7 +224,7 @@ forevalci <- bind_rows(cvpse, cvpre, cvprc, cvdn, cvin, cvbi)
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
 ## Collinearity
-The variance inflation factor (VIF) should be < 5.
+The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
 
 ```{r for-eval col, echo = FALSE, include = FALSE}
 mmvif <- data.frame(Construct = character(),
@@ -300,7 +300,7 @@ forevalmm <- forevalbase %>%
   left_join(btwt[,-5]) %>%
   left_join(btld[,-5])
 colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
-colnames(forevalmm)[13] <- paste0("t(", nrow(model$data), ") (loading)")
+colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
 ```{r for-eval, echo=FALSE}
@@ -321,14 +321,12 @@ datatable(forevalmm,
               digits = 3) %>%
   formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
   formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.7), values = c('#ff9999', '#00'))) %>%
-  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(5), values = c('#00', '#ff9999'))) %>%
-  formatStyle('Weight (original estimate)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Weight (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
-  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
+  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffe5e5', '#00'))) %>%
   formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
   formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
-  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL)) %>%
+  formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
@@ -361,7 +359,7 @@ forhocevalbase <- evalmm %>% filter(Mode == "higher-order") %>% rename(HOC = Con
 Convergent validity cannot be evaluated.
 
 ## Collinearity
-The variance inflation factor (VIF) should be < 5.
+The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
 ```{r hoc-for-eval col, echo = FALSE, include = FALSE}
 hocvif <- data.frame(HOC = character(),
                     LOC = character(),
@@ -437,7 +435,6 @@ forhocevalmm <- forhocevalbase %>%
 colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
-
 ```{r hoc-for-eval, echo=FALSE}
 datatable(forhocevalmm,
           filter = 'top',
@@ -452,16 +449,15 @@ datatable(forhocevalmm,
           caption = 'Results of the formative higher-order construct evaluation') %>%
   formatRound(c(3:6, 8:10),
               digits = 3) %>%
-  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(5), values = c('#00', '#ff9999'))) %>%
-  formatStyle('Weight (original estimate)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Weight (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00'))) %>%
-  formatStyle(colnames(forhocevalmm)[6], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
+  formatStyle(colnames(forhocevalmm)[6], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffe5e5', '#00'))) %>%
   formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
   formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
   formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
-  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL)) %>%
+  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
+
 ## Results of the formative higher-order constructs evaluation
 For the formative higher-order constructs, there are no issues with collinearity and all weights are significant and relevant. The formative higher-order constructs can be retained as hypothesized.
 
