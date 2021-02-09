@@ -163,7 +163,6 @@ forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Ind
 ## Convergent validity
 To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
-### Perceived Self-Efficacy
 ```{r for-eval rapse, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
@@ -173,7 +172,6 @@ sumrapse <- summary(rapse)
 cvpse <- data.frame(Construct = "Perceived Self-Efficacy", 'C.V.R^2' = sumrapse$paths[1], 'C.V.PC' = sumrapse$paths[3])
 ```
 
-### Perceived Response Efficacy
 ```{r for-eval rapre, echo=FALSE}
 # Unfortunately, this has to be done partially manually
 # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
