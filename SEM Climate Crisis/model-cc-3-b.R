@@ -61,7 +61,7 @@ sm <- relationships(
 )
 
 
-# model <- estimate_pls(data, mm, sm)
+#model <- estimate_pls(data, mm, sm)
 #saveRDS(model, "SEM Climate Crisis/Models/model-cc-3b.RDS")
 model <- readRDS("SEM Climate Crisis/Models/model-cc-3b.RDS")
 plot(model)
