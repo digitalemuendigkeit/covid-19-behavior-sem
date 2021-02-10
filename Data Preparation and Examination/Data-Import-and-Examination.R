@@ -20,6 +20,8 @@ RDCrop <- RD[,-c(1:5,7,10:18)]
 RDComp <- RDCrop[!is.na(RDCrop$S2),]
 nrow(RDComp)
 nrow(RDComp %>% filter(S2 == 2))
+#anomaly because force response was erroneously not set for this question block
+view(RDComp[(is.na(RDComp$CCDN4) & (is.na(RDComp$CODN4))),])
 # 955 answers
 # 907 want to be recontacted, 48 don't
 
@@ -216,9 +218,9 @@ write_rds(s1dataqualcl, "Data/S1-data-qualcl.RDS")
 
 # Import data from survey 2 2
 # First 2 rows are descriptors
-# Next 3 rows are tests
+# Next 4 rows are tests
 NameRD2 <- data.frame(read_csv("Data/S2-Raw-Data-20210208.csv"))
-RD2 <- read_csv("Data/S2-Raw-Data-20210208.csv", skip = 5, col_names = colnames(NameRD2))
+RD2 <- read_csv("Data/S2-Raw-Data-20210208.csv", skip = 6, col_names = colnames(NameRD2))
 
 # Crop Data
 # From Descriptive Cols keep only Duration, RecordedDate, ResponseId, gid
@@ -248,7 +250,9 @@ write_csv2(sdataqualcl, "Data/data-qualcl.csv")
 write_rds(sdataqualcl, "Data/data-qualcl.RDS")
 
 # Data for market research institute - final responses
-S1GID <- data.frame(RDprel$gid)
-write_csv(S1GID, "Data/S1GID.csv")
-S2GID <- data.frame(RD2CropC$gid)
-write_csv(S2GID, "Data/S2GID.csv")
+# S1GID <- data.frame(RDprel$gid)
+# write_csv(S1GID, "Data/S1GID.csv")
+S1GIDws <- data.frame(RDComp$gid)
+write_csv(S1GIDws, "Data/S1GIDws.csv")
+S2GIDws <- data.frame(RD2Crop$gid)
+write_csv(S2GIDws, "Data/S2GIDws.csv")
