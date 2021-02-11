@@ -48,15 +48,20 @@ for (i in 1:length(summo$vif_antecedents)){
                                     VIF = summo$vif_antecedents[[{{x}}]][j]))
   }
 }
+locvif <- data.frame('Exogenous Construct' = character(),
+                  'Endogenous Construct' = character(),
+                      VIF = double ())
 for (i in 1:length(sumfs$vif_antecedents)){
   x = names(sumfs$vif_antecedents[i])
   for (j in 1:length(sumfs$vif_antecedents[[{{x}}]])){
     y = names(sumfs$vif_antecedents[[{{x}}]])[j]
-    vif <- vif %>% rbind(data.frame('Exogenous Construct' = {{y}},
+    locvif <- locvif %>% rbind(data.frame('Exogenous Construct' = {{y}},
                                     'Endogenous Construct' = {{x}},
                                     VIF = sumfs$vif_antecedents[[{{x}}]][j]))
   }
 }
+locvif <- locvif %>% filter(!(Exogenous.Construct %in% vif$Exogenous.Construct & Endogenous.Construct %in% vif$Endogenous.Construct))
+vif <- union(vif, locvif)
 datatable(vif,
           filter = 'top',
           options = list(pageLength = nrow(vif)),
@@ -68,6 +73,7 @@ datatable(vif,
               digits = 3) %>%
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999')))
 ```
+None of the VIF values is above 5, though there are suggestions of overlap (VIF > 3) for the Distrusting Beliefs and Response Beliefs lower-order constructs, as well as for the Distrusting Beliefs and Threat Beliefs Constructs. As these constructs are conceptually very different, this points to the intercorrelation between the different HOC subconstructs rivaling the intracorrelation between the respective HOC subconstructs (does it?). However, on the HOC level, there are no VIF issues, therefore they can be retained. The VIF for Personal Moral Norm and Behavioral Intention is also above 3, but only slightly so. 
 
 # In-sample predictive power
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
@@ -91,6 +97,8 @@ datatable(r2,
               digits = 3) %>%
   formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.25,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
+The R² for Perceived Response Costs and Perceived Self-Efficacy are below the threshold, while the R² for Response Beliefs and Perceived Response Efficacy are very weak. Possibly, splitting this higher-order construct into distinct constructs could lead to a more differentiated model.
+
 
 # Effect size
 Effect size f2² measures the impact of a predictor construct on an endogenous construct. f² $\geq$ 0.35 indicates a large effect, f² $\geq$ 0.15 a medium and f² $\geq$ 0.02 a small effect.
@@ -116,7 +124,8 @@ for (i in 1:nrow(smloc)){
   y = smloc[i, 2]
 locf2vec <- append(locf2vec, sumfs$fSquare[[{{x}},{{y}}]])  
 }
-locf2 <- smloc %>% cbind(locf2vec) %>% rename('f^2' = 3)
+locf2 <- smloc %>% cbind(locf2vec) %>% rename('f^2' = 3) %>% 
+  filter(!(`Exogenous Construct` %in% hocf2$`Exogenous Construct` & `Endogenous Construct` %in% hocf2$`Endogenous Construct`))
 f2 <- union(hocf2, locf2)
 datatable(f2,
           filter = 'top',
@@ -128,12 +137,13 @@ datatable(f2,
               digits = 3) %>%
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.02), values = c('#ff9999', '#00')))
 ```
+With a lower threshold of 0.02, the effect sizes of many lower-order constructs are negligible. Concerning higher-order constructs or regular constructs, there is no discernible effect of Subjective Norm and Personal Moral Norm on Behavioral Intention, and no effect of Knowledge on Response Beliefs. The effect of Threat Beliefs on Behavioral Intention is very weak (f² = 0.015), but the path might be retained if the path coefficient is significant.
 
 # Out-of-sample predictive power
 Out of sample predictive power cannot be valuated using R, simplePLS seems to be deprecated.
 
 # Significance and relevance of path coefficients
-Significance ist denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
+Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
 ```{r path-coeff, echo = FALSE}
 pcbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_paths)) %>% rename (
   Construct.Rel. = rowname)
@@ -165,20 +175,34 @@ datatable(pcdf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
+As indicated by the t-values or a change of sign in the CI, there is a lack of significance for the path from Knowledge to Response Beliefs as well as for the paths from Personal Moral Norm and Subjective Norm to Behavioral Intention. The coefficient for the path from Threat Beliefs to Behavioral Intention is small, but significant.
 
-
-
-```{r eval-df, echo = FALSE, include=FALSE}
-# Base DF
-evalmm <- data.frame(Construct = model$mmMatrix[,1],
-                           Type = ifelse(grepl("HOCA", model$mmMatrix[,3]),
-                                         "HOC", "Construct"),
-                           Mode = dplyr::recode(model$mmMatrix[,3],
-                                         "A" = "reflective",
-                                         "B" = "formative",
-                                         "HOCA" = "higher-order"),
-                           Indicator.or.LOC = model$mmMatrix[,2])
+# Summary table
+```{r summary table-df, echo = FALSE, include = FALSE}
+sumsm <- pcdf[,-c(3,5:7)] %>% 
+  left_join(hocf2)  %>%
+  left_join(vif %>% rename('Exogenous Construct' = 'Exogenous.Construct',
+                           'Endogenous Construct' = 'Endogenous.Construct')) %>%
+  rename('Path Coefficient Bootstrap Mean' = 'Bootstrap Mean',
+         '0 in Path Coefficient CI' = '0 in CI',
+         'Path Coefficient p' = 'p')
+colnames(sumsm)[5] <- paste0("Path Coefficient t(", nrow(model$data), ")")
+```
+```{r summary table-df print, echo = FALSE}
+datatable(sumsm,
+          filter = 'top',
+          options = list(pageLength = nrow(sumsm)),
+          rownames = FALSE,
+          colnames = c("f²" = 7),
+          caption = 'Structural Model Summary') %>%
+  formatRound(c(3,5:8),
+              digits = 3) %>%
+  formatStyle(colnames(sumsm)[5], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Path Coefficient p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
+  formatStyle('0 in Path Coefficient CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL)) %>%
+  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.02), values = c('#ff9999', '#00'))) %>%
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999')))
 ```
 
 # Results summary
-Overall, all measurement models and higher-order constructs meet the quality criteria. Structural model evaluation can follow.
+As indicated by the summary table, the paths from Knowledge to Response Beliefs as well as the paths from Personal Moral Norm and Subjective Norm to Behavioral Intention are insignificant and can be omitted. Further, it would be interesting to see what happens if the Response Beliefs construct is split.
