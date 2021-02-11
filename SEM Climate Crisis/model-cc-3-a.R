@@ -13,6 +13,7 @@ data <- as.matrix(datacrop %>% select(!starts_with("CCKN")) %>% cbind("CCKN" = r
 # Describe measurement model
 # Results mm eval 2
 # One way to remedy this would be to substitute the problematic formative constructs by the single-item reflective constructs used in the redundancy analysis
+# Also, delete CCPN2
 mm <- constructs(
   composite("Perceived Self-Efficacy", single_item("CCRB10")),
   composite("Perceived Response Efficacy", single_item("CCRB11")),
@@ -26,7 +27,7 @@ mm <- constructs(
   composite("Perceived Susceptibility", multi_items("CCTB", 1:3)),
   composite("Perceived Severity", multi_items("CCTB", 4:6)),
   higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), mode_B),
-  composite("Personal Moral Norm", multi_items("CCPN", 1:3)),
+  composite("Personal Moral Norm", multi_items("CCPN", c(1,3))),
   composite("Descriptive Norm", multi_items("CCDN", 1:2), mode_B),
   composite("Injunctive Norm", multi_items("CCIN", 1:2), mode_B),
   higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), mode_B),
@@ -39,14 +40,17 @@ sm <- relationships(
 )
 
 
+
 model <- estimate_pls(data, mm, sm)
-#saveRDS(model, "SEM Climate Crisis/Models/model-cc-3-a.RDS")
+# saveRDS(model, "SEM Climate Crisis/Models/model-cc-3-a.RDS")
 model <- readRDS("SEM Climate Crisis/Models/model-cc-3-a.RDS")
 plot(model)
 # bootmodel <- bootstrap_model(model, nboot = 5000)
 # saveRDS(bootmodel, "SEM Climate Crisis/Models/model-boot-cc-3-a.RDS")
 bootmodel <- read_rds("SEM Climate Crisis/Models/model-boot-cc-3-a.RDS")
 plot(bootmodel)
+# bootfsmodel <- bootstrap_model(model$first_stage_model, nboot = 5000)
+# saveRDS(bootfsmodel, "SEM Climate Crisis/Models/model-fs-boot-cc-3-a.RDS")
 
 # # Models for estimation of convergent validity for formative constructs
 # # Perceived Self-Efficacy

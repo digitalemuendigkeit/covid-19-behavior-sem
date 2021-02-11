@@ -31,7 +31,7 @@ seminr_theme_set(thm)
 # Model plots
 ## Original Estimate Path Model
 This is the original estimate path model.
-```{r plot model, echo=FALSE}
+```{r plot model, echo=FALSE, out.width="100%"}
 plot(model, title = "Original Estimate Model")
 ```
 

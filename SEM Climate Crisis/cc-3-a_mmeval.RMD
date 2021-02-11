@@ -1,5 +1,5 @@
 ---
-title: "Template Measurement Model Evaluation"
+title: "Climate Crisis Model Iteration 3-a Measurement Model Evaluation"
 output: html_document
 ---
 
@@ -11,14 +11,14 @@ library(seminr)
 library(DT)
 library(htmltools)
 # Load models and create summaries
-model <- readRDS("Models/model-cc-3.RDS")
-bootmodel <- readRDS("Models/model-boot-cc-3.RDS")
+model <- readRDS("Models/model-cc-3-a.RDS")
+bootmodel <- readRDS("Models/model-boot-cc-3-a.RDS")
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 # Load redundancy analysis models
-radn <- readRDS("Models/radn-cc-3.RDS")
-rain <- readRDS("Models/rain-cc-3.RDS")
+radn <- readRDS("Models/radn-cc-3-a.RDS")
+rain <- readRDS("Models/rain-cc-3-a.RDS")
 # Set seminr plot theme
 thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
 seminr_theme_set(thm)
@@ -27,19 +27,19 @@ seminr_theme_set(thm)
 # Model plots
 ## Original Estimate Path Model
 This is the original estimate path model.
-```{r plot model, echo=FALSE}
+```{r plot model, echo=FALSE, out.width=100%}
 plot(model, title = "Original Estimate Model")
 ```
 
 ## Bootstrapped Path Model
 This is the bootstrapped path model.
-```{r plot bootmodel, echo=FALSE}
+```{r plot bootmodel, echo=FALSE, out.width=100%}
 plot(bootmodel, title = "Bootstrapped Model")
 ```
 
 ## Measurement Model Only
 This is a path model showing only the measurement model components.
-```{r plot mm model, echo=FALSE}
+```{r plot mm model, echo=FALSE, out.width=100%}
 plot(bootmodel, measurement_only = TRUE)
 ```
 ```{r eval-df, echo = FALSE, include=FALSE}
@@ -149,7 +149,82 @@ datatable(boothtmt,
 ```
 
 ## Results of the evaluation of the reflective measurement model
-All multi-item indicators and constructs show sufficient convergent validity, internal consistency reliability and discriminant validity. However, respecifying the Response Beliefs LOC as single-indicator reflective constructs leads to problems in discriminant validity respective Personal Moral Norm, with the HTMT upper 95 % confidence bound just clearing 1 (1.017).  
+All multi-item indicators and constructs show sufficient convergent validity, internal consistency reliability and discriminant validity. However, respecifying the Response Beliefs LOC as single-indicator reflective constructs leads to problems in discriminant validity respective Personal Moral Norm, with the HTMT upper 95 % confidence bound just clearing 1 (1.033). However, this is likely due to the properties of the single-indicator constructs. Therefore, both reflective constructs can be retained as-is. CCPN2 could be removed.
+
+```{r find cross-loadings, echo = FALSE, include = FALSE}
+# Personal Moral Norm
+## Intercorrelation
+icpm <- evalmm %>% filter(Construct == "Personal Moral Norm") %>%
+  cbind(cor(data[,(evalmm %>% filter(Construct == "Personal Moral Norm"))$Indicator.or.LOC]))
+## cross-loadings
+clpm <- data.frame(Indicator = character(),
+                       Construct = character(),
+                       Loading = double ())
+for (i in 1:length(icpm$Indicator)){
+  x <- icpm$Indicator[i]
+  clpm <- clpm %>% rbind(data.frame(Indicator =  {{x}},
+                                            Construct = names(sumfs$validity$cross_loadings[{{x}},]),
+                                            Loading = sumfs$validity$cross_loadings[{{x}},]))
+  
+}
+data.table::setorder(clpm, Loading)
+clpm
+# Personal Moral Norm has high intercorrelation and some weaker cross-loadings on Perceived Severity, Behavioral Intention and Perceived Self-Efficacy (CCPN2)
+
+# Perceived Self Efficacy
+## Intercorrelation -> none, only one indicator
+icpse <- evalmm %>% filter(Construct == "Perceived Self-Efficacy")
+## cross-loadings
+clpse <- data.frame(Indicator = character(),
+                       Construct = character(),
+                       Loading = double ())
+for (i in 1:length(icpse$Indicator)){
+  x <- icpse$Indicator[i]
+  clpse <- clpse %>% rbind(data.frame(Indicator =  {{x}},
+                                            Construct = names(sumfs$validity$cross_loadings[{{x}},]),
+                                            Loading = sumfs$validity$cross_loadings[{{x}},]))
+  
+}
+data.table::setorder(clpse, Loading)
+clpse
+# Some loading on Personal Moral Norm (0.7)
+
+# Perceived Response Efficacy
+## Intercorrelation -> none, only one indicator
+icpre <- evalmm %>% filter(Construct == "Perceived Response Efficacy")
+## cross-loadings
+clpre <- data.frame(Indicator = character(),
+                       Construct = character(),
+                       Loading = double ())
+for (i in 1:length(icpre$Indicator)){
+  x <- icpre$Indicator[i]
+  clpre <- clpre %>% rbind(data.frame(Indicator =  {{x}},
+                                            Construct = names(sumfs$validity$cross_loadings[{{x}},]),
+                                            Loading = sumfs$validity$cross_loadings[{{x}},]))
+  
+}
+data.table::setorder(clpre, Loading)
+clpre
+# Some loading on Personal Moral Norm (0.64)
+
+# Perceived Response Costs
+## Intercorrelation -> none, only one indicator
+icprc <- evalmm %>% filter(Construct == "Perceived Response Costs")
+## cross-loadings
+clprc <- data.frame(Indicator = character(),
+                       Construct = character(),
+                       Loading = double ())
+for (i in 1:length(icprc$Indicator)){
+  x <- icprc$Indicator[i]
+  clprc <- clprc %>% rbind(data.frame(Indicator =  {{x}},
+                                            Construct = names(sumfs$validity$cross_loadings[{{x}},]),
+                                            Loading = sumfs$validity$cross_loadings[{{x}},]))
+  
+}
+data.table::setorder(clprc, Loading)
+clprc
+```
+
 
 # Evaluation of the formative measurement model
 ```{r for-eval prep, echo = FALSE, include=FALSE}
@@ -158,33 +233,6 @@ forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Ind
 ```
 ## Convergent validity
 To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
-
-<!-- # ```{r for-eval rapse, echo=FALSE} -->
-<!-- # # Unfortunately, this has to be done partially manually -->
-<!-- # # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs -->
-<!-- # plot(rapse, title = "Redundancy Analysis Perceived Self-Efficacy") -->
-<!-- # sumrapse <- summary(rapse) -->
-<!-- # # For the final dataframe, you should set a custom name and put the the name of the construct -->
-<!-- # cvpse <- data.frame(Construct = "Perceived Self-Efficacy", 'C.V.R^2' = sumrapse$paths[1], 'C.V.PC' = sumrapse$paths[3]) -->
-<!-- # ``` -->
-<!-- #  -->
-<!-- # ```{r for-eval rapre, echo=FALSE} -->
-<!-- # # Unfortunately, this has to be done partially manually -->
-<!-- # # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs -->
-<!-- # plot(rapre, title = "Redundancy Analysis Perceived Response Efficacy") -->
-<!-- # sumrapre <- summary(rapre) -->
-<!-- # # For the final dataframe, you should set a custom name and put the the name of the construct -->
-<!-- # cvpre <- data.frame(Construct = "Perceived Response Efficacy", 'C.V.R^2' = sumrapre$paths[1], 'C.V.PC' = sumrapre$paths[3]) -->
-<!-- # ``` -->
-<!-- #  -->
-<!-- # ```{r for-eval raprc, echo=FALSE} -->
-<!-- # # Unfortunately, this has to be done partially manually -->
-<!-- # # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs -->
-<!-- # plot(raprc, title = "Redundancy Analysis Perceived Response Costs") -->
-<!-- # sumraprc <- summary(raprc) -->
-<!-- # # For the final dataframe, you should set a custom name and put the the name of the construct -->
-<!-- # cvprc <- data.frame(Construct = "Perceived Response Costs", 'C.V.R^2' = sumraprc$paths[1], 'C.V.PC' = sumraprc$paths[3]) -->
-<!-- # ``` -->
 
 ```{r for-eval radn, echo=FALSE}
 # Unfortunately, this has to be done partially manually
@@ -204,14 +252,6 @@ sumrain <- summary(rain)
 cvin <- data.frame(Construct = "Injunctive Norm", 'C.V.R^2' = sumrain$paths[1], 'C.V.PC' = sumrain$paths[3])
 ```
 
-<!-- # ```{r for-eval rabi, echo=FALSE} -->
-<!-- # # Unfortunately, this has to be done partially manually -->
-<!-- # # Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs -->
-<!-- # plot(rabi, title = "Redundancy Analysis Behavioral Intention") -->
-<!-- # sumrabi <- summary(rabi) -->
-<!-- # # For the final dataframe, you should set a custom name and put the the name of the construct -->
-<!-- # cvbi <- data.frame(Construct = "Behavioral Intention", 'C.V.R^2' = sumrabi$paths[1], 'C.V.PC' = sumrabi$paths[3]) -->
-<!-- # ``` -->
 ```{r for-eval cv,echo=FALSE, include=FALSE}
 # put together all dataframes, this has also to be done manually
 forevalci <- bind_rows(
@@ -302,7 +342,6 @@ forevalmm <- forevalbase %>%
 colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
-
 ```{r for-eval, echo=FALSE}
 datatable(forevalmm,
           filter = 'top',
@@ -332,17 +371,6 @@ datatable(forevalmm,
 
 ## Results of the evaluation of the formative measurement model
 There are no issues with collinearity as measured with VIF, and all indicators are significant and relevant. Convergent validity is established for all constructs.
-
-<!-- # ```{r redundancy analyis, echo = FALSE, include=FALSE} -->
-<!-- # # Perceived Self-Efficacy -->
-<!-- # unlist(sumrapse$descriptives$correlations$items)[rapse$mmMatrix[3,2],rapse$mmMatrix[1:2,2]] -->
-<!-- # # Perceived Response Efficacy -->
-<!-- # unlist(sumrapre$descriptives$correlations$items)[rapre$mmMatrix[3,2],rapre$mmMatrix[1:2,2]] -->
-<!-- # # Perceived Response Costs -->
-<!-- # unlist(sumraprc$descriptives$correlations$items)[raprc$mmMatrix[3,2],raprc$mmMatrix[1:2,2]] -->
-<!-- # # Behavioral Intention -->
-<!-- # unlist(sumrabi$descriptives$correlations$items)[rabi$mmMatrix[3,2],rabi$mmMatrix[1:2,2]] -->
-<!-- # ``` -->
 
 
 # Evaluation of the formative higher-order constructs
