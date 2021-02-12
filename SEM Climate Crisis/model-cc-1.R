@@ -36,13 +36,16 @@ sm <- relationships(
 
 
 #model <- estimate_pls(data, mm, sm)
-#saveRDS(model, "Models/model-cc-1.RDS")
-model <- readRDS("Models/model-cc-1.RDS")
+#saveRDS(model, "SEM Climate Crisis/Models/model-cc-1.RDS")
+model <- readRDS("SEM Climate Crisis/Models/model-cc-1.RDS")
 plot(model)
 #bootmodel <- bootstrap_model(model, nboot = 5000)
-#saveRDS(bootmodel, "Models/model-boot-cc-1.RDS")
-bootmodel <- read_rds("Models/model-boot-cc-1.RDS")
+#saveRDS(bootmodel, "SEM Climate Crisis/Models/model-boot-cc-1.RDS")
+bootmodel <- read_rds("SEM Climate Crisis/Models/model-boot-cc-1.RDS")
 plot(bootmodel)
+fsmodel <- model$first_stage_model
+# bootfsmodel <-  bootstrap_model(fsmodel, nboot = 5000)
+# saveRDS(bootfsmodel, "SEM Climate Crisis/Models/model-fs-boot-cc-1.RDS")
 
 # Models for estimation of convergent validity for formative constructs
 # Perceived Self-Efficacy
