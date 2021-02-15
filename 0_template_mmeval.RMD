@@ -52,12 +52,12 @@ plot(bootmodel, measurement_only = TRUE)
 ```{r eval-df, echo = FALSE, include=FALSE}
 # Base DF
 evalmm <- data.frame(Construct = model$mmMatrix[,1],
-                           Type = ifelse(grepl("HOCA", model$mmMatrix[,3]),
+                           Type = ifelse(grepl("HOCB", model$mmMatrix[,3]),
                                          "HOC", "Construct"),
                            Mode = dplyr::recode(model$mmMatrix[,3],
                                          "A" = "reflective",
                                          "B" = "formative",
-                                         "HOCA" = "higher-order"),
+                                         "HOCB" = "higher-order"),
                            Indicator.or.LOC = model$mmMatrix[,2])
 ```
 
