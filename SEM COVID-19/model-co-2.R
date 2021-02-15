@@ -17,19 +17,19 @@ mm <- constructs(
   composite("Perceived Self-Efficacy", single_item("CORB10")),
   composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
   composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
-  higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), mode_B),
+  higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
   composite("Benevolence", multi_items("CODI", 1:3)),
   composite("Competence", multi_items("CODI", 4:6)),
   composite("Integrity", multi_items("CODI", 7:9)),
-  higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), mode_B),
+  higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
   composite("Knowledge", single_item("COKN")),
   composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
   composite("Perceived Severity", multi_items("COTB", 4:6)),
-  higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), mode_B),
+  higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
   composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
   composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
   composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
-  higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), mode_B),
+  higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
   composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
 )
 
@@ -40,28 +40,28 @@ sm <- relationships(
 
 
 # model <- estimate_pls(data, mm, sm)
-#saveRDS(model, "SEM COVID-19/Models/model-co-2.RDS")
-model <- readRDS("SEM COVID-19/Models/model-co-2.RDS")
-plot(model)
-summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
+# saveRDS(model, "SEM COVID-19/Models/model-co-2.RDS")
+# model <- readRDS("SEM COVID-19/Models/model-co-2.RDS")
+# plot(model)
+# summo <- summary(model)
+# sumfs <- summary(model$first_stage_model)
 # bootmodel <- bootstrap_model(model, nboot = 5000)
 # saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-2.RDS")
-bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-2.RDS")
-them <- seminr_theme_create(construct.compositeA.arrow = "forward", construct.compositeA.use_weights = TRUE, plot.adj = FALSE)
-seminr_theme_set(them)
-modelfull <- plot(bootmodel)
-png(file = "preliminary-co-model-full.png")
-modelfull
-dev.off()
-modelstructure <- plot(bootmodel, structure_only = TRUE)
-png(file = "preliminary-co-model-structural.png")
-modelstructure
-dev.off()
+# bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-2.RDS")
+# them <- seminr_theme_create(construct.compositeA.arrow = "forward", construct.compositeA.use_weights = TRUE, plot.adj = FALSE)
+# seminr_theme_set(them)
+# modelfull <- plot(bootmodel)
+# png(file = "preliminary-co-model-full.png")
+# modelfull
+# dev.off()
+# modelstructure <- plot(bootmodel, structure_only = TRUE)
+# png(file = "preliminary-co-model-structural.png")
+# modelstructure
+# dev.off()
 
 sumbomo <- summary(bootmodel)
-# bootfsmodel <-  bootstrap_model(model$first_stage_model, nboot = 5000)
-# saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-2.RDS")
+bootfsmodel <-  bootstrap_model(model$first_stage_model, nboot = 5000)
+saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-2.RDS")
 
 # Models for estimation of convergent validity for formative constructs
 # # Perceived Self-Efficacy
