@@ -119,15 +119,17 @@ datatable(refevalmm,
           rownames = FALSE,
           colnames = c("Loading" = 3,
                         "Cronbach\'s alpha" = 5, 
-                       "Composite reliability" = 6, 
-                       "1 in HTMT CI" = 7),
+                       "Composite reliability" = 6,
+                       "Construct reliability" = 7,
+                       "1 in HTMT CI" = 8),
           caption = 'Results of the reflective measurement model evaluation') %>%
-  formatRound(3:6,
+  formatRound(3:7,
               digits = 3) %>%
-  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.7), values = c('#ffe5e5', '#ff9999', '#00'))) %>%
+  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.708), values = c('#ff9999', '#ffe5e5', '#00'))) %>%
   formatStyle('AVE', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.95,0.999), values = c('#ff9999', '#00', '#ff9999', '#00'))) %>%
-  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.95,0.999), values = c('#ff9999', '#00', '#ff9999', '#00'))) %>%
+  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
+  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00', '#ffe5e5', '#ff9999', '#00'))) %>%
+    formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
   formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
