@@ -13,19 +13,19 @@ mm <- constructs(
   composite("Perceived Self-Efficacy", multi_items("CCRB", 1:3), mode_B),
   composite("Perceived Response Efficacy", multi_items("CCRB", 4:6), mode_B),
   composite("Perceived Response Costs", multi_items("CCRB", 7:9), mode_B),
-  higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), mode_B),
+  higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights = mode_B),
   composite("Benevolence", multi_items("CCDI", 1:3)),
   composite("Competence", multi_items("CCDI", 4:6)),
   composite("Integrity", multi_items("CCDI", 7:9)),
-  higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), mode_B),
+  higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
   composite("Knowledge", single_item("CCKN")),
   composite("Perceived Susceptibility", multi_items("CCTB", 1:3)),
   composite("Perceived Severity", multi_items("CCTB", 4:6)),
-  higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), mode_B),
+  higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
   composite("Personal Moral Norm", multi_items("CCPN", 1:3)),
   composite("Descriptive Norm", multi_items("CCDN", 1:2), mode_B),
   composite("Injunctive Norm", multi_items("CCIN", 1:2), mode_B),
-  higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), mode_B),
+  higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
   composite("Behavioral Intention", multi_items("CCBI", 1:3), mode_B)
 )
 
@@ -35,12 +35,12 @@ sm <- relationships(
 )
 
 
-#model <- estimate_pls(data, mm, sm)
-#saveRDS(model, "SEM Climate Crisis/Models/model-cc-1.RDS")
+# model <- estimate_pls(data, mm, sm)
+# saveRDS(model, "SEM Climate Crisis/Models/model-cc-1.RDS")
 model <- readRDS("SEM Climate Crisis/Models/model-cc-1.RDS")
 plot(model)
-#bootmodel <- bootstrap_model(model, nboot = 5000)
-#saveRDS(bootmodel, "SEM Climate Crisis/Models/model-boot-cc-1.RDS")
+# bootmodel <- bootstrap_model(model, nboot = 5000)
+# saveRDS(bootmodel, "SEM Climate Crisis/Models/model-boot-cc-1.RDS")
 bootmodel <- read_rds("SEM Climate Crisis/Models/model-boot-cc-1.RDS")
 plot(bootmodel)
 fsmodel <- model$first_stage_model
@@ -57,7 +57,7 @@ smpse <- relationships(
   paths(from = "Perceived Self-Efficacy Formative", to = "Perceived Self-Efficacy Reflective")
 )
 rapse <- estimate_pls(data, mmpse, smpse)
-saveRDS(rapse, "Models//rapse-cc-1.RDS")
+saveRDS(rapse, "SEM Climate Crisis/Models/rapse-cc-1.RDS")
 
 # Perceived Response Efficacy
 mmpre <- constructs(
@@ -68,7 +68,7 @@ smpre <- relationships(
   paths(from = "Perceived Response Efficacy Formative", to = "Perceived Response Efficacy Reflective")
 )
 rapre <- estimate_pls(data, mmpre, smpre)
-saveRDS(rapre, "Models/rapre-cc-1.RDS")
+saveRDS(rapre, "SEM Climate Crisis/Models/rapre-cc-1.RDS")
 
 # Perceived Response Costs
 mmprc <- constructs(
@@ -79,7 +79,7 @@ smprc <- relationships(
   paths(from = "Perceived Response Costs Formative", to = "Perceived Response Costs Reflective")
 )
 raprc <- estimate_pls(data, mmprc, smprc)
-saveRDS(raprc, "Models/raprc-cc-1.RDS")
+saveRDS(raprc, "SEM Climate Crisis/Models/raprc-cc-1.RDS")
 
 # Descriptive Norm
 mmdn <- constructs(
@@ -90,7 +90,7 @@ smdn <- relationships(
   paths(from = "Descriptive Norm Formative", to = "Descriptive Norm Reflective")
 )
 radn <- estimate_pls(data, mmdn, smdn)
-saveRDS(radn, "Models/radn-cc-1.RDS")
+saveRDS(radn, "SEM Climate Crisis/Models/radn-cc-1.RDS")
 
 # Injunctive Norm
 mmin <- constructs(
@@ -101,7 +101,7 @@ smin <- relationships(
   paths(from = "Injunctive Norm Formative", to = "Injunctive Norm Reflective")
 )
 rain <- estimate_pls(data, mmin, smin)
-saveRDS(rain, "Models/rain-cc-1.RDS")
+saveRDS(rain, "SEM Climate Crisis/Models/rain-cc-1.RDS")
 
 # Behavioral Intention
 mmbi <- constructs(
@@ -112,4 +112,4 @@ smbi <- relationships(
   paths(from = "Behavioral Intention Formative", to = "Behavioral Intention Reflective")
 )
 rabi <- estimate_pls(data, mmbi, smbi)
-saveRDS(rabi, "Models/rabi-cc-1.RDS")
+saveRDS(rabi, "SEM Climate Crisis/Models/rabi-cc-1.RDS")
