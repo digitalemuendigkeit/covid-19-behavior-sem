@@ -48,8 +48,20 @@ sumfs <- summary(model$first_stage_model)
 # bootmodel <- bootstrap_model(model, nboot = 5000)
 # saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-2.RDS")
 bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-2.RDS")
-plot(bootmodel)
+them <- seminr_theme_create(construct.compositeA.arrow = "forward", construct.compositeA.use_weights = TRUE, plot.adj = FALSE)
+seminr_theme_set(them)
+modelfull <- plot(bootmodel)
+png(file = "preliminary-co-model-full.png")
+modelfull
+dev.off()
+modelstructure <- plot(bootmodel, structure_only = TRUE)
+png(file = "preliminary-co-model-structural.png")
+modelstructure
+dev.off()
+
 sumbomo <- summary(bootmodel)
+# bootfsmodel <-  bootstrap_model(model$first_stage_model, nboot = 5000)
+# saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-2.RDS")
 
 # Models for estimation of convergent validity for formative constructs
 # # Perceived Self-Efficacy

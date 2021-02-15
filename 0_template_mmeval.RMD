@@ -13,9 +13,12 @@ library(htmltools)
 # Load models and create summaries
 model <- readRDS()
 bootmodel <- readRDS()
+bootfsmodel <- readRDS()
 summo <- summary(model)
+summo$fSquare
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
+sumbofsmo <- summary(bootfsmodel)
 # Load redundancy analysis models
 rapse <- readRDS()
 rapre <- readRDS()
@@ -70,14 +73,17 @@ for (i in 1:nrow(refevalmmbase)){
 cicr <- data.frame(Construct = row.names(sumfs$reliability), 
                    AVE = as.numeric(sumfs$reliability[,3]), 
                    Calpha = as.numeric(sumfs$reliability[,1]),
-                   rhoC = as.numeric(sumfs$reliability[,2]))
+                   rhoC = as.numeric(sumfs$reliability[,2]),
+                   rhoA = as.numeric(sumfs$reliability[,4]))
 #Next step is HTMT
 boothtmtbase <- data.frame(Construct.Rel. = row.names(sumbomo$bootstrapped_HTMT),
                           Lower.CI = as.numeric(sumbomo$bootstrapped_HTMT[,5]),
-                          Upper.CI = as.numeric(sumbomo$bootstrapped_HTMT[,6]))
-#For HTMT evaluation, one should consider only reflective constructs - and HOCs with reflective LOCs
-htmtvec <- c(unique(refevalmmbase$Construct), 
-             unlist(unique(evalmm %>% filter(Indicator.or.LOC %in% unique(refevalmmbase$Construct)) %>% select("Construct"))))
+                          Upper.CI = as.numeric(sumbomo$bootstrapped_HTMT[,6])) %>%
+  rbind(data.frame(Construct.Rel. = row.names(sumbofsmo$bootstrapped_HTMT),
+                          Lower.CI = as.numeric(sumbofsmo$bootstrapped_HTMT[,5]),
+                          Upper.CI = as.numeric(sumbofsmo$bootstrapped_HTMT[,6])))
+#For HTMT evaluation, one should consider only reflective constructs and LOCs
+htmtvec <- c(unique(refevalmmbase$Construct))
 # Transform "Relationships" Column into two distinct columns
 boothtmtsplit <- base::strsplit(boothtmtbase$Construct.Rel., "  ->  ")
 boothtmtsplit1 <- c()
@@ -88,18 +94,11 @@ for (i in 1:length(boothtmtsplit)){
 }
 boothtmt <- (boothtmtbase %>% mutate(Construct.Rel. = NULL, Construct.1 = boothtmtsplit1, Construct.2 = boothtmtsplit2))[,c(3:4,1:2)] %>%
   filter(Construct.1 %in% htmtvec & Construct.2 %in% htmtvec)
-maxhtmtbase <- data.frame(Construct = boothtmt[,1], Max.HTMT =  boothtmt[,4]) %>% 
+maxhtmt <- data.frame(Construct = boothtmt[,1], Max.HTMT =  boothtmt[,4]) %>% 
   rbind(data.frame(Construct = boothtmt[,2], Max.HTMT =  boothtmt[,4])) %>%
   group_by(Construct) %>%
   summarise(Max.HTMT = max(Max.HTMT)) %>%
   mutate('1.in.HTMT.CI' = ifelse(Max.HTMT >=1, TRUE, FALSE))
-`%notin%` <- Negate(`%in%`)
-maxhtmt <- evalmm[,c(1,4)] %>% filter(Indicator.or.LOC %in% unique(refevalmmbase$Construct)) %>%
-  rbind(data.frame(Construct = unique(refevalmmbase$Construct[refevalmmbase$Construct %notin% evalmm$Indicator.or.LOC]),
-                   Indicator.or.LOC = unique(refevalmmbase$Construct[refevalmmbase$Construct %notin% evalmm$Indicator.or.LOC]))) %>%
-  left_join(maxhtmtbase, ) %>% 
-  mutate(Construct = Indicator.or.LOC, Indicator.or.LOC = NULL)
-
 # Make final data frame
 refevalmm <- refevalmmbase %>% cbind(Loadings = refloadings) %>% left_join(cicr) %>% left_join(maxhtmt[,c(1,3)])
 ```
