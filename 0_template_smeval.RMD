@@ -10,13 +10,11 @@ library(tidyverse)
 library(seminr)
 library(DT)
 library(htmltools)
-# library(remotes)
-# remotes::install_github("sem-in-r/pls-predict", ref = "master", force = TRUE)
-# library(PLSpredict)
 # Load models and create summaries
 model <- readRDS()
 bootmodel <- readRDS()
 bootfsmodel <- readRDS()
+proxymodel <- readRDS()
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
@@ -96,7 +94,7 @@ datatable(r2,
           caption = 'In-sample predictive power') %>%
   formatRound(2:3,
               digits = 3) %>%
-  formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.25,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
+  formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
 
 # Effect size
@@ -134,11 +132,28 @@ datatable(f2,
           caption = 'Effect sizes') %>%
   formatRound(3,
               digits = 3) %>%
-  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.02), values = c('#ff9999', '#00')))
+  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
 
 # Out-of-sample predictive power
-Out of sample predictive power cannot be valuated using R, simplePLS seems to be deprecated.
+Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
+If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive power.
+```{r plspredict, echo = FALSE}
+plspre <- predict_pls(proxymodel, noFolds = 10)
+sumplspre <- summary(plspre)
+oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
+  rbind(as.data.frame(sumplspre$LM_out_of_sample)) %>%
+  rbind((as.data.frame(sumplspre$LM_out_of_sample))[1,] - (as.data.frame(sumplspre$PLS_out_of_sample))[1,]) %>%
+  rbind((as.data.frame(sumplspre$LM_out_of_sample))[2,] - (as.data.frame(sumplspre$PLS_out_of_sample))[2,])  %>%
+  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(ncol(sumplspre$PLS_out_of_sample)+1,1:ncol(sumplspre$PLS_out_of_sample))]
+datatable(oospp,
+          options = list(pageLength = nrow(oospp)),
+          rownames = FALSE,
+          caption = 'Out-of-sample predictive power') %>%
+  formatRound(-1,
+              digits = 3) %>%
+  formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
+```
 
 # Significance and relevance of path coefficients
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
@@ -189,8 +204,8 @@ datatable(pcalldf,
           caption = 'Relevance and significance of path coefficients') %>%
   formatRound(c(3:7, 9:10),
               digits = 3) %>%
-  formatStyle(colnames(pcalldf)[9], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
-  formatStyle('p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
+  formatStyle(colnames(pcalldf)[9], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
+  formatStyle('p', backgroundColor = styleInterval(cuts = c(0.049), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
@@ -214,10 +229,10 @@ datatable(sumsm,
           caption = 'Structural Model Summary') %>%
   formatRound(c(3,5:8),
               digits = 3) %>%
-  formatStyle(colnames(sumsm)[5], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Path Coefficient p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
+  formatStyle(colnames(sumsm)[5], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Path Coefficient p', backgroundColor = styleInterval(cuts = c(0.049), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in Path Coefficient CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL)) %>%
-  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.02), values = c('#ff9999', '#00'))) %>%
+  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00'))) %>%
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999')))
 ```
 
