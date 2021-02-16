@@ -75,3 +75,20 @@ smin <- relationships(
 )
 rain <- estimate_pls(data, mmin, smin)
 saveRDS(rain, "SEM Climate Crisis/Models/rain-cc-2-a.RDS")
+
+#Make proxy model for plspredict
+proxymm <- constructs(
+  composite("Response Beliefs", multi_items("CCRB", c(1,4,7)), weights = mode_B),
+  composite("Distrusting Beliefs", multi_items("CCDI", 1:9), weights = mode_B),
+  composite("Knowledge", single_item("CCKN")),
+  composite("Threat Beliefs", multi_items("CCTB", 1:6), weights = mode_B),
+  composite("Personal Moral Norm", multi_items("CCPN",c(1,3))),
+  composite("Subjective Norm", c("CCDN1", "CCDN2", "CCIN1", "CCIN2"), weights = mode_B),
+  composite("Behavioral Intention", single_item("CCBI1"))
+)
+proxysm <- relationships(
+  paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
+  paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+)
+proxymodel <- estimate_pls(data = as.data.frame(data), proxymm, proxysm)
+saveRDS(proxymodel, "SEM Climate Crisis/Models/model-proxy-cc-2-a.RDS")
