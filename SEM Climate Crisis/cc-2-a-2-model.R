@@ -9,10 +9,10 @@ datacrop <- datafull %>% select(starts_with("CC") & !paste0("CCS", 1:4)) %>% fil
 data <- as.matrix(datacrop %>% select(!starts_with("CCKN")) %>% cbind("CCKN" = rowMeans(datacrop %>% select(starts_with("CCKN")))))
 
 
-# In the reflective measurement model, CCPN2 should be tentatively deleted to rectify internal consistency.
 # The paths from Threat Beliefs, Personal Moral Norm, and Subjective Norm to Behavioral Intention are insignificant and the effect sizes are negligible.
-# Therefore, those paths can be removed from the model.
-# Behavior: Diet, i.e. CCBI1, CCRB1, CCRB4, CCRB7
+# Therefore, those constructs can be removed from the model.
+# Concerning lower-order constructs, Perceived Response Costs has no discernible effect on Behavioral Intention, and the path coefficient is insignificant.
+# Therefore, Perceived Response Costs can be removed.
 # Describe measurement model
 mm <- constructs(
   composite("Perceived Self-Efficacy", single_item("CCRB1")),
@@ -33,7 +33,7 @@ sm <- relationships(
 
 
 model <- estimate_pls(data, mm, sm)
-saveRDS(model, "SEM Climate Crisis/Models/model-cc-2-a-2.RDS")
+# saveRDS(model, "SEM Climate Crisis/Models/model-cc-2-a-2.RDS")
 model <- readRDS("SEM Climate Crisis/Models/model-cc-2-a-2.RDS")
 plot(model)
 # bootmodel <- bootstrap_model(model, nboot = 5000)

@@ -1,5 +1,5 @@
 ---
-title: "Climate Crisis Model Iteration 2-a-2 Structural Model Evaluation"
+title: "Climate Crisis Model Iteration 2-a-3-a-1 Structural Model Evaluation"
 output: html_document
 ---
 
@@ -11,10 +11,10 @@ library(seminr)
 library(DT)
 library(htmltools)
 # Load models and create summaries
-model <- readRDS("Models/model-cc-2-a-2.RDS")
-bootmodel <- readRDS("Models/model-boot-cc-2-a-2.RDS")
-bootfsmodel <- readRDS("Models/model-fs-boot-cc-2-a-2.RDS")
-proxymodel <- readRDS("Models/model-proxy-cc-2-a-2.RDS")
+model <- readRDS("Models/model-cc-2-a-3-a-1.RDS")
+bootmodel <- readRDS("Models/model-boot-cc-2-a-3-a-1.RDS")
+bootfsmodel <- readRDS("Models/model-fs-boot-cc-2-a-3-a-1.RDS")
+proxymodel <- readRDS("Models/model-proxy-cc-2-a-3-a-1.RDS")
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
@@ -138,8 +138,7 @@ datatable(f2,
 ```
 
 Again, effect sizes for relationships involving lower-order constructs are very low.
-Specifically, there is no discernible effect of Benevolence, Competence or Integrity.
-On the other hand, there is a medium effect of Distrusting Beliefs on Response Beliefs.
+Specifically, there is no discernible effect of Benevolence.
 The effect of Knowledge on Response Beliefs and its lower-order costructs is also negligible.
 
 # Out-of-sample predictive power
@@ -161,7 +160,7 @@ datatable(oospp,
               digits = 3) %>%
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
-Again, only for Behavioral Intention does the model show out-of-sample predictive power.
+The model does not have out-of-sample predictive power.
 
 # Significance and relevance of path coefficients
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
@@ -219,9 +218,6 @@ datatable(pcalldf,
 All path coefficients not involving lower-order constructs are significant.
 Concerning paths with lower-order constructs, Knowledge has no significant path to Perceived Self-Efficacy.
 Benevolence has no significant path to Perceived Self-Efficacy.
-Integrity has no significant path to Perceived Response Efficacy.
-And Competence has no significant path to either.
-
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
@@ -252,6 +248,3 @@ datatable(sumsm,
 
 # Results summary
 Overall, the model is satisfactory, but in-sample as well as out-sample predictive power is low and effect sizes, with the exception of the effect of Response Beliefs on Behavioral Intention, are as well.
-Competence should be removed from the Distrusting Beliefs higher-order construct because of a lack of effect or significant paths.
-Because of the lack of effect associated with many of the lower-order constructs, splitting up the Response Beliefs constructs and reducing the model from there might lead to better predictive power.
-But this model can also be used as a final point for model comparison.

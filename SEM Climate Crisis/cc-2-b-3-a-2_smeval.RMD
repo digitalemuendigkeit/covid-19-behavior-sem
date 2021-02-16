@@ -138,7 +138,7 @@ datatable(f2,
               digits = 3) %>%
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
-The effect of Perceived Response Efficacy in Behavioral Itention is negligible.
+The effect of Perceived Response Efficacy in Behavioral Intention is negligible.
 The effect of Distrusting Beliefs Benevolence on Response Beliefs and Perceived Response Efficacy is medium, all others effects are small.
 
 # Out-of-sample predictive power

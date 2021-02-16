@@ -1,5 +1,5 @@
 ---
-title: "Template Structural Model Evaluation"
+title: "Climate Crisis Model Iteration 2-b-3-b-2 (Only Heating) Structural Model Evaluation"
 output: html_document
 ---
 
@@ -14,14 +14,11 @@ library(htmltools)
 # remotes::install_github("sem-in-r/pls-predict", ref = "master", force = TRUE)
 # library(PLSpredict)
 # Load models and create summaries
-model <- readRDS()
-bootmodel <- readRDS()
-bootfsmodel <- readRDS()
-proxymodel <- readRDS()
+model <- readRDS("Models/model-cc-2-b-3-b-2.RDS")
+bootmodel <- readRDS("Models/model-boot-cc-2-b-3-b-2.RDS")
+proxymodel <- readRDS("Models/model-proxy-cc-2-b-3-b-2.RDS")
 summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
-sumbofsmo <- summary(bootfsmodel)
 # Set seminr plot theme
 thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
 seminr_theme_set(thm)
@@ -51,20 +48,6 @@ for (i in 1:length(summo$vif_antecedents)){
                                     VIF = summo$vif_antecedents[[{{x}}]][j]))
   }
 }
-locvif <- data.frame('Exogenous Construct' = character(),
-                  'Endogenous Construct' = character(),
-                      VIF = double ())
-for (i in 1:length(sumfs$vif_antecedents)){
-  x = names(sumfs$vif_antecedents[i])
-  for (j in 1:length(sumfs$vif_antecedents[[{{x}}]])){
-    y = names(sumfs$vif_antecedents[[{{x}}]])[j]
-    locvif <- locvif %>% rbind(data.frame('Exogenous Construct' = {{y}},
-                                    'Endogenous Construct' = {{x}},
-                                    VIF = sumfs$vif_antecedents[[{{x}}]][j]))
-  }
-}
-locvif <- locvif %>% filter(!(Exogenous.Construct %in% vif$Exogenous.Construct & Endogenous.Construct %in% vif$Endogenous.Construct))
-vif <- union(vif, locvif)
 datatable(vif,
           filter = 'top',
           options = list(pageLength = nrow(vif)),
@@ -76,18 +59,15 @@ datatable(vif,
               digits = 3) %>%
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999')))
 ```
+There is no structural collinearity as assessed by VIF.
+
 
 # In-sample predictive power
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
 ```{r in-sample pp r^2, echo=FALSE}
-r2hoc <- data.frame(Construct = colnames(summo$paths),
+r2 <- data.frame(Construct = colnames(summo$paths),
                     "R^2" = summo$paths[1,],
                     "AdjR^2" = summo$paths[2,])
-r2loc <- data.frame(Construct = colnames(sumfs$paths),
-                    "R^2" = sumfs$paths[1,],
-                    "AdjR^2" = sumfs$paths[2,]) %>%
-  filter(Construct %notin% r2hoc$Construct)
-r2 <- union(r2hoc, r2loc)
 datatable(r2,
           filter = 'top',
           options = list(pageLength = nrow(r2)),
@@ -97,36 +77,25 @@ datatable(r2,
           caption = 'In-sample predictive power') %>%
   formatRound(2:3,
               digits = 3) %>%
-  formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.25,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
+  formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
+For Perceived Self-Efficacy and Perceived Response Efficacy the model predictiveness is very weak.
+For Behavioral Intention, the model predictiveness is weak.
 
 # Effect size
 Effect size f2² measures the impact of a predictor construct on an endogenous construct. f² $\geq$ 0.35 indicates a large effect, f² $\geq$ 0.15 a medium and f² $\geq$ 0.02 a small effect.
 
 ```{r effect size f^2, echo=FALSE}
-smhoc <- data.frame(model$smMatrix) %>% 
+smloc <- data.frame(model$smMatrix) %>% 
   rename('Exogenous Construct' = source,
          'Endogenous Construct' = target)
-hocf2vec <- c()
-for (i in 1:nrow(smhoc)){
-  x = smhoc[i,1]
-  y = smhoc[i, 2]
-hocf2vec <- append(hocf2vec, summo$fSquare[[{{x}},{{y}}]])  
-}
-hocf2 <- smhoc %>% cbind(hocf2vec) %>% rename('f^2' = 3)
-smloc <- data.frame(model$first_stage_model$smMatrix) %>% 
-  rename('Exogenous Construct' = source,
-         'Endogenous Construct' = target) %>%
-  filter('Exogenous Construct' %notin% smhoc$`Exogenous Construct`)
 locf2vec <- c()
 for (i in 1:nrow(smloc)){
   x = smloc[i,1]
   y = smloc[i, 2]
-locf2vec <- append(locf2vec, sumfs$fSquare[[{{x}},{{y}}]])  
+locf2vec <- append(locf2vec, summo$fSquare[[{{x}},{{y}}]])  
 }
-locf2 <- smloc %>% cbind(locf2vec) %>% rename('f^2' = 3) %>% 
-  filter(!(`Exogenous Construct` %in% hocf2$`Exogenous Construct` & `Endogenous Construct` %in% hocf2$`Endogenous Construct`))
-f2 <- union(hocf2, locf2)
+f2 <- smloc %>% cbind(locf2vec) %>% rename('f^2' = 3)
 datatable(f2,
           filter = 'top',
           options = list(pageLength = nrow(f2)),
@@ -135,8 +104,10 @@ datatable(f2,
           caption = 'Effect sizes') %>%
   formatRound(3,
               digits = 3) %>%
-  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.02), values = c('#ff9999', '#00')))
+  formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
+Knowledge has only a negligible effect on Perceived Self-Efficacy.
+So has Perceived Response Efficacy on Behavioral Intention.
 
 # Out-of-sample predictive power
 Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
@@ -148,15 +119,18 @@ oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
   rbind(as.data.frame(sumplspre$LM_out_of_sample)) %>%
   rbind((as.data.frame(sumplspre$LM_out_of_sample))[1,] - (as.data.frame(sumplspre$PLS_out_of_sample))[1,]) %>%
   rbind((as.data.frame(sumplspre$LM_out_of_sample))[2,] - (as.data.frame(sumplspre$PLS_out_of_sample))[2,])  %>%
-  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(11,1:10)]
+  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(ncol(sumplspre$PLS_out_of_sample)+1,1:ncol(sumplspre$PLS_out_of_sample))]
 datatable(oospp,
           options = list(pageLength = nrow(oospp)),
           rownames = FALSE,
           caption = 'Out-of-sample predictive power') %>%
-  formatRound(2:11,
+  formatRound(-1,
               digits = 3) %>%
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
+
+For the approximation model, the PLS model predicts only CCIBI2 better than the naive linear model.
+Overall, the model has low out-of-sample predictive power.
 
 # Significance and relevance of path coefficients
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
@@ -170,16 +144,7 @@ for (i in 1:length(pcbasesplit)){
   pcbasesplit1 <- append(pcbasesplit1, pcbasesplit[[i]][1])
   pcbasesplit2 <- append(pcbasesplit2, pcbasesplit[[i]][2])
 }
-pclocbase <- rownames_to_column(as.data.frame(sumbofsmo$bootstrapped_paths)) %>% rename (
-  Construct.Rel. = rowname)
-pclocbasesplit <- base::strsplit(pclocbase$Construct.Rel., "  ->  ")
-pclocbasesplit1 <- c()
-pclocbasesplit2 <- c()
-for (i in 1:length(pclocbasesplit)){
-  pclocbasesplit1 <- append(pclocbasesplit1, pclocbasesplit[[i]][1])
-  pclocbasesplit2 <- append(pclocbasesplit2, pclocbasesplit[[i]][2])
-}
-pcdf <- (pcbase %>% 
+pcalldf <- (pcbase %>% 
   mutate('Exogenous Construct' = pcbasesplit1, 
          'Endogenous Construct' = pcbasesplit2,
          Construct.Rel. = NULL,
@@ -187,18 +152,7 @@ pcdf <- (pcbase %>%
          p = pt(abs(pcbase$`T Stat.`), nrow(model$data), lower.tail = FALSE),
          '0 in CI' = ifelse(pcbase$`2.5% CI` < 0 &  pcbase$`97.5% CI` > 0, TRUE, FALSE),)
   )[,c(7:8,1:3,5:6,11,9:10)]
-colnames(pcdf)[9] <- paste0("t(", nrow(model$data), ")")
-pclocdf <- (pclocbase %>% 
-  mutate('Exogenous Construct' = pclocbasesplit1, 
-         'Endogenous Construct' = pclocbasesplit2,
-         Construct.Rel. = NULL,
-         t = abs(pclocbase$`T Stat.`),
-         p = pt(abs(pclocbase$`T Stat.`), nrow(model$data), lower.tail = FALSE),
-         '0 in CI' = ifelse(pclocbase$`2.5% CI` < 0 &  pclocbase$`97.5% CI` > 0, TRUE, FALSE),)
-  )[,c(7:8,1:3,5:6,11,9:10)]
-colnames(pclocdf)[9] <- paste0("t(", nrow(model$data), ")")
-pclocdf <- pclocdf %>% filter(!(`Exogenous Construct` %in% pcdf$`Exogenous Construct` & `Endogenous Construct` %in% pcdf$`Endogenous Construct`))
-pcalldf <- union(pcdf, pclocdf)
+colnames(pcalldf)[9] <- paste0("t(", nrow(model$data), ")")
 datatable(pcalldf,
           filter = 'top',
           options = list(pageLength = nrow(pcalldf)),
@@ -211,11 +165,12 @@ datatable(pcalldf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
+All path coefficients are significant.
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
-sumsm <- pcdf[,-c(3,5:7)] %>% 
-  left_join(hocf2)  %>%
+sumsm <- pcalldf[,-c(3,5:7)] %>% 
+  left_join(f2)  %>%
   left_join(vif %>% rename('Exogenous Construct' = 'Exogenous.Construct',
                            'Endogenous Construct' = 'Endogenous.Construct')) %>%
   rename('Path Coefficient Bootstrap Mean' = 'Bootstrap Mean',
@@ -239,5 +194,6 @@ datatable(sumsm,
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999')))
 ```
 
-# Results summary
 
+# Results summary
+Effect sizes and model predictiveness are overall weak, but on the basis of path coefficients significance, this model can stay as-is.

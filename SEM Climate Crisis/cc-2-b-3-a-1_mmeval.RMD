@@ -217,10 +217,10 @@ bthocldsplit1 <- c()
 bthocldsplit2 <- c()
 for (i in 1:length(bthocldsplit)){
   bthocldsplit1 <- append(bthocldsplit1, bthocldsplit[[i]][1])
-  bthocldsplit2 <- append(bthocldsplit1, bthocldsplit[[i]][2])
+  bthocldsplit2 <- append(bthocldsplit2, bthocldsplit[[i]][2])
 }
-bthocld <- btldbase %>%
-  cbind(data.frame(LOC = btldsplit1, HOC = btldsplit1)) %>%
+bthocld <- bthocldbase %>%
+  cbind(data.frame(LOC = bthocldsplit1, HOC = bthocldsplit2)) %>%
   mutate(Construct.Rel. = NULL,
          Bootstrap.SD.Ld. = NULL,
          '0.in.Ld.CI' = ifelse(Lower.Bounds.CI.Ld. < 0 &  Upper.Bounds.CI.Ld. > 0, TRUE, FALSE),
@@ -264,3 +264,4 @@ All constructs meet quality criteria.
 
 # Results summary
 The measurement model meets quality criteria.
+Structural model evaluation can commence.
