@@ -11,9 +11,13 @@ library(seminr)
 library(DT)
 library(htmltools)
 # Load models and create summaries
+# Load PLS Model
 model <- readRDS()
+# Load bootstrapped PLS Model
 bootmodel <- readRDS()
+# Load bootstrapped first stage PLS model
 bootfsmodel <- readRDS()
+# Load approximation PLS model (no HOCs, data formatted as data.frame)
 proxymodel <- readRDS()
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)

@@ -11,8 +11,11 @@ library(seminr)
 library(DT)
 library(htmltools)
 # Load models and create summaries
+# Load PLS Model
 model <- readRDS()
+# Load bootstrapped PLS Model
 bootmodel <- readRDS()
+# Load bootstrapped first stage PLS model
 bootfsmodel <- readRDS()
 summo <- summary(model)
 summo$fSquare
@@ -316,13 +319,13 @@ datatable(forevalmm,
           caption = 'Results of the formative measurement model evaluation') %>%
   formatRound(c(3:8, 10:12),
               digits = 3) %>%
-  formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.7), values = c('#ff9999', '#00'))) %>%
+  formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.699), values = c('#ff9999', '#00'))) %>%
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
-  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffe5e5', '#00'))) %>%
-  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ffe5e5', '#00'))) %>%
+  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
@@ -442,10 +445,10 @@ datatable(forhocevalmm,
   formatRound(c(3:6, 8:10),
               digits = 3) %>%
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
-  formatStyle(colnames(forhocevalmm)[6], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffe5e5', '#00'))) %>%
-  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forhocevalmm)[6], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ffe5e5', '#00'))) %>%
+  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
