@@ -418,7 +418,7 @@ plot(bootmodel, structure_only = TRUE, title = modelname)
 comparisont <- as.data.frame(t(comparison[,-1]))
 colnames(comparisont) <- comparison[,1]
 comparisont <- cbind(data.frame(Model = colnames(comparison)[-1], 
-                                `R²adj mean` = rowMeans(comparisont, na.rm = TRUE)), comparisont)
+                                `R²adj mean` = rowMeans(comparisont[,-c(10:11)], na.rm = TRUE)), comparisont)
 datatable(comparisont[,-c(5,9:10)],
           rownames = FALSE,
           caption = "Model Comparison") %>% 
