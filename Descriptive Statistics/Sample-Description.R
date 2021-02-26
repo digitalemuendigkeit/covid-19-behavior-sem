@@ -1,17 +1,43 @@
 library(tidyverse)
 library(car)
+library(data.table)
+
 
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
 datafull <- read_rds("Data/S1-data-nm.RDS")
 dataco <- datafull %>% filter(!is.na(COSKN))
 datacc <- datafull %>% filter(!is.na(CCSKN))
 
-test <- car::recode(datafull$SD2,
-                    "'1' = 'female';
-                    '2' = 'male';
-                    '3' = 'other'",
-                    as.factor = TRUE)
+agge <- data.frame(read_csv2("Descriptive Statistics/age-gender-germany.csv", skip = 8))[-c(87:90),-1]
+agge$X2 <- c(0:85)
+agge[agge == "-"] <- NA
+colnames(agge)[1] <- "Age"
+agge <- sapply(agge, as.numeric)
+aggegm <- agge[-c(1:18),1:8]
+aggegf <- agge[-c(1:18),c(1,9:15)]
+aggenm <- agge[-c(1:18),c(1,16:22)]
+aggenf <- agge[-c(1:18),c(1,23:29)]
+aggefull <- as.data.frame(aggegm) %>% transmute(Age = Age,
+                                      German.Male = rowSums(aggegm[,-1], na.rm = TRUE)) %>%
+          left_join(as.data.frame(aggegf) %>% transmute(Age = Age,
+                                                        German.Female = rowSums(aggegf[,-1], na.rm = TRUE))) %>%
+          left_join(as.data.frame(aggenm) %>% transmute(Age = Age,
+                                                        Nongerman.Male = rowSums(aggenm[,-1], na.rm = TRUE))) %>%
+          left_join(as.data.frame(aggenf) %>% transmute(Age = Age,
+                                                        Nongerman.Female = rowSums(aggenf[,-1], na.rm = TRUE))) %>%
+  mutate(Male = German.Male + Nongerman.Male,
+         Female = German.Female + Nongerman.Female)
 
+agebreaks <- c(18,25,30,35,40,45,50,55,60,65,70,75,80,85,500)
+agelabels <- c("18-24","25-29","30-34","35-39","40-44","45-49","50-54","55-59","60-64","65-69","70-74","75-79","80-84","85+")
+
+agudf <- data.frame(Male = double(), Female = double())
+for (i in 1:(length(agebreaks)-1)){
+  agudf <- agudf %>% union(data.frame(Male = sum(aggefull[(aggefull$Age >= agebreaks[i] & aggefull$Age < agebreaks[i+1]), 6]),
+                                      Female = sum(aggefull[(aggefull$Age >= agebreaks[i] & aggefull$Age < agebreaks[i+1]), 7])))
+}
+
+aggefullc <- data.frame(Age.Groups = agelabels) %>% cbind(agudf)
 
 datavis <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
                                                               "1 = 'female';
@@ -97,4 +123,116 @@ datavis <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
                                                                  "1:3 = 'climate crisis';
                                                                  else = 'COVID-19 pandemic'")
                                          )
-head(datavis)
+setDT(datavis)[, Age.Groups := cut(Age,
+                                   breaks = agebreaks,
+                                   right = FALSE,
+                                   labels = agelabels)]
+
+
+# #theme_update(text = element_text(size = 12),
+#              axis.title.x=element_blank(),
+#              axis.ticks.x=element_blank(),
+#              axis.title.y=element_text(angle = 90, vjust = 0.5),
+#              legend.position = 'right',
+#              legend.text = element_text(size = 10),
+#              legend.key = element_blank(),
+#              legend.title = element_blank(),
+#              #legend.spacing.y = unit(0.3, "cm"),
+#              plot.title = element_text(hjust = 0.5),
+#              panel.background = element_blank(),
+#              axis.line.x = element_line(colour = "black"),
+#              panel.grid.major.y = element_line(colour = "#BBBBBB"),
+#              axis.ticks.y = element_line(colour = "#BBBBBB"),
+#              panel.grid.major.x = element_blank())
+
+
+
+cbpaltor <- c("#4477AA", "#EE6677", "#228833", "#CCBB44", "#66CCEE", "#AA3377", "#BBBBBB")
+cbpaltor1 <- sort(cbpaltor)
+cbpaltor2 <- rev(cbpaltor)
+
+genderplot <- ggplot(datavis, aes(fill = str_wrap(Gender), x = Condition)) +
+  geom_bar() +
+  ggtitle("Gender Distribution") +
+  #  theme(aspect.ratio = 1) +
+  scale_fill_manual(values=cbpaltor,  breaks = c("female", "male", "other"))
+genderplot
+
+eduplot <- ggplot(datavis, aes(fill = Education, x = Condition)) +
+  geom_bar() +
+  ggtitle("Education") +
+  scale_fill_manual(values=cbpaltor2)
+eduplot
+
+jobplot <- ggplot(datavis, aes(fill = Occupation, x = Condition)) +
+  geom_bar() +
+  ggtitle("Occupation") +
+  scale_fill_manual(values=cbpaltor)
+jobplot
+
+ageplot <- ggplot(datavis, aes(fill = Condition, x = Age)) +
+  geom_bar(aes(fill = Condition), position="dodge") +
+  ggtitle("Age Distribution") +
+  scale_fill_manual(values=cbpaltor2) +
+  scale_y_continuous(breaks = seq(0,12,5)) +
+  scale_x_continuous(breaks = seq(20,80,20))
+ageplot
+
+agedf <- aggefullc %>%
+  rename(Male.Ger = Male, Female.Ger = Female) %>%
+  left_join(datavis[Gender == "female"] %>% group_by(Age.Groups) %>% summarise(Female.Sam = n())) %>%
+  left_join(datavis[Gender == "male"] %>% group_by(Age.Groups) %>% summarise(Male.Sam = n())) %>%
+  mutate(Pop.Ger = Male.Ger + Female.Ger,
+         Pop.Sam = Male.Sam + Female.Sam) %>%
+  mutate(Male.Ger.p = Male.Ger/sum(Pop.Ger),
+         Female.Ger.p = Female.Ger/sum(Pop.Ger),
+         Female.Sam.p = Female.Sam/sum(Pop.Sam),
+         Male.Sam.p = Male.Sam/sum(Pop.Sam))
+agedfm <- agedf %>% mutate(
+  Female.Ger = -Female.Ger,
+  Female.Sam = -Female.Sam,
+  Female.Ger.p = -Female.Ger.p,
+  Female.Sam.p = -Female.Sam.p
+  )
+# Find out the conversion to percent to rename scales
+max(agedf$Male.Ger)
+
+genderpal <- c("#009988", "#EE7733")
+
+agelong <- agedfm %>%
+  pivot_longer(!Age.Groups, names_to = "Subgroup", values_to = "Count") %>%
+  mutate(Age.Groups = factor(Age.Groups, levels = unique(Age.Groups))) %>%
+  mutate(ageno = as.numeric(Age.Groups) - 0.5)
+agelong <- agelong %>% rbind(agelong %>% filter(Subgroup == "Female.Ger.p" | Subgroup == "Male.Ger.p", Age.Groups == "85+") %>% mutate(ageno = ageno + 1))
+agelong[agelong == "Female.Sam.p"] <- "female"
+agelong[agelong == "Male.Sam.p"] <- "male"
+agelong[agelong == "Female.Ger.p"] <- "female in population"
+agelong[agelong == "Male.Ger.p"] <- "male in population"
+
+pyrplot <- ggplot(agelong, aes(x = Age.Groups, y = Count)) +
+  geom_bar(data = agelong %>% filter(Subgroup == "female"), aes(fill = Subgroup), stat = "identity") +
+  geom_bar(data = agelong %>% filter(Subgroup == "male"), aes(fill = Subgroup), stat = "identity") +
+  geom_step(data = agelong %>% filter(Subgroup == "female in population"), aes(x = ageno, linetype = "female and male")) +
+  geom_step(data = agelong %>% filter(Subgroup == "male in population"), aes(x = ageno, linetype = "female and male")) +
+  coord_flip() +
+  scale_fill_manual(name = "In sample", values = genderpal) +
+  scale_linetype_manual(name = "In population", values = "solid") +
+  scale_y_continuous(name = "Sample count",
+                     breaks = seq(-70/sum(agedf$Pop.Sam), 70/sum(agedf$Pop.Sam), by= 10/sum(agedf$Pop.Sam)),
+                     labels = c(70, 60,50,40,30,20,10,0,10,20,30,40,50,60, 70),
+                     sec.axis = sec_axis(trans =~.*1,name = "Population count",
+                                         breaks = seq(-5000000/sum(agedf$Pop.Ger),5000000/sum(agedf$Pop.Ger),1000000/sum(agedf$Pop.Ger)),
+                                         labels = paste0(as.character(c(5:0,1:5)), "m"))) +
+  labs(title = "Sample composition compared with German population (2019)",
+       x = "Age groups") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+pyrplot
+
+eduplot2 <- ggplot(datavis, aes(fill = Education, x = Education)) +
+  geom_bar() +
+  ggtitle("Education") +
+  scale_fill_manual(values=cbpaltor2) +
+  coord_flip() +
+  scale_x_discrete(limits = rev(levels(datavis$Education)))
+eduplot2
