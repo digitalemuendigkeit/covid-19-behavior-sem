@@ -68,23 +68,23 @@ write_csv(RDprel, "Data/S1-Data-preliminary.csv")
 # 1:3 CO Knowledge c(COKN4, COKN5, COKN6)
 # 6:1 CO c(CODI2, CODI4, CODI9, COTB3, CORB7, CORB8, CORB9, CORB12)
 revcode <-  function(x){dplyr::recode(x,
-                               '1' = 6,
-                               '2' = 5,
-                               '3' = 4,
-                               '4' = 3,
-                               '5' = 2,
-                               '6' = 1,
-                               .default = NaN)}
+                                      '1' = 6,
+                                      '2' = 5,
+                                      '3' = 4,
+                                      '4' = 3,
+                                      '5' = 2,
+                                      '6' = 1,
+                                      .default = NaN)}
 revkncode <-  function(x){dplyr::recode(x,
-                               '1' = 3,
-                               '2' = 2,
-                               '3' = 1,
-                               .default = NaN)}
+                                        '1' = 3,
+                                        '2' = 2,
+                                        '3' = 1,
+                                        .default = NaN)}
 RDCompR <- RDComp %>%
   mutate_at(c("BFE1", "BFC1", "BFA2", "BFC2", "BFO2", "BFN3",
-                                  "CCDI2", "CCDI4", "CCDI9", "CCTB2", "CCRB7", "CCRB8", "CCRB9", "CCRB12",
-                                  "CODI2", "CODI4", "CODI9", "COTB3", "CORB7", "CORB8", "CORB9", "CORB12"),
-                                list(revcode)) %>%
+              "CCDI2", "CCDI4", "CCDI9", "CCTB2", "CCRB7", "CCRB8", "CCRB9", "CCRB12",
+              "CODI2", "CODI4", "CODI9", "COTB3", "CORB7", "CORB8", "CORB9", "CORB12"),
+            list(revcode)) %>%
   mutate_at(c("CCKN1", "CCKN3", "CCKN5", "CCKN6", "COKN4", "COKN5", "COKN6"),
             list(revkncode))
 RDCompR
@@ -211,8 +211,21 @@ write_csv2(dataincluded, "Data/S1-data-recontact.csv")
 write_rds(dataincluded, "Data/S1-data-recontact.RDS")
 write_csv2(data.frame(dataincluded$gid), "Data/Recontact-List.csv")
 
-# Data for working on, 875 responses
-s1dataqualcl <- (datacareless %>% filter(Duration..in.seconds. >= durtm/2 & (pattern.blocks <= 2 |is.na(pattern.blocks))))[,c(3, 145, 143, 6, 8, 4, 5, 7, 9:142)]
+# Last check: Implausible responses in free text fields
+# High Age
+datacareless[datacareless$SD1 > 90,]
+# 2 respondents claim to be 100 years old, household size is also implausible > remove SD1 == 100
+# Large household size
+datacareless[datacareless$SD6 > 6,]
+# Same implausible respondents as before
+# Many known persons with COVID 19
+datacareless[datacareless$COS5 > 20,]
+#Many of those answers are implausible, exclude all starting with > remove COS5 >= 55
+
+# Data for working on, 868 responses
+s1dataqualcl <- (datacareless %>%
+                   filter(Duration..in.seconds. >= durtm/2 & (pattern.blocks <= 2 |is.na(pattern.blocks))))[,c(3, 145, 143, 6, 8, 4, 5, 7, 9:142)] %>%
+  filter(SD1 < 100 & COS5 < 55)
 write_csv2(s1dataqualcl, "Data/S1-data-qualcl.csv")
 write_rds(s1dataqualcl, "Data/S1-data-qualcl.RDS")
 
