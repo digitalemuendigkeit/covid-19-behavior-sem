@@ -158,6 +158,7 @@ As these are lower-order constructs of the same higher-order construct, this doe
 Additionally, the CIs for Perceived Susceptibility and Perceived Severity, as well as for Personal Moral Norm and Perceived Severity contain 0.9. 
 For Perceived Susceptibility and Perceived Severity, this does again not pose a problem as they are LOCs associated with the same HOC. 
 For Personal Moral Norm and Perceived Severity, however, further indicator deletion in order to rectify discriminant validity could raise the HTMT bootstrap ratio.
+The indicator with the greatest overall intercorrelation is CCPN2.
 
 ```{r indicator deletion personal norm, echo = FALSE, include = FALSE}
 as.data.frame(unlist(summo$descriptives$correlations$items)) %>% select(starts_with("CCPN")) %>% rownames_to_column %>% filter(str_detect(rowname, "CCPN"))
@@ -424,7 +425,7 @@ Convergent validity cannot be established for any of the Response Beliefs lower-
 Consequently, four distinct models should be estimated for each of the behaviors (formative: diet, driving, heating, and redundant reflective: general behavior).
 There is no collinearity as indicated by the VIF.
 In the context of this model, CCRB8 shows a lack of significance and relevance.
-However, in its distinct behavioral model, it should be at first retained.
+However, in its distinct behavioral model, it should be initially retained.
 
 # Evaluation of the formative higher-order constructs
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
