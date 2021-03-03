@@ -62,11 +62,13 @@ write_csv(RDprel, "Data/S1-Data-preliminary.csv")
 
 # Find straight liners and diagonal liners
 # Reverse reverse-coded data
-# 6:1 Psychological c(BFE1, BFC1, BFA2, BFC2, BFO2, BFN3)
+# 6:1 Psychological c(BFE1, BFC1, BFA2, BFC2, BFO2)
+# BFN3 is wrongly not reversed in data -> recode twice
 # 1:3 CC Knowledge c(CCKN1, CCKN3, CCKN5, CCKN6)
 # 6:1 CC c(CCDI2, CCDI4, CCDI9, CCTB2, CCRB7, CCRB8, CCRB9, CCRB12)
 # 1:3 CO Knowledge c(COKN4, COKN5, COKN6)
 # 6:1 CO c(CODI2, CODI4, CODI9, COTB3, CORB7, CORB8, CORB9, CORB12)
+RDComp <- RDComp %>% mutate_at("BFN3", revcode)
 revcode <-  function(x){dplyr::recode(x,
                                       '1' = 6,
                                       '2' = 5,

@@ -33,3 +33,16 @@ data1skvcritco <- data1skco %>% filter(Skewness >= 5 | Skewness <= -5 | Kurtosis
 data1normal <-data1 %>% select(!c("COKN1", "COKN2_1", "COKN6", "CORB3"))
 write_csv2(data1normal, "Data/S1-data-nd.csv")
 write_rds(data1normal, "Data/S1-data-nd.RDS")
+
+# Survey 2
+datafull <- read_rds("Data/data-qualcl.RDS")
+# Additional questions
+data2 <- as.matrix(datafull %>% select(c(paste0("COB", 1:4),paste0("CCB",1:4))) %>% filter(!is.na(COB1)))
+data2sk <- data.frame(Item = colnames(data2), Skewness = skew(data2), Kurtosis = kurtosi(data2))
+data2skcrit <- data2sk %>% filter(Skewness >= 1 | Skewness <= -1 | Kurtosis >= 1 | Kurtosis <= -1)
+# All CO items and CCB3 exhibit skewness & kurtosis > abs(1)
+data2skvcrit <- data2sk %>% filter(Skewness >= 5 | Skewness <= -5 | Kurtosis >= 5 | Kurtosis <= -5)
+# exclude COB1, COB3, COB4
+datafullnormal <- datafull %>% select(!data2skvcrit$Item)
+write_csv2(datafullnormal, "Data/data-nd.csv")
+write_rds(datafullnormal, "Data/data-nd.RDS")
