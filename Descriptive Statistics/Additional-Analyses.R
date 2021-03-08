@@ -4,321 +4,199 @@ library(psych)
 #Import Data
 # Data used is nonnormal, missing values are not treated
 datafull <- read_rds("Data/data-qualcl.RDS")[,-c(1:5,143:145)]
-# Replace 7 for CCDN3 and CCIN3 with NA
+# Replace 7 for CCDN3, CCIN3, CODN3 and COIN3 with NA
 datafull$CCDN3[datafull$CCDN3 == 7] <- NA
 datafull$CCIN3[datafull$CCIN3 == 7] <- NA
+datafull$CODN3[datafull$CODN3 == 7] <- NA
+datafull$COIN3[datafull$COIN3 == 7] <- NA
 
 #Make scales from personality data
-dataper <- data.frame(Variable = c(rep("Extraversion",3),
-                                   rep("Agreeableness",3),
-                                   rep("Conscientiousness",3),
-                                   rep("Neuroticism",3),
-                                   rep("Openness.to.Experience",3),
-                                   rep("Internal.Control.Conviction",2),
-                                   rep("External.Control.Conviction",2)),
-                     Item = c(paste0("BFE", 1:3),
-                              paste0("BFA", 1:3),
-                              paste0("BFC", 1:3),
-                              paste0("BFN", 1:3),
-                               paste0("BFO", 1:3),
-                               paste0("IC", 1:2),
-                               paste0("EC", 1:2))
-                                   )
-dataperun <- data.frame(Variable = unique(dataper$Variable))
-dataperunalpha <- c()
+anper <- data.frame(Variable = c(rep("Extraversion",3),
+                                 rep("Agreeableness",3),
+                                 rep("Conscientiousness",3),
+                                 rep("Neuroticism",3),
+                                 rep("Openness.to.Experience",3),
+                                 rep("Internal.Control.Conviction",2),
+                                 rep("External.Control.Conviction",2)),
+                    Item = c(paste0("BFE", 1:3),
+                             paste0("BFA", 1:3),
+                             paste0("BFC", 1:3),
+                             paste0("BFN", 1:3),
+                             paste0("BFO", 1:3),
+                             paste0("IC", 1:2),
+                             paste0("EC", 1:2))
+)
+anperun <- data.frame(Variable = unique(anper$Variable))
+anperunalpha <- c()
 # Analyze Cronbach's Alpha
-for (i in 1:nrow(dataperun)){
-  x = dataperun[i,1]
-  dataperunalpha <- append(dataperunalpha,
-                          ((unlist(psych::alpha(datafull[unlist((filter(dataper, Variable == {{x}}))["Item"])], check.keys = FALSE)[1]))[3]))
-  print(psych::alpha(datafull[unlist((filter(dataper, Variable == {{x}}))["Item"])], check.keys = FALSE))
+for (i in 1:nrow(anperun)){
+  x = anperun[i,1]
+  anperunalpha <- append(anperunalpha,
+                         ((unlist(psych::alpha(datafull[unlist((filter(anper, Variable == {{x}}))["Item"])], check.keys = FALSE)[1]))[2]))
+  print(psych::alpha(datafull[unlist((filter(anper, Variable == {{x}}))["Item"])], check.keys = FALSE))
 }
-dataperun <- dataperun %>% cbind(Cs.Alpha = dataperunalpha)
-dataperalpha <- dataper %>% left_join(dataperun)
-# Cronbach's alpha is insufficient for all constructs
+anperun <- anperun %>% cbind(Cs.Alpha = anperunalpha)
+anperalpha <- anper %>% left_join(anperun)
+# Cronbach's alpha is insufficient for all constructs except Big Five Neuroticism
 # BFE: No alpha >0.7 attainable through item deletion, choose item with highest item-total correlation (r.drop): BFE2
 # BFA: No alpha > 0.7 attainable through item deletion, choose item with highest item-total correlation: BFA1
 # BFC: see above,choose BFC2
-# BFN: Drop BFN3
 # BFO: Choose BFO3
 # IC: Choose IC2 (content)
 # EC: Choose EC1 (content)
-write_csv2(mmper1alpha, "Evaluation_Data/Statistical_Analysis/csalpha-per.csv")
+keepper <- c("BFE2", "BFA1", "BFC2", "BFN1", "BFN2", "BFN3", "BFO3", "IC2", "EC1")
+codeper <- anper %>% filter(Item %in% keepper)
 
-psych::alpha(datafull %>% select(starts_with("BFE")), keys = TRUE)
-
-
-#Define variables for correlation analysis
-datavars1 <- datawosk[,1]
-datavars1
+# Make scales for CC data
 
 #Climate Change
-mmcc <- (readRDS("model-cc-1.rds"))$measurement_model
-mmcc1a <- data.frame(Construct = (unlist(mmcc))[c(T, F, F)],
-                     Indicator = (unlist(mmcc))[c(F, T, F)]) %>%
-  filter(str_detect(Indicator, "^CC")) %>%
-  cbind(Abbreviation = c(rep("CCAM",3),
-                         rep("CCBI",3),
-                         rep("CCKN",7),
-                         rep("CCPM",3),
-                         rep("CCPSE",4),
-                         rep("CCPRE",4),
-                         rep("CCPRC",4),
-                         rep("CCSNFR",2),
-                         rep("CCSNFA",2),
-                         rep("CCSNCO",2),
-                         rep("CCPSUS",3),
-                         rep("CCPSEV",3),
-                         rep("CCTRB",3),
-                         rep("CCTRC",3),
-                         rep("CCTRI",3),
-                         rep("CCDIB",3),
-                         rep("CCDIC",3),
-                         rep("CCDII",3)))
-mmcc1 <- mmcc1a %>% union(data.frame(Construct = c(rep("Past Behavioral Intention",3),
-                                                   rep("Past Behavior",3),
-                                                   rep("Behavior",3)),
-                                     Indicator = c(paste0("CCPBI", 1:3),
-                                                   paste0("CCPBC", 1:3),
-                                                   paste0("CCBC", 1:3)),
-                                     Abbreviation = c(rep("CCPBI", 3),
-                                                      rep("CCPB", 3),
-                                                      rep("CCB", 3))))
-mmcc1
-mmcc1un <- data.frame(Abbreviation = unique(mmcc1$Abbreviation))
-mmcc1un
-mmcc1unalpha <- c()
+mmcc <- (readRDS("SEM Climate Crisis/Models/model-cc-1.RDS"))$measurement_model
+ancc <- data.frame(Variable = (unlist(mmcc))[c(T, F, F)],
+                   Item = (unlist(mmcc))[c(F, T, F)]) %>%
+  filter(!(Item %in% Variable)) %>%
+  filter(!(Item == "CCKN")) %>%
+  rbind(data.frame(Variable = c(rep("Descriptive Norm", 2),
+                                 rep("Injunctive Norm", 2),
+                                 paste0(c("Perceived Self-Efficacy",
+                                          "Perceived Response Efficacy",
+                                          "Perceived Response Costs",
+                                          "Behavioral Intention"),
+                                        c(rep(" Diet", 4),
+                                          rep(" Heating",4),
+                                          rep(" Driving",4),
+                                          rep(" General",4),
+                                          rep("",4))),
+                                 "Subjective Knowledge",
+                                paste0("Behavior", c(rep("",4),
+                                                     " Diet",
+                                                     " Heating",
+                                                     " Driving",
+                                                     " General"))
+  ),
+  Item = c(paste0("CC",
+                       c(paste0("DN", 3:4),
+                         paste0("IN", 3:4),
+                         paste0("RB", 1:3),
+                         "BI1",
+                         paste0("RB", 4:6),
+                         "BI2",
+                         paste0("RB", 7:9),
+                         "BI3",
+                         rep(c(paste0("RB",10:12),
+                               "BI4"),2),
+                         "SKN",
+                         rep(paste0("B", 1:4),2))))
+  ))
+anccun <- data.frame(Variable = unique(ancc$Variable))
+anccunalpha <- c()
 # Analyze Cronbach's Alpha
-for (i in 1:nrow(mmcc1un)){
-  x = mmcc1un[i,1]
-  mmcc1unalpha <- append(mmcc1unalpha,
-                         ((unlist(psych::alpha(datawosk[unlist((filter(mmcc1, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE)[1]))[3]))
-  print(psych::alpha(datawosk[unlist((filter(mmcc1, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE))
+for (i in 1:nrow(anccun)){
+  x = anccun[i,1]
+  anccunalpha <- append(anccunalpha,
+                      ifelse(test = ncol(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])]) > 1,
+                         ((unlist(psych::alpha(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])], check.keys = FALSE)[1]))[2]), NA))
+   # print(ifelse(test = ncol(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])]) > 1,
+   #              psych::alpha(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])], check.keys = FALSE), NA))
 }
-mmcc1unal <- mmcc1un %>% cbind(Cs.Alpha = mmcc1unalpha)
-mmcc1unal
-mmcc1alpha <- mmcc1 %>% left_join(mmcc1unal)
-mmcc1alpha
+anccun <- anccun %>% cbind(Cs.Alpha = anccunalpha)
+anccalpha <- ancc %>% left_join(anccun)
+# Cronbach's alpha is sufficient for
+# CC Perceived Self-Efficacy
+# CC Perceived Response Efficacy
+# CC Distrusting Beliefs Benevolence, Competence, Integrity
+# CC Perceived Susceptibility
+# CC Perceived Severity
+# CC Personal Moral Norm
+# CC Descriptive Norm
+# CC Injunctive Norm
+# CC Behavioral Intention
+# CC Behavior
+# Cronbach's alpha is insufficient for
+# CC Perceived Response Costs
+psych::alpha(datafull %>% select(c(paste0("CCRB", c(7:9,12)))))
+# Without CCRB9:
+psych::alpha(datafull %>% select(c(paste0("CCRB", c(7:8,12)))))
+# Use CCRB12
+codecc <- ancc %>% filter(!(Item %in% paste0("CCRB", 7:9))) %>%
+  mutate(Variable = paste0("Climate Crisis ", Variable))
 
-# CCAM is bad, drop CCAM1 to get above 0.6
-# CCBI is at 0.69 but dropping any item would decrease alpha, retain as is
-# CCKN is bad, but doesn't have to be good
-# CCPM is satisfactory
-# CCPSE: drop CCRB4
-# CCPRE: drop CCRB5, CCRB10
-# CCPRC: would not get better, retain all
-# CCSNFR is bad, retain both in order to not get a single-item measure
-# CCSNFA is okay, retain both
-# CCSNCO is okay, retain both
-# CCPSUS is satisfactory
-# CCPSEV as well
-# all CCTR, CCDI are good
-#for CCPBI, CCPB, CCB alpha would not rise with indicator deletion
-
-mmcc2 <- mmcc1 %>% filter(Indicator != "CCAM1" &
-                            Indicator != "CCKN6" &
-                            Indicator != "CCRB4" &
-                            Indicator != "CCRB5" &
-                            Indicator != "CCRB10")
-mmcc2
-mmcc2un <- data.frame(Abbreviation = unique(mmcc2$Abbreviation))
-mmcc2un
-mmcc2unalpha <- c()
-# Analyze Cronbach's Alpha
-for (i in 1:nrow(mmcc2un)){
-  x = mmcc2un[i,1]
-  mmcc2unalpha <- append(mmcc2unalpha, ifelse(nrow(filter(mmcc2, Abbreviation == {{x}}))==1,
-                                              1,
-                                              ((unlist(psych::alpha(datawosk[unlist((filter(mmcc2, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE)[1]))[2])))
-  print(ifelse(nrow(filter(mmcc2, Abbreviation == {{x}}))==1,
-               "no-alpha",
-               psych::alpha(datawosk[unlist((filter(mmcc2, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE)))
-}
-mmcc2unal <- mmcc2un %>% cbind(Cs.Alpha = mmcc2unalpha)
-mmcc2unal
-mmcc2alpha <- mmcc2 %>% left_join(mmcc2unal)
-mmcc2alpha
-write_csv2(mmcc2alpha, "Evaluation_Data/Statistical_Analysis/csalpha-cc.csv")
-
-#All important alphas are okay
-#Now add data as specified to datavars
-datavars2 <- datavars1
-for (i in 1:nrow(mmcc2unal)){
-  x = mmcc2unal[i,1]
-  datavars2 <- datavars2 %>%
-    cbind(Bob = rowMeans((datawosk %>% select(unlist((mmcc2alpha %>% filter(Abbreviation == {{x}}))[,2]))), na.rm = TRUE))
-}
-colnames(datavars2)
-colnames(datavars2) <- c("Response.ID.1", unlist(mmcc2unal$Abbreviation))
-datavars2
+# Make scales for CO data
 
 #COVID-19
-mmco <- (readRDS("model-co-1.rds"))$measurement_model
-mmco1a <- data.frame(Construct = (unlist(mmco))[c(T, F, F)],
-                     Indicator = (unlist(mmco))[c(F, T, F)]) %>%
-  filter(str_detect(Indicator, "^CO")) %>%
-  cbind(Abbreviation = c(rep("COAM",3),
-                         rep("COBI",3),
-                         rep("COKN",4),
-                         rep("COPM",3),
-                         rep("COPSE",4),
-                         rep("COPRE",4),
-                         rep("COPRC",4),
-                         rep("COSNFR",2),
-                         rep("COSNFA",2),
-                         rep("COPSUS",3),
-                         rep("COPSEV",3),
-                         rep("COTRB",3),
-                         rep("COTRC",3),
-                         rep("COTRI",3),
-                         rep("CODIB",3),
-                         rep("CODIC",3),
-                         rep("CODII",3)))
-mmco1 <- mmco1a %>% union(data.frame(Construct = c(rep("Past Behavioral Intention",3),
-                                                   rep("Past Behavior",3),
-                                                   rep("Behavior",3)),
-                                     Indicator = c(paste0("COPBI", 1:3),
-                                                   paste0("COPBC", 1:3),
-                                                   paste0("COBC", 1:3)),
-                                     Abbreviation = c(rep("COPBI", 3),
-                                                      rep("COPB", 3),
-                                                      rep("COB", 3))))
-mmco1
-mmco1un <- data.frame(Abbreviation = unique(mmco1$Abbreviation))
-mmco1un
-mmco1unalpha <- c()
+mmco <- (readRDS("SEM COVID-19/Models/model-co-1.RDS"))$measurement_model
+anco <- data.frame(Variable = (unlist(mmco))[c(T, F, F)],
+                   Item = (unlist(mmco))[c(F, T, F)]) %>%
+  filter(!(Item %in% Variable)) %>%
+  filter(!(Item == "COKN")) %>%
+  rbind(data.frame(Variable = c(rep("Descriptive Norm", 2),
+                                rep("Injunctive Norm", 2),
+                                paste0(c("Perceived Self-Efficacy",
+                                         "Perceived Response Efficacy",
+                                         "Perceived Response Costs",
+                                         "Behavioral Intention"),
+                                       c(rep(" Contact", 4),
+                                         rep(" App",4),
+                                         rep(" Mask",4),
+                                         rep(" General",4),
+                                         rep("",4))),
+                                "Subjective Knowledge",
+                                paste0("Behavior", c(rep("",4),
+                                                     " Contact",
+                                                     " App",
+                                                     " Mask",
+                                                     " General"))
+  ),
+  Item = c(paste0("CO",
+                  c(paste0("DN", 3:4),
+                    paste0("IN", 3:4),
+                    paste0("RB", 1:3),
+                    "BI1",
+                    paste0("RB", 4:6),
+                    "BI2",
+                    paste0("RB", 7:9),
+                    "BI3",
+                    rep(c(paste0("RB",10:12),
+                          "BI4"),2),
+                    "SKN",
+                    rep(paste0("B", 1:4),2))))
+  )%>%
+    rbind(data.frame(Variable = "Perceived Self-Efficacy", Item = "CORB3"))
+  )
+ancoun <- data.frame(Variable = unique(anco$Variable))
+ancounalpha <- c()
 # Analyze Cronbach's Alpha
-for (i in 1:nrow(mmco1un)){
-  x = mmco1un[i,1]
-  mmco1unalpha <- append(mmco1unalpha,
-                         ((unlist(psych::alpha(datawosk[unlist((filter(mmco1, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE)[1]))[3]))
-  print(psych::alpha(datawosk[unlist((filter(mmco1, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE))
+for (i in 1:nrow(ancoun)){
+  x = ancoun[i,1]
+  ancounalpha <- append(ancounalpha,
+                        ifelse(test = ncol(datafull[unlist((filter(anco, Variable == {{x}}))["Item"])]) > 1,
+                               ((unlist(psych::alpha(datafull[unlist((filter(anco, Variable == {{x}}))["Item"])], check.keys = FALSE)[1]))[2]), NA))
+  # print(ifelse(test = ncol(datafull[unlist((filter(anco, Variable == {{x}}))["Item"])]) > 1,
+  #              psych::alpha(datafull[unlist((filter(anco, Variable == {{x}}))["Item"])], check.keys = FALSE), NA))
 }
-mmco1unal <- mmco1un %>% cbind(Cs.Alpha = mmco1unalpha)
-mmco1unal
-mmco1alpha <- mmco1 %>% left_join(mmco1unal)
-mmco1alpha
+ancoun <- ancoun %>% cbind(Cs.Alpha = ancounalpha)
+ancoalpha <- anco %>% left_join(ancoun)
+# Cronbach's alpha is sufficient for all constructs
+codeco <- anco %>% mutate(Variable = paste0("COVID-19 ", Variable))
 
-#COAM is bad, will not be >0.7 even if one item is dropped
-#drop COAM1
-#COBI is below 0.7 but would not get better even if one item is dropped -> tolerate
-#COKN doesn't have to meet cs alpha
-# COPM is good
-# COPSE is bad, but would not get better above 0.7 item was dropped
-# drop CORB7
-# COPRE is good
-# COPRC is also good
-# COSNFR is bad, keep still
-# COSNFA is okay
-# COPSUS is just right, could be better if COTB3 was dropped, but keep all
-# COPSEV is bad, would not get better when dropping one item
-# keep all
-# all COTR, CODI are fine
-#copbi, cobpmm cobi are all fine enough
+codefull <- codeco %>% union(codecc) %>% union(codeper)
+codefullun <- unique(codefull$Variable)
 
-mmco2 <- mmco1 %>% filter(Indicator != "COAM1" &
-                            Indicator != "CORB4")
-mmco2
-mmco2un <- data.frame(Abbreviation = unique(mmco2$Abbreviation))
-mmco2un
-mmco2unalpha <- c()
-# Analyze Cronbach's Alpha
-for (i in 1:nrow(mmco2un)){
-  x = mmco2un[i,1]
-  mmco2unalpha <- append(mmco2unalpha, ifelse(nrow(filter(mmco2, Abbreviation == {{x}}))==1,
-                                              1,
-                                              ((unlist(psych::alpha(datawosk[unlist((filter(mmco2, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE)[1]))[2])))
-  print(ifelse(nrow(filter(mmco2, Abbreviation == {{x}}))==1,
-               "no-alpha",
-               psych::alpha(datawosk[unlist((filter(mmco2, Abbreviation == {{x}}))["Indicator"])], check.keys = TRUE)))
+datacoded <- data.frame(Dummy = character(851L))
+for (i in 1:length(codefullun)){
+  x = codefullun[i]
+  datacoded <- datacoded %>%
+    cbind(Bob = rowMeans((datafull %>% select(unlist((codefull %>% filter(Variable == {{x}}))[,2]))), na.rm = TRUE))
 }
-mmco2unal <- mmco2un %>% cbind(Cs.Alpha = mmco2unalpha)
-mmco2unal
-mmco2alpha <- mmco2 %>% left_join(mmco2unal)
-mmco2alpha
-write_csv2(mmco2alpha, "Evaluation_Data/Statistical_Analysis/csalpha-co.csv")
+datacoded <- datacoded[,-1]
+colnames(datacoded) <- codefullun
 
-#All important alphas are fine
-# Make vars
-datavars3 <- datavars2
-for (i in 1:nrow(mmco2unal)){
-  x = mmco2unal[i,1]
-  datavars3 <- datavars3 %>%
-    cbind(Bob = rowMeans((datawosk %>% select(unlist((mmco2alpha %>% filter(Abbreviation == {{x}}))[,2]))), na.rm = TRUE))
-}
-colnames(datavars3)
-colnames(datavars3) <- c("Response.ID.1", unlist(mmcc2unal$Abbreviation), unlist(mmco2unal$Abbreviation))
-datavars3
+psych::describe(datacoded)
 
-#Personality Questions
-mmper1 <- data.frame(Construct = c(rep("Extraversion",2),
-                                   rep("Agreeableness",2),
-                                   rep("Conscientiousness",2),
-                                   rep("Neuroticism",2),
-                                   rep("Openness.to.Experience",2),
-                                   rep("Internal.Control.Conviction",2),
-                                   rep("External.Control.Conviction",2)),
-                     Indicator = c("BFE1",
-                                   "BFE2",
-                                   "BFA1",
-                                   "BFA2",
-                                   "BFC1",
-                                   "BFC2",
-                                   "BFN1",
-                                   "BFN2",
-                                   "BFO1",
-                                   "BFO2",
-                                   "IC1",
-                                   "IC2",
-                                   "EC1",
-                                   "EC2"))
-mmper1
-mmper1un <- data.frame(Construct = unique(mmper1$Construct))
-mmper1un
-mmper1unalpha <- c()
-# Analyze Cronbach's Alpha
-for (i in 1:nrow(mmper1un)){
-  x = mmper1un[i,1]
-  mmper1unalpha <- append(mmper1unalpha,
-                          ((unlist(psych::alpha(datawosk[unlist((filter(mmper1, Construct == {{x}}))["Indicator"])], check.keys = TRUE)[1]))[3]))
-  print(psych::alpha(datawosk[unlist((filter(mmper1, Construct == {{x}}))["Indicator"])], check.keys = TRUE))
-}
-mmper1unal <- mmper1un %>% cbind(Cs.Alpha = mmper1unalpha)
-mmper1unal
-mmper1alpha <- mmper1 %>% left_join(mmper1unal)
-mmper1alpha
-write_csv2(mmper1alpha, "Evaluation_Data/Statistical_Analysis/csalpha-per.csv")
-
-allalphas <- mmcc2alpha[,c(3,2,4)] %>%
-  union(mmco2alpha[,c(3,2,4)]) %>%
-  union(mmper1alpha %>% rename(Abbreviation = Construct)) %>%
-  rename(Variable = Abbreviation)
-allalphas
-write_csv2(allalphas, "Evaluation_Data/Statistical_Analysis/Cronbachs_Alpha_Scales.csv")
-
-#alpha is very low with agreeableness and conscientiousness, but the alternative is making a single-item measure
-datavars4 <- datavars3
-for (i in 1:nrow(mmper1unal)){
-  x = mmper1unal[i,1]
-  datavars4 <- datavars4 %>%
-    cbind(Bob = rowMeans((datawosk %>% select(unlist((mmper1alpha %>% filter(Construct == {{x}}))[,2]))), na.rm = TRUE))
-}
-colnames(datavars4)
-colnames(datavars4) <- c("Response.ID.1", unlist(mmcc2unal$Abbreviation), unlist(mmco2unal$Abbreviation), unlist(mmper1unal$Construct))
-datavars4
-
-##tack on rest of variables for analysis
-datavarsdf <- data.frame(datavars4) %>%
-  left_join(restdata) %>% mutate(Response.ID.1 = NULL)
-datavars <- apply(as.matrix(datavarsdf), 2, as.numeric)
-datavars
-saveRDS(datavars, "correlation-analysis-data.rds")
-
-#Shortcut to analysis starts here
-datavars <- readRDS("correlation-analysis-data.rds")
+bighappycor <- cor(as.matrix(datacoded), use = "pairwise.complete.obs")
+summarise(bighappycor %>% max())
 
 ## Descriptive Statistics
-desstatcor1 <- rownames_to_column(data.frame(psych::describe(datavars[,1:48]))) %>% transmute(
+desstatcor1 <- rownames_to_column(data.frame(psych::describe(datacoded[,1:48]))) %>% transmute(
   Variable = rowname,
   n = n,
   m = mean,
