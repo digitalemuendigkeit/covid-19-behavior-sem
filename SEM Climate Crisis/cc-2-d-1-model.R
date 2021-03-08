@@ -50,8 +50,8 @@ plot(model)
 # saveRDS(bootmodel, "SEM Climate Crisis/Models/model-boot-cc-2-d-1.RDS")
 bootmodel <- read_rds("SEM Climate Crisis/Models/model-boot-cc-2-d-1.RDS")
 plot(bootmodel)
-bootfsmodel <-  bootstrap_model(model$first_stage_model, nboot = 5000)
-saveRDS(bootfsmodel, "SEM Climate Crisis/Models/model-fs-boot-cc-2-d-1.RDS")
+# bootfsmodel <-  bootstrap_model(model$first_stage_model, nboot = 5000)
+# saveRDS(bootfsmodel, "SEM Climate Crisis/Models/model-fs-boot-cc-2-d-1.RDS")
 
 # Models for estimation of convergent validity for formative constructs
 # Descriptive Norm

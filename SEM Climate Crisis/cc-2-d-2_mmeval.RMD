@@ -19,9 +19,6 @@ summo$fSquare
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
-# Load redundancy analysis models
-radn <- readRDS("Models/radn-cc-2-d-2.RDS")
-rain <- readRDS("Models/rain-cc-2-d-2.RDS")
 # Set seminr plot theme
 thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
 seminr_theme_set(thm)
@@ -152,149 +149,7 @@ There are no problematic HTMT bootstrap confidence intervals.
 The reflective measurement model meets all quality criteria and can be retained as-is.
 
 # Evaluation of the formative measurement model
-```{r for-eval prep, echo = FALSE, include=FALSE}
-forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Indicator.or.LOC) %>% 
-  mutate(Type = NULL, Mode = NULL)
-```
-## Convergent validity
-To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
-
-```{r for-eval radn, echo=FALSE}
-# Unfortunately, this has to be done partially manually
-# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-plot(radn, title = "Redundancy Analysis Descriptive Norm")
-sumradn <- summary(radn)
-# For the final dataframe, you should set a custom name and put the the name of the construct
-cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1], 'C.V.PC' = sumradn$paths[3])
-```
-
-```{r for-eval rain, echo=FALSE}
-# Unfortunately, this has to be done partially manually
-# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-plot(rain, title = "Redundancy Analysis Injunctive Norm")
-sumrain <- summary(rain)
-# For the final dataframe, you should set a custom name and put the the name of the construct
-cvin <- data.frame(Construct = "Injunctive Norm", 'C.V.R^2' = sumrain$paths[1], 'C.V.PC' = sumrain$paths[3])
-```
-
-```{r for-eval cv,echo=FALSE, include=FALSE}
-# put together all dataframes, this has also to be done manually
-forevalci <- bind_rows(cvdn, cvin)
-```
-
-Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
-
-## Collinearity
-The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
-
-```{r for-eval col, echo = FALSE, include = FALSE}
-mmvif <- data.frame(Construct = character(),
-                      Indicator = character(),
-                      VIF = double())
-for (i in 1:length(unique(forevalbase$Construct))){
-  for (j in 1:nrow(filter(forevalbase, Construct == unique(forevalbase$Construct)[i]))){
-    x = unique(forevalbase$Construct)[i]
-    y = (filter(forevalbase, Construct == x))[j,"Indicator"]
-    mmvif <- mmvif %>% rbind(data.frame(Construct = x,
-                              Indicator = y,
-                              VIF = unlist(sumfs$validity$vif_items)[paste0({{x}}, ".", {{y}})]))
-  }}
-```
-
-## Significance and relevance
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
-
-```{r for-eval sar, echo=FALSE, include=FALSE}
-# Make weights df
-btwtbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_weights)) %>% rename (
-  Construct.Rel. = rowname,
-  Original.Est.Wt. = "Original Est.",
-  Bootstrap.Mean.Wt. = "Bootstrap Mean",
-  Bootstrap.SD.Wt. = "Bootstrap SD",
-  T.Stat.Wt. = "T Stat.",
-  Lower.Bounds.CI.Wt. = "2.5% CI",
-  Upper.Bounds.CI.Wt. = "97.5% CI"
-)
-btwtsplit <- base::strsplit(btwtbase$Construct.Rel., "  ->  ")
-btwtsplit1 <- c()
-btwtsplit2 <- c()
-for (i in 1:length(btwtsplit)){
-  btwtsplit1 <- append(btwtsplit1, btwtsplit[[i]][1])
-  btwtsplit2 <- append(btwtsplit2, btwtsplit[[i]][2])
-}
-btwt <- btwtbase %>%
-  cbind(data.frame(Indicator = btwtsplit1, Construct = btwtsplit2)) %>%
-  mutate(Construct.Rel. = NULL,
-         Bootstrap.SD.Wt. = NULL,
-         '0.in.Wt.CI' = ifelse(Lower.Bounds.CI.Wt. < 0 &  Upper.Bounds.CI.Wt. > 0, TRUE, FALSE),
-         Lower.Bounds.CI.Wt. = NULL,
-         Upper.Bounds.CI.Wt. = NULL)
-# Make loadings df
-btldbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_loadings)) %>% rename(
-  Construct.Rel. = rowname,
-  Original.Est.Ld. = "Original Est.",
-  Bootstrap.Mean.Ld. = "Bootstrap Mean",
-  Bootstrap.SD.Ld. = "Bootstrap SD",
-  T.Stat.Ld. = "T Stat.",
-  Lower.Bounds.CI.Ld. = "2.5% CI",
-  Upper.Bounds.CI.Ld. = "97.5% CI"
-)
-btldsplit <- base::strsplit(btldbase$Construct.Rel., "  ->  ")
-btldsplit1 <- c()
-btldsplit2 <- c()
-for (i in 1:length(btldsplit)){
-  btldsplit1 <- append(btldsplit1, btldsplit[[i]][1])
-  btldsplit2 <- append(btldsplit1, btldsplit[[i]][2])
-}
-btld <- btldbase %>%
-  cbind(data.frame(Indicator = btldsplit1, Construct = btldsplit1)) %>%
-  mutate(Construct.Rel. = NULL,
-         Bootstrap.SD.Ld. = NULL,
-         '0.in.Ld.CI' = ifelse(Lower.Bounds.CI.Ld. < 0 &  Upper.Bounds.CI.Ld. > 0, TRUE, FALSE),
-         Lower.Bounds.CI.Ld. = NULL,
-         Upper.Bounds.CI.Ld. = NULL)
-
-#Make final data frame
-forevalmm <- forevalbase %>% 
-  left_join(forevalci) %>%
-  left_join(mmvif[,2:3]) %>%
-  left_join(btwt[,-5]) %>%
-  left_join(btld[,-5])
-colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
-colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
-```
-
-```{r for-eval, echo=FALSE}
-datatable(forevalmm,
-          filter = 'top',
-          options = list(pageLength = nrow(forevalmm)),
-          rownames = FALSE,
-          colnames = c("CV R^2" = 3,
-                        "CV pc" = 4, 
-                       "Weight (original estimate)" = 6, 
-                       "Weight (bootstrap mean)" = 7,
-                       "0 in CI (weight)" = 9,
-                       "Loading (original estimate)" = 10,
-                       "Loading (bootstrap mean)" = 11,
-                       "0 in CI (loading)" = 13),
-          caption = 'Results of the formative measurement model evaluation') %>%
-  formatRound(c(3:8, 10:12),
-              digits = 3) %>%
-  formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.7), values = c('#ff9999', '#00'))) %>%
-  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
-  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ffe5e5', '#00'))) %>%
-  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.65), values = c('#ff9999', '#00'))) %>%
-  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
-  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-```
-Convergent validity is established for both constructs and there is no collinearity.
-Two weights are insignificant on the basis of the bootstrap CI (CCDN1 and CCIN1), however, the loadings are large enough and significant.
-
-## Results of the evaluation of the formative measurement model
-The formative measurement model meets all quality criteria and can be retained as-is.
+There are no formative constructs.
 
 # Evaluation of the formative higher-order constructs
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
@@ -364,10 +219,10 @@ bthocldsplit1 <- c()
 bthocldsplit2 <- c()
 for (i in 1:length(bthocldsplit)){
   bthocldsplit1 <- append(bthocldsplit1, bthocldsplit[[i]][1])
-  bthocldsplit2 <- append(bthocldsplit1, bthocldsplit[[i]][2])
+  bthocldsplit2 <- append(bthocldsplit2, bthocldsplit[[i]][2])
 }
-bthocld <- btldbase %>%
-  cbind(data.frame(LOC = btldsplit1, HOC = btldsplit1)) %>%
+bthocld <- bthocldbase %>%
+  cbind(data.frame(LOC = bthocldsplit1, HOC = bthocldsplit2)) %>%
   mutate(Construct.Rel. = NULL,
          Bootstrap.SD.Ld. = NULL,
          '0.in.Ld.CI' = ifelse(Lower.Bounds.CI.Ld. < 0 &  Upper.Bounds.CI.Ld. > 0, TRUE, FALSE),
