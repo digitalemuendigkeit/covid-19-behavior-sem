@@ -21,6 +21,7 @@ sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Load redundancy analysis models
 radn <- readRDS("Models/radn-cc-2-b-2.RDS")
+rain <- readRDS("Models/rain-cc-2-b-2.RDS")
 # Set seminr plot theme
 thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
 seminr_theme_set(thm)
@@ -168,10 +169,18 @@ sumradn <- summary(radn)
 # For the final dataframe, you should set a custom name and put the the name of the construct
 cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1], 'C.V.PC' = sumradn$paths[3])
 ```
+```{r for-eval rain, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(rain, title = "Redundancy Analysis Injunctive Norm")
+sumrain <- summary(rain)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvin <- data.frame(Construct = "Injunctive Norm", 'C.V.R^2' = sumrain$paths[1], 'C.V.PC' = sumrain$paths[3])
+```
 
 ```{r for-eval cv,echo=FALSE, include=FALSE}
 # put together all dataframes, this has also to be done manually
-forevalci <- bind_rows(cvdn)
+forevalci <- bind_rows(cvdn, cvin)
 ```
 
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
@@ -283,7 +292,7 @@ datatable(forevalmm,
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 Convergent validity is established for the construct and there is no collinearity.
-One weights is insignificant on the basis of the bootstrap CI (CCDN1), however, the loading is large enough and significant.
+Three weights are insignificant on the basis of the bootstrap CI or t-value (CCDN1, CCIN1, CCIN2), however, the loadings are large enough and significant.
 
 ## Results of the evaluation of the formative measurement model
 The formative measurement model meets all quality criteria and can be retained as-is.
@@ -399,6 +408,7 @@ datatable(forhocevalmm,
 
 The VIFs for the Distrusting Beliefs are above 3, but still below 5.
 With that, there are no issues with collinearity.
+The weights for Distrusting Beliefs Integrity and Injunctive Norm are non-significant, but the loadings are significant and sufficiently large.
 All other weights are significant and relevant.
 
 ## Results of the formative higher-order constructs evaluation

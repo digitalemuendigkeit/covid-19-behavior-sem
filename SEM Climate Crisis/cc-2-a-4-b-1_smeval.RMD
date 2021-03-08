@@ -1,5 +1,5 @@
 ---
-title: "Climate Crisis Model Iteration 2-a-3-b-1 Structural Model Evaluation"
+title: "Climate Crisis Model Iteration 2-a-4-b-1 Structural Model Evaluation"
 output: html_document
 ---
 
@@ -11,10 +11,10 @@ library(seminr)
 library(DT)
 library(htmltools)
 # Load models and create summaries
-model <- readRDS("Models/model-cc-2-a-3-b-1.RDS")
-bootmodel <- readRDS("Models/model-boot-cc-2-a-3-b-1.RDS")
-bootfsmodel <- readRDS("Models/model-fs-boot-cc-2-a-3-b-1.RDS")
-proxymodel <- readRDS("Models/model-proxy-cc-2-a-3-b-1.RDS")
+model <- readRDS("Models/model-cc-2-a-4-b-1.RDS")
+bootmodel <- readRDS("Models/model-boot-cc-2-a-4-b-1.RDS")
+bootfsmodel <- bootmodel
+proxymodel <- estimate_pls(data = as.data.frame(model$data), structural_model = model$smMatrix, measurement_model = model$measurement_model)
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
@@ -48,20 +48,6 @@ for (i in 1:length(summo$vif_antecedents)){
                                     VIF = summo$vif_antecedents[[{{x}}]][j]))
   }
 }
-locvif <- data.frame('Exogenous Construct' = character(),
-                  'Endogenous Construct' = character(),
-                      VIF = double ())
-for (i in 1:length(sumfs$vif_antecedents)){
-  x = names(sumfs$vif_antecedents[i])
-  for (j in 1:length(sumfs$vif_antecedents[[{{x}}]])){
-    y = names(sumfs$vif_antecedents[[{{x}}]])[j]
-    locvif <- locvif %>% rbind(data.frame('Exogenous Construct' = {{y}},
-                                    'Endogenous Construct' = {{x}},
-                                    VIF = sumfs$vif_antecedents[[{{x}}]][j]))
-  }
-}
-locvif <- locvif %>% filter(!(Exogenous.Construct %in% vif$Exogenous.Construct & Endogenous.Construct %in% vif$Endogenous.Construct))
-vif <- union(vif, locvif)
 datatable(vif,
           filter = 'top',
           options = list(pageLength = nrow(vif)),
@@ -78,14 +64,9 @@ There are no collinearity issues as indicated by VIF.
 # In-sample predictive power
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
 ```{r in-sample pp r^2, echo=FALSE}
-r2hoc <- data.frame(Construct = colnames(summo$paths),
+r2 <- data.frame(Construct = colnames(summo$paths),
                     "R^2" = summo$paths[1,],
                     "AdjR^2" = summo$paths[2,])
-r2loc <- data.frame(Construct = colnames(sumfs$paths),
-                    "R^2" = sumfs$paths[1,],
-                    "AdjR^2" = sumfs$paths[2,]) %>%
-  filter(Construct %notin% r2hoc$Construct)
-r2 <- union(r2hoc, r2loc)
 datatable(r2,
           filter = 'top',
           options = list(pageLength = nrow(r2)),
@@ -113,19 +94,7 @@ for (i in 1:nrow(smhoc)){
 hocf2vec <- append(hocf2vec, summo$fSquare[[{{x}},{{y}}]])  
 }
 hocf2 <- smhoc %>% cbind(hocf2vec) %>% rename('f^2' = 3)
-smloc <- data.frame(model$first_stage_model$smMatrix) %>% 
-  rename('Exogenous Construct' = source,
-         'Endogenous Construct' = target) %>%
-  filter('Exogenous Construct' %notin% smhoc$`Exogenous Construct`)
-locf2vec <- c()
-for (i in 1:nrow(smloc)){
-  x = smloc[i,1]
-  y = smloc[i, 2]
-locf2vec <- append(locf2vec, sumfs$fSquare[[{{x}},{{y}}]])  
-}
-locf2 <- smloc %>% cbind(locf2vec) %>% rename('f^2' = 3) %>% 
-  filter(!(`Exogenous Construct` %in% hocf2$`Exogenous Construct` & `Endogenous Construct` %in% hocf2$`Endogenous Construct`))
-f2 <- union(hocf2, locf2)
+f2 <- hocf2
 datatable(f2,
           filter = 'top',
           options = list(pageLength = nrow(f2)),
@@ -137,10 +106,10 @@ datatable(f2,
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
 
-There is no discernible effect of Benevolence or Knowledge on either Perceived Self-Efficacy or Perceived Response Efficacy.
+There is no discernible effect of Knowledge on either Perceived Self-Efficacy.
 
 # Out-of-sample predictive power
-Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
+Out of sample predictive power can be evaluated on the original model as there are no HOCs.
 If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive power.
 ```{r plspredict, echo = FALSE}
 plspre <- predict_pls(proxymodel, noFolds = 10)
@@ -158,7 +127,7 @@ datatable(oospp,
               digits = 3) %>%
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
-The model does only have very weak out-of-sample predictive power.
+The model does not have out-of-sample predictive power.
 
 # Significance and relevance of path coefficients
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
@@ -214,8 +183,7 @@ datatable(pcalldf,
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
-Benevolence has no significant path to Perceived Self-Efficacy.
-All other paths are significant and relevant.
+All path coefficients are significant.
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
@@ -245,4 +213,4 @@ datatable(sumsm,
 ```
 
 # Results summary
-Overall, the model is satisfactory, but in-sample as well as out-sample predictive power is low and effect sizes, with the exception of the effect of Distrusting Beliefs on Perceived Response Efficacy and the effect of Perceived Self-Efficacy on Behavioral Intention, are as well.
+Overall, the model is satisfactory, but in-sample as well as out-sample predictive power is low and effect sizes, with the exception of the effect of Distrusting Beliefs Integrity on Perceived Response Efficacy and the effect of Perceived Self-Efficacy on Behavioral Intention, are as well.

@@ -409,10 +409,12 @@ datatable(forhocevalmm,
 
 The VIFs for the Distrusting Beliefs are above 3, but still below 5.
 With that, there are no issues with collinearity.
-All weights are significant and relevant.
+The weight for Perceived Response Costs is non-significant, and the loading is not sufficiently large.
+Therefore, it should be removed.
+All other weights are significant and relevant.
 
 ## Results of the formative higher-order constructs evaluation
-The formative higher-order constructs can be retained as-is.
+Perceived Response Costs has to be removed, otherwise the formative higher-order constructs can be retained as-is.
 
 # Results summary
-All measurement models meet quality criteria. Structural model evaluation can commence.
+Perceived Response Costs has to be removed as a lower-order construct.

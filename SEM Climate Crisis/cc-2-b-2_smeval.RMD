@@ -101,7 +101,6 @@ datatable(r2,
               digits = 3) %>%
   formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
-R² for Perceived Response Costs is below the critical threshold.
 For Response Beliefs, Perceived Self-Efficacy and Perceived Response Efficacy the model predictiveness is very weak.
 For all other constructs the model predictiveness is weak.
 
@@ -144,10 +143,10 @@ datatable(f2,
 ```
 The effect sizes for many of the relationships involving lower-order constructs is below the critical threshold.
 Among these, there is no discernible effect of Integrity on any construct.
-Competence only has an effect on Perceived Severity, and  Benevolence on Perceived Self-Efficacy and Perceived Severity.
+Competence only has an effect on Perceived Severity, and  Benevolence on Perceived Susceptibility and Perceived Severity.
 From the lower-order constructs, only Perceived Self-Efficacy has an influence on Behavioral Intention.
 Knowledge has only an effect on Threat Beliefs and its lower-order constructs.
-Among the (higher-order) constructs, there is no effect of Knowledge on Response Beliefs, or of Threat Beliefs or Descriptive Norm on Behavioral Intention.
+Among the (higher-order) constructs, there is no effect of Knowledge on Response Beliefs, or of Threat Beliefs or Subjective Norm on Behavioral Intention.
 
 # Out-of-sample predictive power
 Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
@@ -169,7 +168,7 @@ datatable(oospp,
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
 
-For the approximation model, the PLS model predicts CCIBI2 and CCRB8 (Perceived Response Costs) better than the naive linear model.
+For the approximation model, the PLS model predicts CCIBI2 better than the naive linear model.
 Overall, the model has low out-of-sample predictive power.
 
 # Significance and relevance of path coefficients
@@ -226,12 +225,13 @@ datatable(pcalldf,
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 Many of the path coefficients involving lower-order constructs are insignificant.
-None of the paths from Integrity is significant, and for Competence only the paths to the Threat Beliefs lower-order constructs.
-For Benevolence, all except the one to Perceived Response Costs are significant.
-Concerning the Response and Threat Beliefs lower-order constructs, only Perceived Self-Efficacy and Perceived Response Efficacy have significant paths to Behavioral Intention.
+None of the paths from Integrity is significant, and for Competence only the paths to the Threat Beliefs lower-order constructs are.
+For Benevolence, all paths are significant.
+Concerning the Response and Threat Beliefs lower-order constructs, only Perceived Self-Efficacy has a significant path to Behavioral Intention.
 Knowledge has significant paths to Threat Beliefs and its lower-order constructs, and to the lower-order construct Perceived Self-Efficacy.
 All paths from Distrusting Beliefs are significant.
-The paths from Threat Beliefs and Descriptive Norm to Behavioral Intention are insignificant.
+The paths from Threat Beliefs and Subjective (as well as Descriptive) Norm to Behavioral Intention are insignificant.
+However, the path from Injunctive Norm is significant.
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
@@ -261,8 +261,8 @@ datatable(sumsm,
 ```
 
 # Results summary
-The path from Knowledge to Response Beliefs is insignificant and shows no effect, as are the paths from Threat Beliefs and Descriptive Norm in Behavioral Intention.
-Threat Beliefs and Descriptive Norm can be eliminated as constructs.
+The path from Knowledge to Response Beliefs is insignificant and shows no effect, as are the paths from Threat Beliefs and Subjective Norm in Behavioral Intention.
+Threat Beliefs and Subjective Norm can be eliminated as constructs, but Injunctive Norm should be retained.
 Concerning lower-order constructs, Distrusting Beliefs Integrity and Competence have no discernible effect and no significant path on any Response Beliefs lower-order constructs and can be eliminated.
 With that, Distrusting Beliefs Benevolence as a regular construct substitutes the Distrusting Beliefs higher-order construct.
 Additionally, there are two possible constellations:

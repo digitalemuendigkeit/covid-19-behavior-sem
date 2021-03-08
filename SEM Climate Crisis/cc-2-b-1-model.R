@@ -90,5 +90,5 @@ proxysm <- relationships(
   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
   paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
 )
-proxymodel <- estimate_pls(data = as.data.frame(data), proxymm, proxysm)
-saveRDS(proxymodel, "SEM Climate Crisis/Models/model-proxy-cc-2-b.RDS")
+# proxymodel <- estimate_pls(data = as.data.frame(data), proxymm, proxysm)
+# saveRDS(proxymodel, "SEM Climate Crisis/Models/model-proxy-cc-2-b.RDS")
