@@ -1,9 +1,95 @@
 library(tidyverse)
 library(psych)
+library(Hmisc)
+
+#' correlation_matrix
+#' Creates a publication-ready / formatted correlation matrix, using `Hmisc::rcorr` in the backend.
+#'
+#' @param df dataframe; containing numeric and/or logical columns to calculate correlations for
+#' @param type character; specifies the type of correlations to compute; gets passed to `Hmisc::rcorr`; options are `"pearson"` or `"spearman"`; defaults to `"pearson"`
+#' @param digits integer/double; number of decimals to show in the correlation matrix; gets passed to `formatC`; defaults to `3`
+#' @param decimal.mark character; which decimal.mark to use; gets passed to `formatC`; defaults to `.`
+#' @param use character; which part of the correlation matrix to display; options are `"all"`, `"upper"`, `"lower"`; defaults to `"all"`
+#' @param show_significance boolean; whether to add `*` to represent the significance levels for the correlations; defaults to `TRUE`
+#' @param replace_diagonal boolean; whether to replace the correlations on the diagonal; defaults to `FALSE`
+#' @param replacement character; what to replace the diagonal and/or upper/lower triangles with; defaults to `""` (empty string)
+#'
+#' @return a correlation matrix
+#' @export
+#'
+#' @examples
+#' `correlation_matrix(iris)`
+#' `correlation_matrix(mtcars)`
+correlation_matrix <- function(df,
+                               type = "pearson",
+                               digits = 3,
+                               decimal.mark = ".",
+                               use = "all",
+                               show_significance = TRUE,
+                               replace_diagonal = FALSE,
+                               replacement = ""){
+
+  # check arguments
+  stopifnot({
+    is.numeric(digits)
+    digits >= 0
+    use %in% c("all", "upper", "lower")
+    is.logical(replace_diagonal)
+    is.logical(show_significance)
+    is.character(replacement)
+  })
+  # we need the Hmisc package for this
+  require(Hmisc)
+
+  # retain only numeric and boolean columns
+  isNumericOrBoolean = vapply(df, function(x) is.numeric(x) | is.logical(x), logical(1))
+  if (sum(!isNumericOrBoolean) > 0) {
+    cat('Dropping non-numeric/-boolean column(s):', paste(names(isNumericOrBoolean)[!isNumericOrBoolean], collapse = ', '), '\n\n')
+  }
+  df = df[isNumericOrBoolean]
+
+  # transform input data frame to matrix
+  x <- as.matrix(df)
+
+  # run correlation analysis using Hmisc package
+  correlation_matrix <- Hmisc::rcorr(x, type = )
+  R <- correlation_matrix$r # Matrix of correlation coeficients
+  p <- correlation_matrix$P # Matrix of p-value
+
+  # transform correlations to specific character format
+  Rformatted = formatC(R, format = 'f', digits = digits, decimal.mark = decimal.mark)
+
+  # if there are any negative numbers, we want to put a space before the positives to align all
+  if (sum(R < 0) > 0) {
+    Rformatted = ifelse(R > 0, paste0(' ', Rformatted), Rformatted)
+  }
+
+  # add significance levels if desired
+  if (show_significance) {
+    # define notions for significance levels; spacing is important.
+    stars <- ifelse(is.na(p), "   ", ifelse(p < .001, "***", ifelse(p < .01, "** ", ifelse(p < .05, "*  ", "   "))))
+    Rformatted = paste0(Rformatted, stars)
+  }
+  # build a new matrix that includes the formatted correlations and their significance stars
+  Rnew <- matrix(Rformatted, ncol = ncol(x))
+  rownames(Rnew) <- colnames(x)
+  colnames(Rnew) <- paste(colnames(x), "", sep =" ")
+
+  # replace undesired values
+  if (use == 'upper') {
+    Rnew[lower.tri(Rnew, diag = replace_diagonal)] <- replacement
+  } else if (use == 'lower') {
+    Rnew[upper.tri(Rnew, diag = replace_diagonal)] <- replacement
+  } else if (replace_diagonal) {
+    diag(Rnew) <- replacement
+  }
+
+  return(Rnew)
+}
 
 #Import Data
 # Data used is nonnormal, missing values are not treated
-datafull <- read_rds("Data/data-qualcl.RDS")[,-c(1:5,143:145)]
+datafull <- read_rds("Data/data-qualcl-inc.RDS")[,-c(1:5,143:145)]
 # Replace 7 for CCDN3, CCIN3, CODN3 and COIN3 with NA
 datafull$CCDN3[datafull$CCDN3 == 7] <- NA
 datafull$CCIN3[datafull$CCIN3 == 7] <- NA
@@ -15,9 +101,9 @@ anper <- data.frame(Variable = c(rep("Extraversion",3),
                                  rep("Agreeableness",3),
                                  rep("Conscientiousness",3),
                                  rep("Neuroticism",3),
-                                 rep("Openness.to.Experience",3),
-                                 rep("Internal.Control.Conviction",2),
-                                 rep("External.Control.Conviction",2)),
+                                 rep("Openness to Experience",3),
+                                 rep("Internal Control Conviction",2),
+                                 rep("External Control Conviction",2)),
                     Item = c(paste0("BFE", 1:3),
                              paste0("BFA", 1:3),
                              paste0("BFC", 1:3),
@@ -87,6 +173,9 @@ ancc <- data.frame(Variable = (unlist(mmcc))[c(T, F, F)],
                          "SKN",
                          rep(paste0("B", 1:4),2))))
   ))
+ancc[ancc == "Benevolence"] <- "Distrusting Beliefs Benevolence"
+ancc[ancc == "Competence"] <- "Distrusting Beliefs Competence"
+ancc[ancc == "Integrity"] <- "Distrusting Beliefs Integrity"
 anccun <- data.frame(Variable = unique(ancc$Variable))
 anccunalpha <- c()
 # Analyze Cronbach's Alpha
@@ -162,6 +251,9 @@ anco <- data.frame(Variable = (unlist(mmco))[c(T, F, F)],
   )%>%
     rbind(data.frame(Variable = "Perceived Self-Efficacy", Item = "CORB3"))
   )
+anco[anco == "Benevolence"] <- "Distrusting Beliefs Benevolence"
+anco[anco == "Competence"] <- "Distrusting Beliefs Competence"
+anco[anco == "Integrity"] <- "Distrusting Beliefs Integrity"
 ancoun <- data.frame(Variable = unique(anco$Variable))
 ancounalpha <- c()
 # Analyze Cronbach's Alpha
@@ -181,7 +273,7 @@ codeco <- anco %>% mutate(Variable = paste0("COVID-19 ", Variable))
 codefull <- codeco %>% union(codecc) %>% union(codeper)
 codefullun <- unique(codefull$Variable)
 
-datacoded <- data.frame(Dummy = character(851L))
+datacoded <- data.frame(Dummy = character(length = nrow(datafull)))
 for (i in 1:length(codefullun)){
   x = codefullun[i]
   datacoded <- datacoded %>%
@@ -190,73 +282,198 @@ for (i in 1:length(codefullun)){
 datacoded <- datacoded[,-1]
 colnames(datacoded) <- codefullun
 
-psych::describe(datacoded)
+# Make descriptive statistics
+descstat <- data.frame(Variable = rownames(psych::describe(datacoded)), psych::describe(datacoded)) %>%
+  left_join(rbind(anperalpha,
+                  (anccalpha%>% mutate(Variable = paste0("Climate Crisis ", Variable))),
+                   (ancoalpha %>% mutate(Variable = paste0("COVID-19 ", Variable)))) %>%
+              group_by(Variable) %>%
+              mutate(Items = paste0(Item, collapse = ", "),
+                     Item = NULL) %>%
+              distinct(Variable, .keep_all = TRUE)
 
-bighappycor <- cor(as.matrix(datacoded), use = "pairwise.complete.obs")
-summarise(bighappycor %>% max())
+  )
+# order by groups and alphabetical
+descstatalph <- descstat[c(order(descstat$Variable)[order(descstat$Variable) %in% grep("Climate Crisis", descstat$Variable)],
+                          order(descstat$Variable)[order(descstat$Variable) %in% grep("COVID-19", descstat$Variable)],
+                          66:72),]
 
-## Descriptive Statistics
-desstatcor1 <- rownames_to_column(data.frame(psych::describe(datacoded[,1:48]))) %>% transmute(
-  Variable = rowname,
+descstatshort <- descstat %>%
+  transmute(
+  Variable = Variable,
+  Items = Items,
   n = n,
-  m = mean,
-  SD = sd)
-desstatcor1c <- unique(desstatcor1$Variable)
-desstatcor2c <- c()
-for (i in 1:length(desstatcor1c)){
-  x = desstatcor1c[i]
-  y = (allalphas %>% filter(Variable == {{x}}))[,3]
-  z = paste(y, collapse = ", ")
-  desstatcor2c <- append(desstatcor2c, z)}
-desstatcor2c
+  Cs.Alpha = ifelse(is.na(Cs.Alpha), "-", round(Cs.Alpha, 2)),
+  Mean = round(mean,2),
+  SD = round(sd,2)
+)
 
-desstatcor2 <- desstatcor1 %>% cbind(Indicators = desstatcor2c) %>% left_join(allalphas[,c(1,3)])
-desstatcor3 <- distinct(desstatcor2[,c(1,5,2,6,3,4)])
-desstatcor3
-write_csv2(desstatcor3, "Evaluation_Data/Statistical_Analysis/descriptive-statistics.csv")
+# Append Knowledge data
+datacodedkn <- datacoded %>%
+  cbind(datafull %>% select((contains("KN")&!(contains("SKN")))))
+datacodedkn$'Climate Crisis Knowledge Sum Correct' <- rowSums(datacodedkn %>% select(contains("CCKN")) == 3)
+datacodedkn$'Climate Crisis Knowledge Sum DK' <- rowSums(datacodedkn %>% select(contains("CCKN")) == 2)
+datacodedkn$'Climate Crisis Knowledge Sum Incorrect' <- rowSums(datacodedkn %>% select(contains("CCKN")) == 1)
+datacodedkn$'COVID-19 Knowledge Sum Correct' <- rowSums(datacodedkn %>% select(contains("COKN")) == 3)
+datacodedkn$'COVID-19 Knowledge Sum DK' <- rowSums(datacodedkn %>% select(contains("COKN")) == 2)
+datacodedkn$'COVID-19 Knowledge Sum Incorrect' <- rowSums(datacodedkn %>% select(contains("COKN")) == 1)
+
+# Append demographic and other vars
+datarest <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
+                                                           "1 = 'female';
+                                                              2 = 'male';
+                                                              3 = 'other'",
+                                                           as.factor = TRUE),
+                                      Age = SD1,
+                                      Education = car::recode(SD3,
+                                                              "1 = 'still a student';
+                                                                 2 = 'dropped out of school';
+                                                                 c(3,4) = 'secondary school leaving certificate';
+                                                                 5 = 'university entrance qualification';
+                                                                 6 = 'university degree';
+                                                                 7 = 'doctorate';
+                                                                 8 =  'a different level of education'",
+                                                              as.factor = TRUE,
+                                                              levels = c('still a student',
+                                                                         'dropped out of school',
+                                                                         'secondary school leaving certificate',
+                                                                         'university entrance qualification',
+                                                                         'university degree',
+                                                                         'doctorate',
+                                                                         'a different level of education')),
+                                      Occupation = car::recode(SD4,
+                                                               "1 = 'employed full-time';
+                                                                  2 = 'employed part-time';
+                                                                  3 = 'in vocational training';
+                                                                  4 = 'student (university)';
+                                                                  5 = 'student (school)';
+                                                                  6 = 'not in paid employment'",
+                                                               as.factor = TRUE,
+                                                               levels = c('employed full-time',
+                                                                          'employed part-time',
+                                                                          'in vocational training',
+                                                                          'student (university)',
+                                                                          'student (school)',
+                                                                          'not in paid employment')),
+                                      Income = car::recode(SD5,
+                                                           "1 = 'up to 450 EUR';
+                                                                2 = 'between 451 and 1000 EUR';
+                                                                3 = 'between 1001 and 1500 EUR';
+                                                                4 = 'between 1501 and 2000 EUR';
+                                                                5 = 'between 2001 and 2500 EUR';
+                                                                6 = 'between 2501 and 3000 EUR';
+                                                                7 = 'between 3001 and 3500 EUR';
+                                                                8 = 'between 3501 and 4000 EUR';
+                                                                9 = 'between 4001 and 4500 EUR';
+                                                                10 = 'between 4501 and 5000 EUR';
+                                                                11 = 'more than 5000 EUR';
+                                                                12 = 'not specified';
+                                                                else = 'not specified'",
+                                                           as.factor = TRUE,
+                                                           levels = c('up to 450 EUR',
+                                                                      'between 451 and 1000 EUR',
+                                                                      'between 1001 and 1500 EUR',
+                                                                      'between 1501 and 2000 EUR',
+                                                                      'between 2001 and 2500 EUR',
+                                                                      'between 2501 and 3000 EUR',
+                                                                      'between 3001 and 3500 EUR',
+                                                                      'between 3501 and 4000 EUR',
+                                                                      'between 4001 and 4500 EUR',
+                                                                      'between 4501 and 5000 EUR',
+                                                                      'more than 5000 EUR',
+                                                                      'not specified')),
+                                      Income2 = car::recode(SD5,
+                                                            "c(1,2) = 'up to 1000 EUR';
+                                                                c(3,4) = 'between 1001 and 2000 EUR';
+                                                                c(5,6) = 'between 2001 and 3000 EUR';
+                                                                c(7,8) = 'between 3001 and 4000 EUR';
+                                                                c(9,10) = 'between 4001 and 5000 EUR';
+                                                                11 = 'more than 5000 EUR';
+                                                                12 = 'not specified';
+                                                                else = 'not specified'",
+                                                            as.factor = TRUE,
+                                                            levels = c('up to 1000 EUR',
+                                                                       'between 1001 and 2000 EUR',
+                                                                       'between 2001 and 3000 EUR',
+                                                                       'between 3001 and 4000 EUR',
+                                                                       'between 4001 and 5000 EUR',
+                                                                       'more than 5000 EUR',
+                                                                       'not specified')),
+                                      )
+psych::describe(datafull$SD8)
+# Are Behavior or Behavioral Intention correlated with count or incidence?
+correlation_matrix(datafull %>% select(starts_with("COB") | starts_with("Count") | starts_with("Incidence")),
+                   type = "spearman")
+summary(aov(datarest$Age ~ datarest$Gender))
+
+# Exploratory correlation analysis
+allcor <- correlation_matrix(df = datacodedkn %>% select(!starts_with("CC") & !starts_with("CO")),
+                                  type = "spearman",
+                                  use = "lower"
+)
+allcorv <- cor(datacodedkn %>% select(!starts_with("CC") & !starts_with("CO")),
+                   method = "spearman", use = "pairwise.complete.obs")
+BigLargeCors <- data.frame(V1 = rownames(which(allcorv > 0.7 & allcorv < 0.999, arr.ind = TRUE)),
+                           V2 = colnames(allcorv[,which(allcorv > 0.7 & allcorv < 0.999, arr.ind = TRUE)[,2]]),
+                           SC = round(allcorv[allcorv > 0.7 & allcorv < 0.999], 3))
+# No surprises
+
+# Look at correlations
+# COVID-19
+# Behavioral Intention and Behavior
+cor(datacoded %>% select(starts_with("COVID-19 Behavior")), use = "pairwise.complete.obs", method = "spearman")
+cor.test(datacoded[,"COVID-19 Behavior"],datacoded[,"COVID-19 Behavioral Intention"], method = "spearman")
+corr.test(datacoded %>% select(starts_with("COVID-19 Behavior")), use = "pairwise.complete.obs", method = "spearman")
+# Behavioral Intention and Behavior and all possible predictors
+cor(datacodedkn %>% select(!starts_with("COVID-19 Behavior") &
+                             !starts_with("Climate Crisis") &
+                             !starts_with("CC") &
+                             !ends_with("Contact") &
+                             !ends_with("App") &
+                             !ends_with("Mask") &
+                             !ends_with("General")),
+    datacodedkn[,c("COVID-19 Behavior", "COVID-19 Behavioral Intention")],
+    use = "pairwise.complete.obs", method = "spearman")
+corr.test(datacodedkn %>% select(!starts_with("COVID-19 Behavior") &
+                             !starts_with("Climate Crisis") &
+                             !starts_with("CC") &
+                             !ends_with("Contact") &
+                             !ends_with("App") &
+                             !ends_with("Mask") &
+                             !ends_with("General")),
+    datacodedkn[,c("COVID-19 Behavior", "COVID-19 Behavioral Intention")],
+    use = "pairwise.complete.obs", method = "spearman")
+
+#COVID-19 Corr matrix
+covidcor <- correlation_matrix(df = datacodedkn %>% select(starts_with("COVID-19") &
+                                            !ends_with("Contact") &
+                                            !ends_with("App") &
+                                            !ends_with("Mask") &
+                                            !ends_with("General")),
+                   type = "spearman",
+                   use = "lower"
+)
+#Climate Crisis Corr matrix
+climatecor <- correlation_matrix(df = datacodedkn %>% select(starts_with("Climate Crisis") &
+                                                 !ends_with("Diet") &
+                                                 !ends_with("Driving") &
+                                                 !ends_with("Heating") &
+                                                 !ends_with("General")),
+                   type = "spearman",
+                   use = "lower"
+)
+#Behavior  Psych Corr matrix
+psychcor <- correlation_matrix(df = datacodedkn %>% select(contains("Behavior") |
+                                        !starts_with("Climate Crisis") &
+                                        !starts_with("COVID-19") &
+                                        !starts_with("CO") &
+                                        !starts_with("CC")),
+                   type = "spearman",
+                   use = "lower")
 
 
-#BI and B
-cor.test(datavars[,"CCBI"], datavars[,"CCB"])
-cor.test(datavars[,"CCPBI"], datavars[,"CCPB"])
-cor.test(datavars[,"CCPB"], datavars[,"CCB"])
-cor.test(datavars[,"CCPBI"], datavars[,"CCBI"])
-cor.test(datavars[,"COBI"], datavars[,"COB"])
-cor.test(datavars[,"COPBI"], datavars[,"COPB"])
-cor.test(datavars[,"COPB"], datavars[,"COB"])
-cor.test(datavars[,"COPBI"], datavars[,"COBI"])
-cor.test(datavars[,"CCB"], datavars[,"COB"])
-cor(datavars[,c("CCBI","CCB","CCPBI","CCPB","COBI","COB","COPBI","COPB")], use ="pairwise.complete.obs")
+#
 
-#BI, B and other constructs
-cor(datavars[,c("CCBI","CCB","CCPBI","CCPB")], datavars[,unlist(mmcc2un)], use ="pairwise.complete.obs")
-cor(datavars[,c("COBI","COB","COPBI","COPB")], datavars[,unlist(mmco2un)], use ="pairwise.complete.obs")
-
-#model constructs
-intercorcc <-  data.frame(cor(datavars[,unlist(mmcc2un)], use ="pairwise.complete.obs"))
-intercorcc
-cor.test(datavars[,"CCPM"], datavars[,"CCPRE"])
-partial.r(datavars, x=c("CCPM", "CCPRE"), y="CCBI")
-cor.test(datavars[,"CCPM"], datavars[,"CCPSUS"])
-cor.test(datavars[,"CCPM"], datavars[,"CCPSEV"])
-cor.test(datavars[,"CCPM"], datavars[,"CCSNFA"])
-
-intercorco <- data.frame(cor(datavars[,unlist(mmco2un)], use ="pairwise.complete.obs"))
-intercorco
-cor.test(datavars[,"COPM"], datavars[,"COPRE"])
-cor.test(datavars[,"COPM"], datavars[,"COSNFA"])
-cor.test(datavars[,"COPM"], datavars[,"COTRB"])
-cor.test(datavars[,"COPM"], datavars[,"COTRI"])
-cor.test(datavars[,"COPRC"], datavars[,"CODIC"])
-
-
-#cor.test(datavars[,"COPSE"], datavars[,"Internal.Control.Conviction"])
-#nothing lol
-#BI, B (or constructs) and big five and control
-cor(datavars[,c("CCBI","CCB","CCPBI","CCPB")], datavars[,unlist(mmper1un)], use ="pairwise.complete.obs")
-cor(datavars[,unlist(mmcc2un)], datavars[,unlist(mmper1un)], use ="pairwise.complete.obs")
-cor(datavars[,c("COBI","COB","COPBI","COPB")], datavars[,unlist(mmper1un)], use ="pairwise.complete.obs")
-cor(datavars[,unlist(mmco2un)], datavars[,unlist(mmper1un)], use ="pairwise.complete.obs")
 
 #Correlation of age and behavior?
 cor(datavars[,c("CCBI","CCB","CCPBI","CCPB")], datavars[,"Age"], use ="pairwise.complete.obs")
