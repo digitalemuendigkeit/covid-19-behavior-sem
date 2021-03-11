@@ -399,12 +399,103 @@ datarest <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
                                                                        'between 4001 and 5000 EUR',
                                                                        'more than 5000 EUR',
                                                                        'not specified')),
+                                      'Household Size' = SD6,
+                                      'Household Children' = ifelse(is.na(SD7),0,as.numeric(SD7)),
+                                      'Own Risk COVID-19' = car::recode(COS1,
+                                                                        "2 = 'do not know';
+                                                                        1 = 'no';
+                                                                        3 = 'yes'",
+                                                                        as.factor = TRUE,
+                                                                        levels = c('no', 'do not know', 'yes')),
+                                      'Own Infection COVID-19' = car::recode(COS2,
+                                                                             "2 = 'do not know';
+                                                                        1 = 'no';
+                                                                        3 = 'yes'",
+                                                                             as.factor = TRUE,
+                                                                             levels = c('no', 'do not know', 'yes')),
+                                      'Own Hospitalisation COVID-19' = car::recode(COS3,
+                                                                                   "1 = 'no';
+                                                                                    3 = 'yes'",
+                                                                                   as.factor = TRUE,
+                                                                                   levels = c('no', 'yes')),
+                                      'Cohabitate Risk COVID-19' = car::recode(COS4,
+                                                                        "2 = 'do not know';
+                                                                        1 = 'no';
+                                                                        3 = 'yes'",
+                                                                        as.factor = TRUE,
+                                                                        levels = c('no', 'do not know', 'yes')),
+                                      'Acquaintances Infection COVID-19' = COS5,
+                                      'Acquaintances Hospitalisation COVID-19' = ifelse(is.na(COS6), 0, COS6),
+                                      'Work From Home COVID-19' = car::recode(COS7,
+                                                                              "1 = 'no';
+                                                                                    3 = 'yes'",
+                                                                              as.factor = TRUE,
+                                                                              levels = c('no', 'yes')),
+                                      'AD S1 Count COVID-19' = Count210112,
+                                      'AD S2 Count COVID-19' = Count210201,
+                                      'AD S1 Incidence COVID-19' = Incidence210112,
+                                      'AD S2 Incidence COVID-19' = Incidence210201,
+                                      'Diet' = car::recode(CCS1,
+                                                           "1 = 'vegan';
+                                                           2 = 'vegetarian';
+                                                           3 = 'eat meat less than once a week';
+                                                           4 = 'eat meat once a week';
+                                                           5 = 'eat meat several times a week';
+                                                           6 = 'eat meat every day'",
+                                                           as.factor = TRUE,
+                                                           levels = c('vegan',
+                                                                     'vegetarian',
+                                                                      'eat meat less than once a week',
+                                                                      'eat meat once a week',
+                                                                      'eat meat several times a week',
+                                                                      'eat meat every day')),
+                                      'Car Ownership' = car::recode(CCS2,
+                                                                    "1 = 'does not own a car';
+                                                                    2 = 'does not own a car but can access one';
+                                                                    3 = 'owns a car'",
+                                                                    as.factor = TRUE,
+                                                                    levels = c('does not own a car',
+                                                                                'does not own a car but can access one',
+                                                                                'owns a car')),
+                                      'Distance Driven Private' = car::recode(CCS3,
+                                                                              "1 = 'none';
+                                                                              2 = 'up to 5,000 km';
+                                                                              3 = 'between 5,001 and 10,000 km';
+                                                                              4 = 'between 10,001 and 15,000 km';
+                                                                              5 = 'between 15,001 and 20,000 km';
+                                                                              6 = 'more than 20.000 km';
+                                                                              7 = 'do not know'",
+                                                                              as.factor = TRUE,
+                                                                              levels = c('none',
+                                                                                        'up to 5,000 km',
+                                                                                        'between 5,001 and 10,000 km',
+                                                                                        'between 10,001 and 15,000 km',
+                                                                                        'between 15,001 and 20,000 km',
+                                                                                        'more than 20.000 km',
+                                                                                        'do not know')),
+                                      'Distance Driven Business' = car::recode(CCS4,
+                                                                               "1 = 'none';
+                                                                              2 = 'up to 5,000 km';
+                                                                              3 = 'between 5,001 and 10,000 km';
+                                                                              4 = 'between 10,001 and 15,000 km';
+                                                                              5 = 'between 15,001 and 20,000 km';
+                                                                              6 = 'more than 20.000 km';
+                                                                              7 = 'do not know'",
+                                                                              as.factor = TRUE,
+                                                                              levels = c('none',
+                                                                                         'up to 5,000 km',
+                                                                                         'between 5,001 and 10,000 km',
+                                                                                         'between 10,001 and 15,000 km',
+                                                                                         'between 15,001 and 20,000 km',
+                                                                                         'more than 20.000 km',
+                                                                                         'do not know'))
                                       )
-psych::describe(datafull$SD8)
-# Are Behavior or Behavioral Intention correlated with count or incidence?
-correlation_matrix(datafull %>% select(starts_with("COB") | starts_with("Count") | starts_with("Incidence")),
-                   type = "spearman")
-summary(aov(datarest$Age ~ datarest$Gender))
+datacodedfull <- datacodedkn %>% cbind(datarest)
+# psych::describe(datafull$SD8)
+# # Are Behavior or Behavioral Intention correlated with count or incidence?
+# correlation_matrix(datafull %>% select(starts_with("COB") | starts_with("COTB") | starts_with("Count") | starts_with("Incidence")),
+#                    type = "spearman")
+# summary(aov(datarest$Age ~ datarest$Gender))
 
 # Exploratory correlation analysis
 allcor <- correlation_matrix(df = datacodedkn %>% select(!starts_with("CC") & !starts_with("CO")),
@@ -472,255 +563,76 @@ psychcor <- correlation_matrix(df = datacodedkn %>% select(contains("Behavior") 
                    use = "lower")
 
 
-#
+# Look at influence of manifest variables
+# COVID-19
+covidcor2 <- correlation_matrix(df = datacodedfull %>% select((contains("Behavior") & starts_with("COVID-19")) |
+                                                          ends_with("COVID-19") &
+                                                            where(is.numeric)),
+                               type = "spearman",
+                               use = "lower")
+# Anovas for categoricals
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Own Risk COVID-19`))
+TukeyHSD(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Own Risk COVID-19`))
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Own Infection COVID-19`))
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Own Hospitalisation COVID-19`))
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Cohabitate Risk COVID-19`))
+TukeyHSD(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Cohabitate Risk COVID-19`))
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$`Work From Home COVID-19`))
 
+correlation_matrix(datacodedfull %>%
+                     select(ends_with("Incidence COVID-19") | starts_with("COVID-19 Distrusting")),
+                            type = "spearman")
 
-#Correlation of age and behavior?
-cor(datavars[,c("CCBI","CCB","CCPBI","CCPB")], datavars[,"Age"], use ="pairwise.complete.obs")
-cor(datavars[,c("COBI","COB","COPBI","COPB")], datavars[,"Age"], use ="pairwise.complete.obs")
-#no correlation of age
+# Climate Crisis
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Diet))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Diet))
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$`Car Ownership`))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$`Car Ownership`))
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$`Distance Driven Business`))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$`Distance Driven Business`))
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$`Distance Driven Private`))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$`Distance Driven Private`))
 
-#Next, t-tests
-#sociodemographic variables
-#Differences in Gender and Behavioral Intention?
-datavars[(datavarsdf$C.Gender %in% 1),"CCBI"]
-t.test(datavars[(datavarsdf$C.Gender %in% 1),"CCBI"], datavars[(datavarsdf$C.Gender %in% 2),"CCBI"])
-sd(datavars[(datavarsdf$C.Gender %in% 1),"CCBI"])
-sd(datavars[(datavarsdf$C.Gender %in% 2),"CCBI"])
-#yes!
-t.test(datavars[(datavarsdf$C.Gender %in% 1),"COBI"], datavars[(datavarsdf$C.Gender %in% 2),"COBI"])
-#also yes
-sd(datavars[(datavarsdf$C.Gender %in% 1),"COBI"])
-sd(datavars[(datavarsdf$C.Gender %in% 2),"COBI"])
-#how about actual behavior
-t.test(datavars[(datavarsdf$C.Gender %in% 1),"CCB"], datavars[(datavarsdf$C.Gender %in% 2),"CCB"])
-#no
-t.test(datavars[(datavarsdf$C.Gender %in% 1),"COB"], datavars[(datavarsdf$C.Gender %in% 2),"COB"])
-sd(datavars[(datavarsdf$C.Gender %in% 1),"COB"], na.rm = TRUE)
-sd(datavars[(datavarsdf$C.Gender %in% 2),"COB"], na.rm = TRUE)
-#tiny bit
-#income and CCBI
-#high income is 11
-t.test(datavars[(datavarsdf$C.Income %in% 11),"CCBI"], datavars[!(datavarsdf$C.Income %in% 11),"CCBI"])
-#low income
-t.test(datavars[(datavarsdf$C.Income %in% 1),"CCBI"], datavars[!(datavarsdf$C.Income %in% 1),"CCBI"])
-#mid income
-t.test(datavars[(datavarsdf$C.Income %in% 6),"CCBI"], datavars[!(datavarsdf$C.Income %in% 6),"CCBI"])
+# Next test, for demographic variables
+# Age
+agecor <- correlation_matrix(df = datacodedfull %>% select(contains("Behavior") |
+                                                            contains("Age")),
+                             type = "spearman",
+                             use = "lower")
+# No substantial correlation
+# Gender CC
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Gender))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Gender))
+# Female-male difference
+# Gender CO
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$Gender))
+# no notable difference
 
-#income and CCB
-#high income is 11
-t.test(datavars[(datavarsdf$C.Income %in% 11),"CCB"], datavars[!(datavarsdf$C.Income %in% 11),"CCB"])
-#low income
-t.test(datavars[(datavarsdf$C.Income %in% 1),"CCB"], datavars[!(datavarsdf$C.Income %in% 1),"CCB"])
-#mid income
-t.test(datavars[(datavarsdf$C.Income %in% 6),"CCB"], datavars[!(datavarsdf$C.Income %in% 6),"CCB"])
+#Education CC
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Education))
+#no notable difference
+# Education CO
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$Education))
+#no notable difference
 
-#income and COBI
-#high income is 11
-t.test(datavars[(datavarsdf$C.Income %in% 11),"COBI"], datavars[!(datavarsdf$C.Income %in% 11),"COBI"])
-#low income
-t.test(datavars[(datavarsdf$C.Income %in% 1),"COBI"], datavars[!(datavarsdf$C.Income %in% 1),"COBI"])
-#mid income
-t.test(datavars[(datavarsdf$C.Income %in% 6),"COBI"], datavars[!(datavarsdf$C.Income %in% 6),"COBI"])
+#OCcupation CC
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Occupation))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Occupation))
+# diff university student and fully employed (and not in paid employment)
+# Occupation CO
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$Occupation))
+# no notable difference
 
-#income and COB
-#high income is 11
-t.test(datavars[(datavarsdf$C.Income %in% 11),"COB"], datavars[!(datavarsdf$C.Income %in% 11),"COB"])
-#low income
-t.test(datavars[(datavarsdf$C.Income %in% 1),"COB"], datavars[!(datavarsdf$C.Income %in% 1),"COB"])
-#mid income
-t.test(datavars[(datavarsdf$C.Income %in% 6),"COB"], datavars[!(datavarsdf$C.Income %in% 6),"COB"])
+#Income CC
+summary(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Income))
+TukeyHSD(aov(datacodedfull$`Climate Crisis Behavior` ~ datacodedfull$Income))
+# Difference between 3501-4000 and up to 450 EUR
+#Income CO
+summary(aov(datacodedfull$`COVID-19 Behavior` ~ datacodedfull$Income))
+# no notable difference
 
-#education
-#doctorate
-t.test(datavars[(datavarsdf$C.Education %in% 7),"CCBI"], datavars[!(datavarsdf$C.Education %in% 7),"CCBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 7),"CCB"], datavars[!(datavarsdf$C.Education %in% 7),"CCB"])
-t.test(datavars[(datavarsdf$C.Education %in% 7),"COBI"], datavars[!(datavarsdf$C.Education %in% 7),"COBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 7),"COB"], datavars[!(datavarsdf$C.Education %in% 7),"COB"])
-#university degree
-t.test(datavars[(datavarsdf$C.Education %in% 6),"CCBI"], datavars[!(datavarsdf$C.Education %in% 6),"CCBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 6),"CCB"], datavars[!(datavarsdf$C.Education %in% 6),"CCB"])
-t.test(datavars[(datavarsdf$C.Education %in% 6),"COBI"], datavars[!(datavarsdf$C.Education %in% 6),"COBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 6),"COB"], datavars[!(datavarsdf$C.Education %in% 6),"COB"])
-#abitur
-t.test(datavars[(datavarsdf$C.Education %in% 5),"CCBI"], datavars[!(datavarsdf$C.Education %in% 5),"CCBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 5),"CCB"], datavars[!(datavarsdf$C.Education %in% 5),"CCB"])
-t.test(datavars[(datavarsdf$C.Education %in% 5),"COBI"], datavars[!(datavarsdf$C.Education %in% 5),"COBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 5),"COB"], datavars[!(datavarsdf$C.Education %in% 5),"COB"])
-#ralschulabschluss
-t.test(datavars[(datavarsdf$C.Education %in% 4),"CCBI"], datavars[!(datavarsdf$C.Education %in% 4),"CCBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 4),"CCB"], datavars[!(datavarsdf$C.Education %in% 4),"CCB"])
-t.test(datavars[(datavarsdf$C.Education %in% 4),"COBI"], datavars[!(datavarsdf$C.Education %in% 4),"COBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 4),"COB"], datavars[!(datavarsdf$C.Education %in% 4),"COB"])
-#hauptschulabschluss
-t.test(datavars[(datavarsdf$C.Education %in% 3),"CCBI"], datavars[!(datavarsdf$C.Education %in% 3),"CCBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 3),"CCB"], datavars[!(datavarsdf$C.Education %in% 3),"CCB"])
-t.test(datavars[(datavarsdf$C.Education %in% 3),"COBI"], datavars[!(datavarsdf$C.Education %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.Education %in% 3),"COB"], datavars[!(datavarsdf$C.Education %in% 3),"COB"])
-
-#occupation
-#fulltime
-t.test(datavars[(datavarsdf$C.Occupation %in% 1),"CCBI"], datavars[!(datavarsdf$C.Occupation %in% 1),"CCBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 1),"CCB"], datavars[!(datavarsdf$C.Occupation %in% 1),"CCB"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 1),"COBI"], datavars[!(datavarsdf$C.Occupation %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 1),"COB"], datavars[!(datavarsdf$C.Occupation %in% 1),"COB"])
-#parttime
-t.test(datavars[(datavarsdf$C.Occupation %in% 2),"CCBI"], datavars[!(datavarsdf$C.Occupation %in% 2),"CCBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 2),"CCB"], datavars[!(datavarsdf$C.Occupation %in% 2),"CCB"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 2),"COBI"], datavars[!(datavarsdf$C.Occupation %in% 2),"COBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 2),"COB"], datavars[!(datavarsdf$C.Occupation %in% 2),"COB"])
-#vocational training
-t.test(datavars[(datavarsdf$C.Occupation %in% 3),"CCBI"], datavars[!(datavarsdf$C.Occupation %in% 3),"CCBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 3),"CCB"], datavars[!(datavarsdf$C.Occupation %in% 3),"CCB"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 3),"COBI"], datavars[!(datavarsdf$C.Occupation %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 3),"COB"], datavars[!(datavarsdf$C.Occupation %in% 3),"COB"])
-#university student
-t.test(datavars[(datavarsdf$C.Occupation %in% 4),"CCBI"], datavars[!(datavarsdf$C.Occupation %in% 4),"CCBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 4),"CCB"], datavars[!(datavarsdf$C.Occupation %in% 4),"CCB"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 4),"COBI"], datavars[!(datavarsdf$C.Occupation %in% 4),"COBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 4),"COB"], datavars[!(datavarsdf$C.Occupation %in% 4),"COB"])
-#other student (none)
-#not employed
-t.test(datavars[(datavarsdf$C.Occupation %in% 6),"CCBI"], datavars[!(datavarsdf$C.Occupation %in% 6),"CCBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 6),"CCB"], datavars[!(datavarsdf$C.Occupation %in% 6),"CCB"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 6),"COBI"], datavars[!(datavarsdf$C.Occupation %in% 6),"COBI"])
-t.test(datavars[(datavarsdf$C.Occupation %in% 6),"COB"], datavars[!(datavarsdf$C.Occupation %in% 6),"COB"])
-
-
-#living situation!
-#alone
-t.test(datavars[(datavarsdf$C.Living %in% 1),"CCBI"], datavars[!(datavarsdf$C.Living %in% 1),"CCBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 1),"CCB"], datavars[!(datavarsdf$C.Living %in% 1),"CCB"])
-t.test(datavars[(datavarsdf$C.Living %in% 1),"COBI"], datavars[!(datavarsdf$C.Living %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 1),"COB"], datavars[!(datavarsdf$C.Living %in% 1),"COB"])
-#zu zweit partner
-t.test(datavars[(datavarsdf$C.Living %in% 2),"CCBI"], datavars[!(datavarsdf$C.Living %in% 2),"CCBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 2),"CCB"], datavars[!(datavarsdf$C.Living %in% 2),"CCB"])
-t.test(datavars[(datavarsdf$C.Living %in% 2),"COBI"], datavars[!(datavarsdf$C.Living %in% 2),"COBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 2),"COB"], datavars[!(datavarsdf$C.Living %in% 2),"COB"])
-#zu zweit familie
-t.test(datavars[(datavarsdf$C.Living %in% 3),"CCBI"], datavars[!(datavarsdf$C.Living %in% 3),"CCBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 3),"CCB"], datavars[!(datavarsdf$C.Living %in% 3),"CCB"])
-t.test(datavars[(datavarsdf$C.Living %in% 3),"COBI"], datavars[!(datavarsdf$C.Living %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 3),"COB"], datavars[!(datavarsdf$C.Living %in% 3),"COB"])
-#zu mehr familie
-t.test(datavars[(datavarsdf$C.Living %in% 4),"CCBI"], datavars[!(datavarsdf$C.Living %in% 4),"CCBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 4),"CCB"], datavars[!(datavarsdf$C.Living %in% 4),"CCB"])
-t.test(datavars[(datavarsdf$C.Living %in% 4),"COBI"], datavars[!(datavarsdf$C.Living %in% 4),"COBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 4),"COB"], datavars[!(datavarsdf$C.Living %in% 4),"COB"])
-#zu zweit wg
-t.test(datavars[(datavarsdf$C.Living %in% 5),"CCBI"], datavars[!(datavarsdf$C.Living %in% 5),"CCBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 5),"CCB"], datavars[!(datavarsdf$C.Living %in% 5),"CCB"])
-t.test(datavars[(datavarsdf$C.Living %in% 5),"COBI"], datavars[!(datavarsdf$C.Living %in% 5),"COBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 5),"COB"], datavars[!(datavarsdf$C.Living %in% 5),"COB"])
-#zu mehreren wg
-t.test(datavars[(datavarsdf$C.Living %in% 6),"CCBI"], datavars[!(datavarsdf$C.Living %in% 6),"CCBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 6),"CCB"], datavars[!(datavarsdf$C.Living %in% 6),"CCB"])
-t.test(datavars[(datavarsdf$C.Living %in% 6),"COBI"], datavars[!(datavarsdf$C.Living %in% 6),"COBI"])
-t.test(datavars[(datavarsdf$C.Living %in% 6),"COB"], datavars[!(datavarsdf$C.Living %in% 6),"COB"])
-
-
-#COVID-Questions!
-#own risk, 3 is yes, 1 is no
-t.test(datavars[(datavarsdf$C.CO.Own.Risk %in% 3),"COBI"], datavars[!(datavarsdf$C.CO.Own.Risk %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Risk %in% 3),"COB"], datavars[!(datavarsdfC.CO.Own.Risk %in% 3),"COB"])
-t.test(datavars[(datavarsdf$C.CO.Own.Risk %in% 1),"COBI"], datavars[!(datavarsdf$C.CO.Own.Risk %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Risk %in% 1),"COB"], datavars[!(datavarsdfC.CO.Own.Risk %in% 1),"COB"])
-#own infektion, 3 is yes, 1 is no
-t.test(datavars[(datavarsdf$C.CO.Own.Infektion %in% 3),"COBI"], datavars[!(datavarsdf$C.CO.Own.Infektion %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Infektion %in% 3),"COB"], datavars[!(datavarsdfC.CO.Own.Infektion %in% 3),"COB"])
-t.test(datavars[(datavarsdf$C.CO.Own.Infektion %in% 1),"COBI"], datavars[!(datavarsdf$C.CO.Own.Infektion %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Infektion %in% 1),"COB"], datavars[!(datavarsdfC.CO.Own.Infektion %in% 1),"COB"])
-#own severity, 3 is yes, 1 is no
-t.test(datavars[(datavarsdf$C.CO.Own.Severity %in% 3),"COBI"], datavars[!(datavarsdf$C.CO.Own.Severity %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Severity %in% 3),"COB"], datavars[!(datavarsdfC.CO.Own.Severity %in% 3),"COB"])
-t.test(datavars[(datavarsdf$C.CO.Own.Severity %in% 1),"COBI"], datavars[!(datavarsdf$C.CO.Own.Severity %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Severity %in% 1),"COB"], datavars[!(datavarsdfC.CO.Own.Severity %in% 1),"COB"])
-#living with someone at risk C.CO.Living.Risk
-t.test(datavars[(datavarsdf$C.CO.Living.Risk %in% 3),"COBI"], datavars[!(datavarsdf$C.CO.Living.Risk %in% 3),"COBI"])
-sd(datavars[(datavarsdf$C.CO.Living.Risk %in% 3),"COBI"], na.rm=TRUE)
-sd(datavars[!(datavarsdf$C.CO.Living.Risk %in% 3),"COBI"], na.rm=TRUE)
-
-t.test(datavars[(datavarsdf$C.CO.Living.Risk %in% 3),"COB"], datavars[!(datavarsdfC.CO.Living.Risk %in% 3),"COB"])
-t.test(datavars[(datavarsdf$C.CO.Living.Risk %in% 1),"COBI"], datavars[!(datavarsdf$C.CO.Living.Risk %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Living.Risk %in% 1),"COB"], datavars[!(datavarsdfC.CO.Living.Risk %in% 1),"COB"])
-#knowing others with infection - correlation CO.Others.Infection
-cor.test(datavars[,"COBI"], datavars[,"CO.Others.Infection"])
-t.test(datavars[(datavarsdf$CO.Others.Infection %in% 0),"COBI"], datavars[!(datavarsdf$CO.Others.Infection %in% 0),"COBI"])
-t.test(datavars[(datavarsdf$CO.Others.Infection %in% 0),"COB"], datavars[!(datavarsdfCO.Others.Infection %in% 0),"COB"])
-t.test(datavars[(datavarsdf$CO.Others.Infection %in% 5),"COBI"], datavars[!(datavarsdf$CO.Others.Infection %in% 5),"COBI"])
-t.test(datavars[(datavarsdf$CO.Others.Infection %in% 5),"COB"], datavars[!(datavarsdfCO.Others.Infection %in% 5),"COB"])
-#other's severity CO.Others.Severity
-cor.test(datavars[,"COBI"], datavars[,"CO.Others.Severity"])
-t.test(datavars[(datavarsdf$CO.Others.Severity %in% 0),"COBI"], datavars[!(datavarsdf$CO.Others.Severity %in% 0),"COBI"])
-t.test(datavars[(datavarsdf$CO.Others.Severity %in% 0),"COB"], datavars[!(datavarsdfCO.Others.Severity %in% 0),"COB"])
-t.test(datavars[(datavarsdf$CO.Others.Severity %in% 1),"COBI"], datavars[!(datavarsdf$CO.Others.Severity %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$CO.Others.Severity %in% 1),"COB"], datavars[!(datavarsdfCO.Others.Severity %in% 1),"COB"])
-t.test(datavars[(datavarsdf$CO.Others.Severity %in% 3),"COBI"], datavars[!(datavarsdf$CO.Others.Severity %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$CO.Others.Severity %in% 3),"COB"], datavars[!(datavarsdfCO.Others.Severity %in% 3),"COB"])
-#occupational C.CO.Own.Ocuppation
-t.test(datavars[(datavarsdf$C.CO.Own.Ocuppation %in% 3),"COBI"], datavars[!(datavarsdf$C.CO.Own.Ocuppation %in% 3),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Ocuppation %in% 3),"COB"], datavars[!(datavarsdfC.CO.Own.Ocuppation %in% 3),"COB"])
-t.test(datavars[(datavarsdf$C.CO.Own.Ocuppation %in% 1),"COBI"], datavars[!(datavarsdf$C.CO.Own.Ocuppation %in% 1),"COBI"])
-t.test(datavars[(datavarsdf$C.CO.Own.Ocuppation %in% 1),"COB"], datavars[!(datavarsdfC.CO.Own.Ocuppation %in% 1),"COB"])
-
-
-#Diet
-#Vegans
-t.test(datavars[(datavarsdf$C.Diet %in% 1),"CCBI"], datavars[!(datavarsdf$C.Diet %in% 1),"CCBI"])
-sd(datavars[(datavarsdf$C.Diet %in% 1),"CCBI"])
-sd(datavars[!(datavarsdf$C.Diet %in% 1),"CCBI"])
-t.test(datavars[(datavarsdf$C.Diet %in% 1),"CCB"], datavars[!(datavarsdfC.Diet %in% 1),"CCB"])
-#Vegetarians
-t.test(datavars[(datavarsdf$C.Diet %in% 2),"CCBI"], datavars[!(datavarsdf$C.Diet %in% 2),"CCBI"])
-t.test(datavars[(datavarsdf$C.Diet %in% 2),"CCB"], datavars[!(datavarsdfC.Diet %in% 2),"CCB"])
-#3
-t.test(datavars[(datavarsdf$C.Diet %in% 3),"CCBI"], datavars[!(datavarsdf$C.Diet %in% 3),"CCBI"])
-t.test(datavars[(datavarsdf$C.Diet %in% 3),"CCB"], datavars[!(datavarsdfC.Diet %in% 3),"CCB"])
-#middleground
-t.test(datavars[(datavarsdf$C.Diet %in% 4),"CCBI"], datavars[!(datavarsdf$C.Diet %in% 4),"CCBI"])
-t.test(datavars[(datavarsdf$C.Diet %in% 4),"CCB"], datavars[!(datavarsdfC.Diet %in% 4),"CCB"])
-#5
-t.test(datavars[(datavarsdf$C.Diet %in% 5),"CCBI"], datavars[!(datavarsdf$C.Diet %in% 5),"CCBI"])
-t.test(datavars[(datavarsdf$C.Diet %in% 5),"CCB"], datavars[!(datavarsdfC.Diet %in% 5),"CCB"])
-#daily
-t.test(datavars[(datavarsdf$C.Diet %in% 6),"CCBI"], datavars[!(datavarsdf$C.Diet %in% 6),"CCBI"])
-t.test(datavars[(datavarsdf$C.Diet %in% 6),"CCB"], datavars[!(datavarsdfC.Diet %in% 6),"CCB"])
-
-#CARS!
-#Differences in Car Own and Behavioral Intention/Behavior?
-t.test(datavars[(datavarsdf$C.Car.Own %in% 5),"CCBI"], datavars[!(datavarsdf$C.Car.Own %in% 5),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Own %in% 5),"CCB"], datavars[!(datavarsdf$C.Car.Own %in% 5),"CCB"])
-sd(datavars[(datavarsdf$C.Car.Own %in% 5),"CCBI"])
-sd(datavars[!(datavarsdf$C.Car.Own %in% 5),"CCBI"])
-
-#ride along 2
-t.test(datavars[(datavarsdf$C.Car.Use.Ride.Along %in% 2),"CCBI"], datavars[!(datavarsdf$C.Car.Use.Ride.Along %in% 2),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Use.Ride.Along %in% 2),"CCB"], datavars[!(datavarsdf$C.Car.Use.Ride.Along %in% 2),"CCB"])
-#carshare3
-t.test(datavars[(datavarsdf$C.Car.Use.Carshare %in% 3),"CCBI"], datavars[!(datavarsdf$C.Car.Use.Carshare %in% 3),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Use.Carshare %in% 3),"CCB"], datavars[!(datavarsdf$C.Car.Use.Carshare %in% 3),"CCB"])
-#access4
-t.test(datavars[(datavarsdf$C.Car.Use.Access %in% 4),"CCBI"], datavars[!(datavarsdf$C.Car.Use.Access %in% 4),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Use.Access %in% 4),"CCB"], datavars[!(datavarsdf$C.Car.Use.Access %in% 4),"CCB"])
-
-#Driving distance: 1:5
-#1
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 1),"CCBI"], datavars[!(datavarsdf$C.Car.Distance %in% 1),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 1),"CCB"], datavars[!(datavarsdf$C.Car.Distance %in% 1),"CCB"])
-#2
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 2),"CCBI"], datavars[!(datavarsdf$C.Car.Distance %in% 2),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 2),"CCB"], datavars[!(datavarsdf$C.Car.Distance %in% 2),"CCB"])
-#3
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 3),"CCBI"], datavars[!(datavarsdf$C.Car.Distance %in% 3),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 3),"CCB"], datavars[!(datavarsdf$C.Car.Distance %in% 3),"CCB"])
-#4
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 4),"CCBI"], datavars[!(datavarsdf$C.Car.Distance %in% 4),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 4),"CCB"], datavars[!(datavarsdf$C.Car.Distance %in% 4),"CCB"])
-#5
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 5),"CCBI"], datavars[!(datavarsdf$C.Car.Distance %in% 5),"CCBI"])
-sd(datavars[(datavarsdf$C.Car.Distance %in% 5),"CCBI"])
-sd(datavars[!(datavarsdf$C.Car.Distance %in% 5),"CCBI"])
-t.test(datavars[(datavarsdf$C.Car.Distance %in% 5),"CCB"], datavars[!(datavarsdf$C.Car.Distance %in% 5),"CCB"])
-sd(datavars[(datavarsdf$C.Car.Distance %in% 5),"CCB"], na.rm=TRUE)
-sd(datavars[!(datavarsdf$C.Car.Distance %in% 5),"CCB"], na.rm=TRUE)
+#Household Size + Children
+correlation_matrix(datacodedfull %>%
+                     select(contains("Behavior") | starts_with("Household")),
+                   type = "spearman")
+# no notable correlation
