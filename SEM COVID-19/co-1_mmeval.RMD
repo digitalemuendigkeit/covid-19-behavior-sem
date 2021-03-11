@@ -453,10 +453,13 @@ datatable(forhocevalmm,
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 
+
 ## Results of the formative higher-order constructs evaluation
-For the formative higher-order constructs, there are no issues with collinearity (VIF above 3, but below 5) and all weights are significant and relevant.
+For the formative higher-order constructs, there are no issues with collinearity (VIF above 3, but below 5).
+The weight for Distrusting Beliefs Integrity is not significant, but the loading is sufficiently large and significant.
+All other weights are significant and relevant.
 The formative higher-order constructs can be retained as hypothesized.
 
 # Results summary
 To improve internal consistency reliability of Personal Norm, COPN2 should be deleted.
-Because of a lack of convergent validity, the formative Perceived Self-Efficacy construct should be replaced by a single-indicator reflective Perceived Self-Efficacy construct.
+Because of a lack of convergent validity, the formative Perceived Self-Efficacy construct should be replaced by a single-indicator (CORB10) reflective Perceived Self-Efficacy construct.

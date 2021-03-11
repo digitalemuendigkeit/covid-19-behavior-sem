@@ -110,7 +110,7 @@ DI <- model$construct_scores[,"Distrusting Beliefs"]
 RB <- model$construct_scores[,"Response Beliefs"]
 
 # Define number of bootstraps: 10.000 for reporting, 100 for testing
-bootrounds <- 100
+bootrounds <- 10000
 
 # Estimate regression model
 rbmodel <- lm(RB ~ DI + KN)
@@ -180,7 +180,7 @@ datatable(rbdf) %>%
   formatRound(-1,
               digits = 3)
 ```
-Neither the Distrusting Beliefs nor the Knowlede Copula is significant, indicating that there is no hidden endogeneity in the regression of Response Beliefs on its predictors.
+Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no hidden endogeneity in the regression of Response Beliefs on its predictors.
 
 # Regression of Threat Beliefs on Distrusting Beliefs and Knowledge
 ```{r gca tb}
@@ -188,7 +188,7 @@ Neither the Distrusting Beliefs nor the Knowlede Copula is significant, indicati
 TB <- model$construct_scores[,"Threat Beliefs"]
 
 # Define number of bootstraps: 10.000 for reporting, 100 for testing
-bootrounds <- 100
+bootrounds <- 10000
 
 # Estimate regression model
 tbmodel <- lm(TB ~ DI + KN)
@@ -268,7 +268,7 @@ PN <- model$construct_scores[,"Personal Moral Norm"]
 SN <- model$construct_scores[,"Subjective Norm"]
 
 # Define number of bootstraps: 10.000 for reporting, 100 for testing
-bootrounds <- 100
+bootrounds <- 10000
 
 # Estimate regression model
 bimodel <- lm(BI ~ RB + TB + PN + SN)
@@ -533,8 +533,11 @@ datatable(bidf) %>%
               digits = 3)
 ```
 
+
 In looking only at single copulas, none of copulas achieves a significant p-value.
 However, when combining multiple copulas, the copula for Response Beliefs achieves a significant p-value in some cases (p < 0.1).
-Further, adding the copula increases the path coefficient by 0.064 from 0.485 in the original model to 0.549.
+Further, adding the single copula increases the path coefficient by 0.057 from 0.488 in the original model to 0.545.
 Both of this indicates that Response Beliefs might be endogenous.
 There is nothing pointing to hidden endogeneity in any of the other predictors.
+
+As the capula cannot be integrated in iterative model improvement, the capula test will be repeated for the final models.

@@ -152,7 +152,7 @@ The effect of Distrusting Beliefs on Perceived Response Efficacy and Perceived R
 Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
 If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive power.
 ```{r plspredict, echo = FALSE}
-plspre <- predict_pls(proxymodel, noFolds = 10)
+plspre <- predict_pls(proxymodel, noFolds = 50, technique = predict_DA)
 sumplspre <- summary(plspre)
 oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
   rbind(as.data.frame(sumplspre$LM_out_of_sample)) %>%

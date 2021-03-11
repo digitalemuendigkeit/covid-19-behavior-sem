@@ -46,9 +46,9 @@ sm <- relationships(
 # plot(model)
 # bootmodel <- bootstrap_model(model, nboot = 5000)
 # saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-2.RDS")
-# bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-2.RDS")
+bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-2.RDS")
 # bootfsmodel <- bootstrap_model(model$first_stage_model, nboot = 5000)
-saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-2.RDS")
+# saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-2.RDS")
 
 # Models for estimation of convergent validity for formative constructs
 # Perceived Response Efficacy
