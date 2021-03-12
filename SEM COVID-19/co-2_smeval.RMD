@@ -144,9 +144,9 @@ datatable(f2,
 ```
 The effect sizes of the relationships including many lower-order constructs are below 0.2.
 Benevolence has only an effect on Perceived Response Costs and Perceived Severity.
-Compentence has an effect on all its descendent lower-order constructs except Perceived Susceptibility.
-Integrity has no effect on any of its descendent lower order constructs.
-Knowledge has a discernible effect only on Perceived REsponse Efficacy, Threat Beliefs and Perceived Severity.
+Competence has an effect on all its descendant lower-order constructs except Perceived Susceptibility.
+Integrity only has an effect on any of Perceived Response Efficacy.
+Knowledge has a discernible effect only on Perceived Response Efficacy, Threat Beliefs and Perceived Severity.
 From the lower-order constructs, only Perceived Response Efficacy and Perceived Response Costs have a discernible effect on Behavioral Intention.
 Apart from that, there is only a negligible effect of Threat Beliefs on Behavioral Intention.
 If this is mirrored in non-significant and irrelevant path coefficients, these structural relationships can be removed.
@@ -229,7 +229,7 @@ datatable(pcalldf,
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 Concerning higher-order and regular constructs, only the path from Threat Beliefs to Behavioral Intention is non-significant.
-With lower-order constructs, insignificant paths are those from Knowledge to Perceived Response Costs, all from Benevolence except those from Perceived Response Costs and Perceived Severity, the path from Competence to Perceived Susceptibility,  all from Integrity except to Perceived Response Efficacy, all paths from the Response and Threat Beliefs lower-order constructs except the one from Perceived Response Efficacy and the path from Injunctive Norm to Behavioral Intention.
+With lower-order constructs, non-significant paths are those from Knowledge to Perceived Response Costs and Perceived Self-Efficacy, all from Benevolence except those from Perceived Response Costs and Perceived Severity, the path from Competence to Perceived Susceptibility,  all from Integrity except to Perceived Response Efficacy, all from the Threat Beliefs lower-order constructs and the one from Perceived Self-Efficacy,and both the paths from Descriptive and from Injunctive Norm to Behavioral Intention.
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
@@ -259,12 +259,13 @@ datatable(sumsm,
 ```
 
 # Results summary
-The path from Threat Beliefs to Behavioral Intention is insignificant and the effect size is negligible, therefore the path and the Threat Beliefs construct can be removed.
-Concerning the remaining lower-order constructs, Benevolence only has a significant path with a discernible effect to Perceived Response Costs and so does Integrity, although with only a negligible effect.
-Knowledge has no discernible effect on and no significant path to Perceived Response Costs.
-Only Perceived Response Efficacy has a significant path to and an effect on Behavioral Intention, for Perceived Response Costs the path is on the edge of significance with a discernible effect.
-Perceived Self-Efficacy has neither.
-Therefore, Perceived Self-Efficacy should be removed as a lower-order construct.
-Injunctive Norm has neither a significant path to nor a discernible effect on Behavioral Intention.
-Therefore, Injunctive Norm should be removed as a lower-order construct and Descriptive Norm substitute the Subjective Norm higher-order construct.
+Concerning higher-order and regular constructs, the path from Threat Beliefs to Behavioral Intention is non-significant and the effect size is negligible.
+Therefore the path and the Threat Beliefs construct can be removed.
+All other paths are significant and the effects, with the exception of the effect of Knowledge on Response Beliefs, are at least weak.
+Concerning the remaining lower-order constructs, Benevolence only has a significant path with a discernible effect to Perceived Response Costs, and Integrity only to Perceived Response Efficacy.
+Knowledge only has a significant path with a discernible effect to Perceived Response Efficacy.
+Perceived Self-Efficacy has no significant path to or discernible effect on Behavioral Intention.
+Therefore, Perceived Self-Efficacy could be removed as a lower-order construct.
+Neither Descriptive nor Injunctive Norm have  a significant path to or a discernible effect on Behavioral Intention, though Subjective Norm has both.
+As Injunctive Norm is the comparatively weaker construct, it should be removed for the next model iteration and Descriptive Norm should replace the Subjective Norm HOC to assess wether it has a significant effect on its own.
 To differentiate the influence of Distrusting Beliefs and Knowledge on the Response Beliefs lower-order construct, an alternative model with the Response Beliefs lower-order constructs split up should be estimated.

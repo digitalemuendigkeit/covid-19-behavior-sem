@@ -14,7 +14,7 @@ data <- as.matrix(datacrop %>% select(!starts_with("COKN")) %>% cbind("COKN" = r
 # Results of co 2 mm eval
 # The path from Threat Beliefs to Behavioral Intention is insignificant and the effect size is negligible, therefore the path and the Threat Beliefs construct can be removed.
 # Therefore, Perceived Self-Efficacy should be removed as a lower-order construct.
-# Therefore, Injunctive Norm should be removed as a lower-order construct and Descriptive Norm substitute the Subjective Norm higher-order construct.
+# Injunctive Norm should be removed as a lower-order construct and Descriptive Norm substitute the Subjective Norm higher-order construct.
 
 mm <- constructs(
   composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
