@@ -143,7 +143,7 @@ datatable(f2,
 ```
 The effect sizes of the relationships including many lower-order constructs are below 0.2.
 Benevolence has only an effect on Perceived Response Costs.
-Integrity has no effect on any of its descendant lower order constructs.
+Integrity has only an effect on Perceived Response-Efficacy.
 Knowledge has only a negligible effect on Response Beliefs and one of its lower-order constructs, Perceived Response Costs.
 Other than that, all effects are small at a minimum.
 The effects of Perceived Response Efficacy and Response Beliefs on Behavioral Intention are medium.
@@ -255,4 +255,4 @@ datatable(sumsm,
 
 # Results summary
 All construct and higher-order construct paths are significant, altough the effect size for the path from Knowledge to Response Beliefs is negligible.
-The mode can be compared with other models.
+The model can be compared with other models.

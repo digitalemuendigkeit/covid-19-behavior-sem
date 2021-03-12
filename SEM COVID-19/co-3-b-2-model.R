@@ -1,9 +1,5 @@
 library(tidyverse)
-# library(remotes)
-# remotes::install_github("sem-in-r/seminr", ref = "model-viz", force = TRUE)
 library(seminr)
-thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
-seminr_theme_set(thm)
 
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
 datafull <- read_rds("Data/S1-data-nm.RDS")

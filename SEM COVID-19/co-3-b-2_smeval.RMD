@@ -23,7 +23,7 @@ sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Set seminr plot theme
-thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
+thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE, construct.compositeA.shape = "ellipse", construct.compositeB.shape = "ellipse")
 seminr_theme_set(thm)
 # My favorite operator
 `%notin%` <- Negate(`%in%`)
@@ -78,6 +78,7 @@ datatable(vif,
 ```
 VIF is above 3 for some constructs, specifically lower-order constructs.
 But it is not above 5 for any constructs.
+There is no VIF information for the relationship Distrusting Beliefs - Perceived Response Costs.
 
 # In-sample predictive power
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
@@ -142,8 +143,7 @@ datatable(f2,
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
 Benevolence has only an effect on Perceived Response Costs.
-Integrity has no effect on any of its descendant lower order constructs.
-Knowledge has only a negligible effect on Perceived Response Costs.
+Integrity has only an effect on Perceived Response Efficacy.
 Other than that, all effects are small at a minimum.
 The effect of Perceived Response Efficacy on Behavioral Intention is medium.
 The effect of Distrusting Beliefs on Perceived Response Efficacy and Perceived REsponse Costs is large.
@@ -224,6 +224,7 @@ datatable(pcalldf,
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
 The only insignificant paths are those from Integrity to Perceived Response Costs and from Benevolence to Perceived Response Efficacy.
+All other paths are significant.
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
