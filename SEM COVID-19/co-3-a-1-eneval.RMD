@@ -153,7 +153,7 @@ bootSig(model$data, bootcopulaknrb, 2,1)
 # Attach to df
 rbdf <- rbdf %>% cbind(
   KN.Co.Model.Value = c(summary(bootcopulaknrb)[1:2,5], NA, summary(bootcopulaknrb)[3,5]),
-  KN.Co.Model.p = c(bootSig(model$data, bootcopuladirb, 2,1)[1:2], NA, bootSig(model$data, bootcopuladirb, 3,1)[3])
+  KN.Co.Model.p = c(bootSig(model$data, bootcopulaknrb, 2,1)[1:2], NA, bootSig(model$data, bootcopulaknrb, 3,1)[3])
 )
 
 # Calculate results with copula for both DI and KN
@@ -250,7 +250,7 @@ bootSig(model$data, bootcopuladnbi, 3,1)
 # Attach to df
 bidf <- bidf %>% cbind(
   DN.Co.Model.Value = c(summary(bootcopuladnbi)[1:3,5], NA, NA, summary(bootcopuladnbi)[4,5]),
-  DN.Co.Model.p = c(bootSig(model$data, bootcopulasnbi, 3,1)[1:3], NA,  NA, bootSig(model$data, bootcopuladnbi, 3,1)[4])
+  DN.Co.Model.p = c(bootSig(model$data, bootcopuladnbi, 3,1)[1:3], NA,  NA, bootSig(model$data, bootcopuladnbi, 3,1)[4])
 )
 
 
@@ -325,10 +325,52 @@ datatable(bidf) %>%
 ```
 
 
-In looking only at single copulas, none of copulas achieves a significant p-value.
-However, when combining multiple copulas, the copula for Response Beliefs achieves a significant p-value in some cases (p < 0.1).
+The  copula for Response Beliefs achieves a significant p-value in almost all constellations (p < 0.1).
 Further, adding the single copula increases the Response Belief path coefficient by about 0.06.
 Both of this indicates that Response Beliefs might be endogenous.
 There is nothing pointing to hidden endogeneity in any of the other predictors.
 
 The copula will be integrated in the final model to improve the model.
+
+<!-- ```{r model with copula} -->
+<!-- modelwc <- estimate_pls(data = model$data %>% cbind(RB_star),  -->
+<!--                         measurement_model = constructs( -->
+<!--                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B), -->
+<!--                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B), -->
+<!--                         higher_composite("Response Beliefs", c("Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B), -->
+<!--                         composite("Benevolence", multi_items("CODI", 1:3)), -->
+<!--                         composite("Competence", multi_items("CODI", 4:6)), -->
+<!--                         composite("Integrity", multi_items("CODI", 7:9)), -->
+<!--                         higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B), -->
+<!--                         composite("Knowledge", single_item("COKN")), -->
+<!--                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))), -->
+<!--                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B), -->
+<!--                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B), -->
+<!--                         composite("Copula Response Beliefs", single_item("RB_star")) -->
+<!--                         ),  -->
+<!--   structural_model = relationships( -->
+<!--   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs")), -->
+<!--   paths(from = c("Response Beliefs", "Personal Moral Norm", "Descriptive Norm", "Copula Response Beliefs"), to = "Behavioral Intention") -->
+<!-- )) -->
+<!-- saveRDS(modelwc, "Models/model-co-3-a-1-cop.RDS") -->
+<!-- bootmodelwc <- bootstrap_model(modelwc, nboot = 5000) -->
+<!-- saveRDS(bootmodelwc, "Models/model-boot-co-3-a-1-cop.RDS") -->
+<!-- bootfsmodel <- bootstrap_model(modelwc$first_stage_model, nboot = 5000) -->
+<!-- saveRDS(bootmodelwc, "Models/model-fs-boot-co-3-a-1-cop.RDS") -->
+<!-- proxymodelwc <- estimate_pls(data = as.data.frame(model$data %>% cbind(RB_star)),  -->
+<!--                            measurement_model = constructs( -->
+<!--   composite("Response Beliefs", multi_items("CORB", c(4:9)), weights = mode_B), -->
+<!--   composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B), -->
+<!--   composite("Knowledge", single_item("COKN")), -->
+<!--   composite("Personal Moral Norm", multi_items("COPN", c(1,3))), -->
+<!--   composite("Descriptive Norm", multi_items("CODN", 1:2), weights = mode_B), -->
+<!--   composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B), -->
+<!--                         composite("Copula Response Beliefs", single_item("RB_star")) -->
+<!--                                                           ), -->
+<!-- structural_model = relationships( -->
+<!--   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs")), -->
+<!--   paths(from = c("Response Beliefs", "Personal Moral Norm", "Descriptive Norm", "Copula Response Beliefs"), to = "Behavioral Intention") -->
+<!-- )) -->
+<!-- saveRDS(proxymodelwc, "Models/model-proxy-co-3-a-1-cop.RDS") -->
+<!-- ``` -->
+

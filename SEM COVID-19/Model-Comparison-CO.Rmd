@@ -120,6 +120,51 @@ comparison <- comparison %>% left_join(modelsum)
 ```{r visualize model Model COVID-19 3-a-1, echo=FALSE}
 plot(bootmodel, structure_only = TRUE, title = modelname)
 ```
+
+```{r model Insert Model COVID-19 3-a-1 with copula, echo=FALSE, include =FALSE}
+# Define model name
+modelname <- "Model COVID-19 3-a-1 with copula"
+# Load models and create summaries
+model <- readRDS("Models/model-co-3-a-1-cop.RDS")
+bootmodel <- readRDS("Models/model-boot-co-3-a-1-cop.RDS")
+bootfsmodel <- readRDS("Models/model-fs-boot-co-3-a-1-cop.RDS")
+proxymodel <- readRDS("Models/model-proxy-co-3-a-1-cop.RDS")
+summo <- summary(model)
+sumfs <- summary(model$first_stage_model)
+sumbomo <- summary(bootmodel)
+sumbofsmo <- summary(bootfsmodel)
+# Create R²adj df
+r2hoc <- data.frame(Construct = colnames(summo$paths),
+                    "AdjR^2" = summo$paths[2,])
+r2loc <- data.frame(Construct = colnames(sumfs$paths),
+                    "AdjR^2" = sumfs$paths[2,]) %>%
+  filter(Construct %notin% r2hoc$Construct)
+# Insert Model name here
+r2adj <- union(r2hoc, r2loc) %>% transmute(Category = paste0("R²adj ", Construct),
+                                          modelname = AdjR.2)
+colnames(r2adj)[2] <- modelname
+# Create plspredict df
+plspre <- predict_pls(proxymodel, noFolds = 10)
+sumplspre <- summary(plspre)
+oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
+  rbind(as.data.frame(sumplspre$LM_out_of_sample)) %>%
+  rbind((as.data.frame(sumplspre$LM_out_of_sample))[1,] - (as.data.frame(sumplspre$PLS_out_of_sample))[1,]) %>%
+  rbind((as.data.frame(sumplspre$LM_out_of_sample))[2,] - (as.data.frame(sumplspre$PLS_out_of_sample))[2,])  %>%
+  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(4,1:3)]
+plspredf <- data.frame(Category = c("PLSpredict PLS>LM RMSE",
+                                    "PLSpredict PLS>LM MAD"),
+                       modelname = c(sum(oospp[3,-1]>0)/ncol(oospp[,-1]),
+                                     sum(oospp[6,-1]>0)/ncol(oospp[,-1])))
+colnames(plspredf)[2] <- modelname
+# create modelsum and join it with comparison df
+modelsum <- union(r2adj, plspredf)
+comparison <- comparison %>% left_join(modelsum)
+```
+```{r visualize model Model COVID-19 3-a-1 with copula, echo=FALSE}
+plot(bootmodel, structure_only = TRUE, title = modelname)
+```
+
+
 ```{r model Insert Model COVID-19 3-b-2, echo=FALSE, include =FALSE}
 # Define model name
 modelname <- "Model COVID-19 3-b-2"
@@ -159,7 +204,49 @@ colnames(plspredf)[2] <- modelname
 modelsum <- union(r2adj, plspredf)
 comparison <- comparison %>% left_join(modelsum)
 ```
-```{r visualize MModel COVID-19 3-b-2, echo=FALSE}
+```{r visualize Model COVID-19 3-b-2, echo=FALSE}
+plot(bootmodel, structure_only = TRUE, title = modelname)
+```
+```{r model Insert Model COVID-19 3-b-2 with copula, echo=FALSE, include =FALSE}
+# Define model name
+modelname <- "Model COVID-19 3-b-2 with copula"
+# Load models and create summaries
+model <- readRDS("Models/model-co-3-b-2-cop.RDS")
+bootmodel <- readRDS("Models/model-boot-co-3-b-2-cop.RDS")
+bootfsmodel <- readRDS("Models/model-fs-boot-co-3-b-2-cop.RDS")
+proxymodel <- readRDS("Models/model-proxy-co-3-b-2-cop.RDS")
+summo <- summary(model)
+sumfs <- summary(model$first_stage_model)
+sumbomo <- summary(bootmodel)
+sumbofsmo <- summary(bootfsmodel)
+# Create R²adj df
+r2hoc <- data.frame(Construct = colnames(summo$paths),
+                    "AdjR^2" = summo$paths[2,])
+r2loc <- data.frame(Construct = colnames(sumfs$paths),
+                    "AdjR^2" = sumfs$paths[2,]) %>%
+  filter(Construct %notin% r2hoc$Construct)
+# Insert Model name here
+r2adj <- union(r2hoc, r2loc) %>% transmute(Category = paste0("R²adj ", Construct),
+                                          modelname = AdjR.2)
+colnames(r2adj)[2] <- modelname
+# Create plspredict df
+plspre <- predict_pls(proxymodel, noFolds = 10)
+sumplspre <- summary(plspre)
+oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
+  rbind(as.data.frame(sumplspre$LM_out_of_sample)) %>%
+  rbind((as.data.frame(sumplspre$LM_out_of_sample))[1,] - (as.data.frame(sumplspre$PLS_out_of_sample))[1,]) %>%
+  rbind((as.data.frame(sumplspre$LM_out_of_sample))[2,] - (as.data.frame(sumplspre$PLS_out_of_sample))[2,])  %>%
+  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(4,1:3)]
+plspredf <- data.frame(Category = c("PLSpredict PLS>LM RMSE",
+                                    "PLSpredict PLS>LM MAD"),
+                       modelname = c(sum(oospp[3,-1]>0)/ncol(oospp[,-1]),
+                                     sum(oospp[6,-1]>0)/ncol(oospp[,-1])))
+colnames(plspredf)[2] <- modelname
+# create modelsum and join it with comparison df
+modelsum <- union(r2adj, plspredf)
+comparison <- comparison %>% left_join(modelsum)
+```
+```{r visualize MModel COVID-19 3-b-2 with copula, echo=FALSE}
 plot(bootmodel, structure_only = TRUE, title = modelname)
 ```
 

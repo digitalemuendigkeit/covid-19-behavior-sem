@@ -308,6 +308,13 @@ descstatshort <- descstat %>%
   SD = round(sd,2)
 )
 
+# Make only covid descriptive stats
+covidpls <- readRDS("SEM COVID-19/Models/model-co-3-a-1.RDS")
+sumcopls <- summary(covidpls)
+covidpls$mmMatrix
+anco
+codes <- anco %>% filter(Item %in% covidpls$mmMatrix[,2])
+
 # Append Knowledge data
 datacodedkn <- datacoded %>%
   cbind(datafull %>% select((contains("KN")&!(contains("SKN")))))
