@@ -1,12 +1,12 @@
-﻿Construct,Indicator,C.V.R.2,C.V.PC,VIF,Original.Est.Wt.,Bootstrap.Mean.Wt.,t(431) (weight),0.in.Wt.CI,Original.Est.Ld.,Bootstrap.Mean.Ld.,t(431) (loading),0.in.Ld.CI
-Perceived Response Efficacy,CORB4,0.594,0.771,2.126,0.472,0.472,6.913,FALSE,0.907,0.905,35.914,FALSE
-Perceived Response Efficacy,CORB5,0.594,0.771,1.43,0.258,0.255,4.866,FALSE,0.715,0.712,19.684,FALSE
-Perceived Response Efficacy,CORB6,0.594,0.771,2.172,0.43,0.431,6.671,FALSE,0.899,0.897,35.675,FALSE
-Perceived Response Costs,CORB7,0.552,0.743,1.582,0.241,0.239,2.647,FALSE,0.74,0.736,12.956,FALSE
-Perceived Response Costs,CORB8,0.552,0.743,1.302,0.326,0.323,3.705,FALSE,0.712,0.706,10.476,FALSE
-Perceived Response Costs,CORB9,0.552,0.743,1.758,0.633,0.631,7.09,FALSE,0.931,0.926,29.68,FALSE
-Descriptive Norm,CODN1,0.65,0.806,1.654,0.406,0.401,3.848,FALSE,0.842,0.837,17.452,FALSE
-Descriptive Norm,CODN2,0.65,0.806,1.654,0.693,0.696,7.576,FALSE,0.949,0.946,31.47,FALSE
-Behavioral Intention,COBI1,0.733,0.856,1.696,0.426,0.427,6.876,FALSE,0.848,0.846,23.998,FALSE
-Behavioral Intention,COBI2,0.733,0.856,1.163,0.298,0.295,5.444,FALSE,0.616,0.613,12.978,FALSE
-Behavioral Intention,COBI3,0.733,0.856,1.71,0.514,0.513,8.536,FALSE,0.884,0.882,30.377,FALSE
+﻿Construct;Indicator;C.V.R.2;C.V.PC;VIF;Original.Est.Wt.;Bootstrap.Mean.Wt.;t(431) (weight);0.in.Wt.CI;Original.Est.Ld.;Bootstrap.Mean.Ld.;t(431) (loading);0.in.Ld.CI
+Perceived Response Efficacy;CORB4;0.59;0.77;2.13;0.47;0.47;6.91;FALSE;0.91;0.91;35.91;FALSE
+Perceived Response Efficacy;CORB5;0.59;0.77;1.43;0.26;0.26;4.87;FALSE;0.72;0.71;19.68;FALSE
+Perceived Response Efficacy;CORB6;0.59;0.77;2.17;0.43;0.43;6.67;FALSE;0.9;0.9;35.68;FALSE
+Perceived Response Costs;CORB7;0.55;0.74;1.58;0.24;0.24;2.65;FALSE;0.74;0.74;12.96;FALSE
+Perceived Response Costs;CORB8;0.55;0.74;1.3;0.33;0.32;3.7;FALSE;0.71;0.71;10.48;FALSE
+Perceived Response Costs;CORB9;0.55;0.74;1.76;0.63;0.63;7.09;FALSE;0.93;0.93;29.68;FALSE
+Descriptive Norm;CODN1;0.65;0.81;1.65;0.41;0.4;3.85;FALSE;0.84;0.84;17.45;FALSE
+Descriptive Norm;CODN2;0.65;0.81;1.65;0.69;0.7;7.58;FALSE;0.95;0.95;31.47;FALSE
+Behavioral Intention;COBI1;0.73;0.86;1.7;0.43;0.43;6.88;FALSE;0.85;0.85;24;FALSE
+Behavioral Intention;COBI2;0.73;0.86;1.16;0.3;0.29;5.44;FALSE;0.62;0.61;12.98;FALSE
+Behavioral Intention;COBI3;0.73;0.86;1.71;0.51;0.51;8.54;FALSE;0.88;0.88;30.38;FALSE

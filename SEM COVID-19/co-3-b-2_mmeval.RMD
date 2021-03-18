@@ -132,7 +132,7 @@ datatable(refevalmm,
   formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00', '#ffe5e5', '#ff9999', '#00'))) %>%
     formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
   formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-#write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 3)), "mmevalref-co-3-b-2.csv")
+#write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "mmevalref-co-3-b-2.csv",delim = ";")
 ```
 
 ```{r ref-eval-HTMT,echo=FALSE}
@@ -150,7 +150,7 @@ datatable(boothtmt,
               digits = 3) %>%
     formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
   formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999')))
-#write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 3)), "htmt-co-3-b-2.csv")
+#write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "htmt-co-3-b-2.csv",delim = ";")
 ```
 
 ## Results of the evaluation of the reflective measurement model
@@ -312,7 +312,7 @@ datatable(forevalmm,
   formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-# write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 3)), "mmevalfor-co-3-b-2.csv")
+#write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "mmevalfor-co-3-b-2.csv",delim = ";")
 ```
 
 ## Results of the evaluation of the formative measurement model
@@ -426,7 +426,7 @@ datatable(forhocevalmm,
   formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-#write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 3)), "mmevalhoc-co-3-b-2.csv")
+#write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "mmevalhoc-co-3-b-2.csv",delim = ";")
 ```
 
 ## Results of the formative higher-order constructs evaluation

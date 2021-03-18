@@ -275,6 +275,6 @@ datatable(comparisont[,-c(5:6,9:10)],
 ```
 
 All models show low predictive power.
-In terms of in-sample predictive power, the COVID-19 3-a-1 model performs best (mean of R²adj = 0.400).
-When it comes to the in-sample predictive power concerning Behavioral Intention, the COVID-19 3-b-2 model shows the best results (R²adj = 0.669).
+In terms of in-sample predictive power, the COVID-19 3-a-1 model performs best (mean of R²adj around 0.4).
+When it comes to the in-sample predictive power concerning Behavioral Intention, the COVID-19 3-b-2 model shows the best results (R²adj around 0.7).
 Both models lack out-of-sampe predictive power, with no indicator being predicted better by the PLS than by the naive LM.

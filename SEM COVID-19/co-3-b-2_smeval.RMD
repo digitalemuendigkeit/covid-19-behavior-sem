@@ -256,3 +256,7 @@ datatable(sumsm,
 # Results summary
 All construct and higher-order construct paths are significant and the effect sizes are sufficiently large.
 This model can be compared with others.
+
+<!-- ```{r table-getter, echo = FALSE, include = FALSE} -->
+<!-- write_excel_csv(sumsm %>% mutate(across(c(3,5:8),  round, 2)), "smeval-co-3-b-2.csv",delim = ";") -->
+<!-- ``` -->
