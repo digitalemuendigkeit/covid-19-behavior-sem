@@ -1,3 +1,5 @@
+# Data Folder 
+
 This folder contains the sensitive survey data. With the exception of this file and the .gitignore, please do not upload any of its contents to GitHub.
 
 S1-data-recontact is the data cleaned from speeders and the worst satisficers (> 2 blocks straightlining or diagonal lining) with only respondents who want to be recontacted. It also includes information about speeding and answering patterns.
