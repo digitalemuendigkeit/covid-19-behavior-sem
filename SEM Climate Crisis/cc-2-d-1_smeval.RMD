@@ -140,9 +140,9 @@ datatable(f2,
 ```
 
 f² indicates negligible effect sizes for many of the relationships involving lower-order constructs.
-For the Distrusting Beliefs lower-order constructs, Integrity has only negligible effects, Competence only on Perceived Severity, and Benevolence none on Perceived Response Costs and Perceived Severity.
+For the Distrusting Beliefs lower-order constructs, Integrity has only negligible effects, Competence only on Perceived Severity, and Benevolence none on Perceived Response Costs.
 None of the Threat or Response Beliefs lower-order constructs has a discernible effect on Behavioral Intention.
-On a construct level, there seems to be no discernible effect of Threat Beliefs, Subjective Norm, or Personal Moral Norm on Behavioral Intention, or of Knowledge on Response Beliefs or any of its lower-order constructs.
+On a construct level, there seems to be no discernible effect of any of the exogenous constructs on Behavioral Intention, or of Knowledge on Response Beliefs or any of its lower-order constructs.
 If this is mirrored in non-significant path coefficients, those structural paths should be removed.
 
 # Out-of-sample predictive power
@@ -221,10 +221,9 @@ datatable(pcalldf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
-As already hinted by a lack of effect size, neither Threat Beliefs nor Personal Moral Norm show a significant influence on Behavioral Intention as indicated by the path coefficients.
-For Subjective Norm, the path from the higher-order construct is significant, but the path from the lower-order constructs is not.
+As already hinted by a lack of effect size among all exogenous construct, only Response Beliefs (and its lower-order constructs Perceived Response Efficacy and Perceived REsponse Costs) show a significant influence on Behavioral Intention as indicated by the path coefficients.
 The path from Knowledge to Response Beliefs and all its lower-order constructs is non-significant as well.
-The paths from Integrity are non-significant ecept for the paths to Perceived Susceptibility, as are all paths from Competence to the Response Beliefs lower-order constructs.
+The paths from Integrity are non-significant except for the path to Perceived Severity, as are all paths from Competence to the Response Beliefs lower-order constructs.
 The path from Benevolence to Perceived Response Costs is also non-significant.
 The path from Perceived Self-Efficacy to Behavioral Intention is also non-significant.
 All other path coefficients are significant.
@@ -258,9 +257,10 @@ datatable(sumsm,
 ```
 
 # Results summary
-The paths from Threat Beliefs and Personal Moral Norm, and Subjective Norm to Behavioral Intention are insignificant and the effect sizes are negligible.
+The paths from Threat Beliefs, Personal Moral Norm, and Subjective Norm to Behavioral Intention are insignificant and the effect sizes are negligible.
+Only the path from Response Belief is significant, although the effect sizes is small.
 The paths from Knowledge to Response Beliefs are also non-significant and there are no discernible effects.
-Knowledge, Threat Beliefs and Personal Moral Norm can be removed from the model.
+Knowledge, Threat Beliefs, Personal Moral Norm, and Subjective Norm can be removed from the model.
 Concerning lower-order constructs, Perceived Self-Efficacy has no discernible effect on Behavioral Intention, and the path coefficient is insignificant.
 Therefore, Perceived Self-Efficacy can be removed.
 Further, the Distrusting Beliefs lower order-constructs Integrity and Competence have no discernible effect on and no significant path to any of the remaining lower-order construct.

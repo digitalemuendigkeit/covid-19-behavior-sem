@@ -141,7 +141,7 @@ datatable(f2,
 ```
 f² indicates negligible effect sizes for many of the relationships involving lower-order constructs.
 In particular, there is no discernible effect of Integrity on any other lower-order construct.
-Benevolence and Competence have only a discernible effect on Perceived Severity.
+Benevolence and Competence have only a discernible effect on the Threat Beliefs lower-order constructs.
 Additionally, there seems to be no discernible effect of Threat Beliefs, Subjective Norm, or Personal Moral Norm on Behavioral Intention, or of Knowledge on Response Beliefs.
 If this is mirrored in non-significant path coefficients, those structural paths should be removed.
 
@@ -221,10 +221,9 @@ datatable(pcalldf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.05), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
-As already hinted by a lack of effect size, neither Personal Moral Norm nor Subjective Norm show a significant influence on Behavioral Intention as indicated by the path coefficients, nor does Knowledge on Response Beliefs.
+As already hinted by a lack of effect size, neither Personal Moral Norm nor Subjective Norm or Threat Beliefs show a significant influence on Behavioral Intention as indicated by the path coefficients, nor does Knowledge on Response Beliefs.
 Looking at relationships involving lower-order constructs, Knowledge or Integrity have no significant influence on the Response Beliefs lower-constructs, either.
 Concerning Response Beliefs lower-order constructs, Benevolence and Competence only show a significant influence on Perceived Response Efficacy.
-None of the Threat Beliefs lower-order constructs has a significant effect on Behavioral Intention, but Threat Beliefs does.
 All other path coefficients are significant.
 
 
@@ -256,6 +255,7 @@ datatable(sumsm,
 ```
 
 # Results summary
-The paths from Personal Moral Norm, and Subjective Norm to Behavioral Intention are insignificant and the effect sizes are negligible.
-Therefore, those paths and the normative constructs can be removed from the model.
-The path from Knowledge on Response Beliefs is also insignificant and shows no effect, and can therefore be removed.
+The paths from Personal Moral Norm, Subjective Norm, and Threat Beliefs to Behavioral Intention are insignificant and the effect sizes are negligible.
+Therefore, those exogenous constructs can be removed from the model.
+The path from Knowledge on Response Beliefs is also insignificant and shows no effect.
+Therefore, Knowledge can also be removed.

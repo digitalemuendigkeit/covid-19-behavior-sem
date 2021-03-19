@@ -1,0 +1,74 @@
+---
+title: "Group Comparison COVID-19"
+output: html_document
+---
+
+```{r setup, echo =FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Include libraries
+library(tidyverse)
+library(seminr)
+library(DT)
+library(htmltools)
+# Set seminr plot theme
+thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = TRUE)
+seminr_theme_set(thm)
+# My favorite operator
+`%notin%` <- Negate(`%in%`)
+```
+
+Here, we compare different Covid-19 groups.
+
+
+```{r comparison original estimate table print, echo=FALSE}
+# 
+oet <- readRDS("co-2-mg-comp.RDS")
+datatable(oet,
+          rownames = FALSE,
+          caption = "Original Estimate Comparison") %>% 
+  formatRound(-1,
+              digits = 3) %>%
+  formatStyle(colnames(oet)[2], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,2])), digits = 3)-0.001),round(max(abs(oet[,2])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[3], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,3])), digits = 3)-0.001),round(max(abs(oet[,3])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[4], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,4])), digits = 3)-0.001),round(max(abs(oet[,4])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[5], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,5])), digits = 3)-0.001),round(max(abs(oet[,5])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[6], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,6])), digits = 3)-0.001),round(max(abs(oet[,6])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[7], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,7])), digits = 3)-0.001),round(max(abs(oet[,7])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[8], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,8])), digits = 3)-0.001),round(max(abs(oet[,8])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[9], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,9])), digits = 3)-0.001),round(max(abs(oet[,9])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[10], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,10])), digits = 3)-0.001),round(max(abs(oet[,10])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[11], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,11])), digits = 3)-0.001),round(max(abs(oet[,11])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(oet)[12], backgroundColor = styleInterval(cuts = c(-(round(max(abs(oet[,12])), digits = 3)-0.001),round(max(abs(oet[,12])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6')))
+```
+
+
+```{r comparison original estimate table print, echo=FALSE}
+# boot model
+bt <- readRDS("co-2-mg-boot-comp.RDS")
+datatable(bt,
+          rownames = FALSE,
+          caption = "Bootstrap Comparison") %>% 
+  formatRound(-1,
+              digits = 3) %>%
+  formatStyle(colnames(bt)[2], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,2])), digits = 3)-0.001),round(max(abs(bt[,2])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[3], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,3])), digits = 3)-0.001),round(max(abs(bt[,3])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[4], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,4])), digits = 3)-0.001),round(max(abs(bt[,4])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[5], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,5])), digits = 3)-0.001),round(max(abs(bt[,5])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[6], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,6])), digits = 3)-0.001),round(max(abs(bt[,6])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[7], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,7])), digits = 3)-0.001),round(max(abs(bt[,7])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[8], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,8])), digits = 3)-0.001),round(max(abs(bt[,8])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[9], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,9])), digits = 3)-0.001),round(max(abs(bt[,9])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[10], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,10])), digits = 3)-0.001),round(max(abs(bt[,10])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[11], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,11])), digits = 3)-0.001),round(max(abs(bt[,11])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[12], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,12])), digits = 3)-0.001),round(max(abs(bt[,12])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[13], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,13])), digits = 3)-0.001),round(max(abs(bt[,13])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[14], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,14])), digits = 3)-0.001),round(max(abs(bt[,14])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[15], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,15])), digits = 3)-0.001),round(max(abs(bt[,15])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[16], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,16])), digits = 3)-0.001),round(max(abs(bt[,16])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[17], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,17])), digits = 3)-0.001),round(max(abs(bt[,17])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[18], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,18])), digits = 3)-0.001),round(max(abs(bt[,18])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[19], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,19])), digits = 3)-0.001),round(max(abs(bt[,19])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6'))) %>%
+  formatStyle(colnames(bt)[20], backgroundColor = styleInterval(cuts = c(-(round(max(abs(bt[,20])), digits = 3)-0.001),round(max(abs(bt[,20])), digits = 3)-0.001), values = c('#add8e6', '#00','#add8e6')))
+
+```
+

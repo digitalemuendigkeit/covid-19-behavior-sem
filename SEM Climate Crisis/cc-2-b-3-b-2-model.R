@@ -9,12 +9,10 @@ datacrop <- datafull %>% select(starts_with("CC") & !paste0("CCS", 1:4)) %>% fil
 data <- as.matrix(datacrop %>% select(!starts_with("CCKN")) %>% cbind("CCKN" = rowMeans(datacrop %>% select(starts_with("CCKN")))))
 
 
-# Perceived Response Costs can be removed from the model as a construct.
-# The path from Knowledge to Perceived Response Costs can be removed.
+# Perceived Response Efficacy and Injunctive Norm can be removed from the model.
 # Describe measurement model
 mm <- constructs(
   composite("Perceived Self-Efficacy", single_item("CCRB2")),
-  composite("Perceived Response Efficacy", single_item("CCRB5")),
   composite("Distrusting Beliefs Benevolence", multi_items("CCDI", 1:3)),
   composite("Knowledge", single_item("CCKN")),
   composite("Personal Moral Norm", multi_items("CCPN",c(1,3))),
@@ -23,8 +21,7 @@ mm <- constructs(
 
 sm <- relationships(
   paths(from = c("Distrusting Beliefs Benevolence", "Knowledge"), to = c("Perceived Self-Efficacy")),
-  paths(from = c("Distrusting Beliefs Benevolence"), to = c("Perceived Response Efficacy")),
-  paths(from = c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Personal Moral Norm"), to = "Behavioral Intention")
+  paths(from = c("Perceived Self-Efficacy", "Personal Moral Norm"), to = "Behavioral Intention")
 )
 
 
@@ -38,5 +35,5 @@ bootmodel <- read_rds("SEM Climate Crisis/Models/model-boot-cc-2-b-3-b-2.RDS")
 plot(bootmodel)
 
 #Make proxy model for plspredict
-proxymodel <- estimate_pls(data = as.data.frame(data), mm, sm)
-saveRDS(proxymodel, "SEM Climate Crisis/Models/model-proxy-cc-2-b-3-b-2.RDS")
+# proxymodel <- estimate_pls(data = as.data.frame(data), mm, sm)
+# saveRDS(proxymodel, "SEM Climate Crisis/Models/model-proxy-cc-2-b-3-b-2.RDS")

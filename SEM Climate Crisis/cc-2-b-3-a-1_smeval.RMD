@@ -138,7 +138,7 @@ datatable(f2,
               digits = 3) %>%
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
-The effects of Perceived Response Efficacy and Perceived Response Costs are negligible.
+The effects of Perceived Response Efficacy and Injunctive Norm are negligible.
 The effect of Distrusting Beliefs Benevolence on Response Beliefs and Perceived Response Efficacy is medium, all others effects are small.
 
 # Out-of-sample predictive power
@@ -151,7 +151,7 @@ oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
   rbind(as.data.frame(sumplspre$LM_out_of_sample)) %>%
   rbind((as.data.frame(sumplspre$LM_out_of_sample))[1,] - (as.data.frame(sumplspre$PLS_out_of_sample))[1,]) %>%
   rbind((as.data.frame(sumplspre$LM_out_of_sample))[2,] - (as.data.frame(sumplspre$PLS_out_of_sample))[2,])  %>%
-  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(5,1:4)]
+  cbind(`Prediction Errors` = c("PLS RMSE", "PLS MAD", "LM RMSE", "LM MAD", "RMSE Difference", "MAD Difference")))[c(1,3,5,2,4,6),c(ncol(sumplspre$PLS_out_of_sample)+1,1:ncol(sumplspre$PLS_out_of_sample))]
 datatable(oospp,
           options = list(pageLength = nrow(oospp)),
           rownames = FALSE,
@@ -216,7 +216,7 @@ datatable(pcalldf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.049), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
-With the exception of the path from Perceived Response Costs on Behavioral Intention, all paths are significant.
+With the exception of the path from Injunctive Norm and Perceived Response Efficacy on Behavioral Intention, all paths are significant.
 
 # Summary table
 ```{r summary table-df, echo = FALSE, include = FALSE}
@@ -246,5 +246,8 @@ datatable(sumsm,
 ```
 
 # Results summary
-Perceived Response Costs can be removed as a Response Beliefs lower-order construct.
+The path from Injunctive Norm to Behavioral Intention is non-significant on the basis of the bootstrap CI, but there is an effect.
+Perceived Response Efficacy has no significant effect on or path coefficient to Behavioral Intention, however, Response Beliefs does.
 All other constructs and paths can be retained.
+SO this model can be included in model comparison.
+However, Injunctive Norm and Perceived Response Efficacy can be tentatively removed to observe if that increases model predictivity.

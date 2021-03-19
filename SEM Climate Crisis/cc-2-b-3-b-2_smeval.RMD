@@ -79,7 +79,7 @@ datatable(r2,
               digits = 3) %>%
   formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
-For Perceived Self-Efficacy and Perceived Response Efficacy the model predictiveness is very weak.
+For Perceived Self-Efficacy the model predictiveness is very weak.
 For Behavioral Intention, the model predictiveness is weak.
 
 # Effect size
@@ -107,7 +107,7 @@ datatable(f2,
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
 Knowledge has only a negligible effect on Perceived Self-Efficacy.
-So has Perceived Response Efficacy on Behavioral Intention.
+All other effects are small.
 
 # Out-of-sample predictive power
 Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
@@ -130,7 +130,7 @@ datatable(oospp,
 ```
 
 For the approximation model, the PLS model predicts only CCIBI2 better than the naive linear model.
-Overall, the model has low out-of-sample predictive power.
+Overall, the model has medium out-of-sample predictive power.
 
 # Significance and relevance of path coefficients
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
@@ -196,4 +196,4 @@ datatable(sumsm,
 
 
 # Results summary
-Effect sizes and model predictiveness are overall weak, but on the basis of path coefficients significance, this model can stay as-is.
+Effect sizes and model predictiveness is overall weak, but on the basis of path coefficients significance, this model can stay as-is.

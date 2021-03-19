@@ -409,7 +409,8 @@ datatable(forhocevalmm,
 
 The VIFs for the Distrusting Beliefs are above 3, but still below 5.
 With that, there are no issues with collinearity.
-The weight for Injunctive norm is not significant, and the loading is too small. Therefore it has to be discarded.
+The weights for Injunctive Norm and Distrusting Beliefs Integrity are not significant, but the loadings are sufficiently large and significant.
+On the other hand, the weight for Perceived Response Costs is nonsignificant, and the loading is too small. Therefore it has to be discarded.
 All other weights are significant and relevant.
 
 ## Results of the formative higher-order constructs evaluation
@@ -417,5 +418,4 @@ The formative higher-order constructs can be retained as-is.
 
 # Results summary
 The reflective and formative measurement model meet the quality criteria.
-The lower-order construct Injunctive Norm has to be deleted.
-With that, Descriptive Norm substitutes the Subjective Norm construct.
+The lower-order construct Perceived Response Costs has to be deleted.

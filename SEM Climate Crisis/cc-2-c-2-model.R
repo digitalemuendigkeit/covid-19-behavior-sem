@@ -9,9 +9,7 @@ datacrop <- datafull %>% select(starts_with("CC") & !paste0("CCS", 1:4)) %>% fil
 data <- as.matrix(datacrop %>% select(!starts_with("CCKN")) %>% cbind("CCKN" = rowMeans(datacrop %>% select(starts_with("CCKN")))))
 
 
-# The paths from Personal Moral Norm, and Subjective Norm to Behavioral Intention are insignificant and the effect sizes are negligible.
-# Therefore, those paths and the normative constructs can be removed from the model.
-# The path from Knowledge on Response Beliefs is also insignificant and shows no effect, and can therefore be removed.
+# Remove Personal Moral Norm, Subjective Norm, Threat Beliefs, Knowledge
 # Behavior: Driving, i.e. CCBI3, CCRB3, CCRB6, CCRB9
 # Describe measurement model
 mm <- constructs(
@@ -23,17 +21,12 @@ mm <- constructs(
   composite("Competence", multi_items("CCDI", 4:6)),
   composite("Integrity", multi_items("CCDI", 7:9)),
   higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
-  composite("Knowledge", single_item("CCKN")),
-  composite("Perceived Susceptibility", multi_items("CCTB", 1:3)),
-  composite("Perceived Severity", multi_items("CCTB", 4:6)),
-  higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
   composite("Behavioral Intention", single_item("CCBI3"))
 )
 
 sm <- relationships(
-  paths(from = c("Distrusting Beliefs"), to = c("Response Beliefs", "Threat Beliefs")),
-  paths(from = c("Knowledge"), to = c("Threat Beliefs")),
-  paths(from = c("Response Beliefs", "Threat Beliefs"), to = "Behavioral Intention")
+  paths(from = c("Distrusting Beliefs"), to = c("Response Beliefs")),
+  paths(from = c("Response Beliefs"), to = "Behavioral Intention")
 )
 
 
@@ -53,8 +46,6 @@ plot(bootmodel)
 proxymm <- constructs(
   composite("Response Beliefs", multi_items("CCRB", c(3,6,9)), weights = mode_B),
   composite("Distrusting Beliefs", multi_items("CCDI", 1:9), weights = mode_B),
-  composite("Knowledge", single_item("CCKN")),
-  composite("Threat Beliefs", multi_items("CCTB", 1:6), weights = mode_B),
   composite("Behavioral Intention", single_item("CCBI3"))
 )
 

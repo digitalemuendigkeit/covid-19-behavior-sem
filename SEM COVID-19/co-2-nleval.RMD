@@ -1,0 +1,496 @@
+---
+title: "COVID-19 Model Iteration 2 Nonlinearity Evaluation"
+output: html_document
+---
+
+```{r setup, echo =FALSE, include=FALSE}
+# Include libraries
+library(tidyverse)
+library(seminr)
+library(DT)
+library(htmltools)
+library(lmtest)
+# Load models and create summaries
+# Load PLS Model
+model <- readRDS("Models/model-co-2.RDS")
+bootmodel <- readRDS("Models/model-boot-co-2.RDS")
+# Load bootstrapped first stage PLS model
+bootfsmodel <- readRDS("Models/model-fs-boot-co-2.RDS")
+# Load approximation PLS model (no HOCs, data formatted as data.frame)
+proxymodel <- readRDS("Models/model-proxy-co-2.RDS")
+summo <- summary(model)
+sumfs <- summary(model$first_stage_model)
+sumbomo <- summary(bootmodel)
+sumbofsmo <- summary(bootfsmodel)
+sumprmo <- summary(proxymodel)
+# Bootstrap proxy model (500 samples) for comparability
+bootprmodel <- bootstrap_model(proxymodel)
+sumboprmo <- summary(bootprmodel)
+# Set seminr plot theme
+thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
+seminr_theme_set(thm)
+# My favorite operator
+`%notin%` <- Negate(`%in%`)
+```
+
+#Nonlinearity
+If any of the test statistics is significant, the respective partial regression might be nonlinear.
+```{r reset}
+# Estimate partial linear models + proxy models for HOCs
+lmbi1 <- lm(model$construct_scores[,"Behavioral Intention"] ~ model$construct_scores[,c("Response Beliefs")])
+lmbi1prox  <- lm(proxymodel$construct_scores[,"Behavioral Intention"] ~ proxymodel$construct_scores[,c("Response Beliefs")])
+lmbi2 <- lm(model$construct_scores[,"Behavioral Intention"] ~ model$construct_scores[,c("Threat Beliefs")])
+lmbi2prox <- lm(proxymodel$construct_scores[,"Behavioral Intention"] ~ proxymodel$construct_scores[,c("Threat Beliefs")])
+lmbi3 <- lm(model$construct_scores[,"Behavioral Intention"] ~ model$construct_scores[,c("Personal Moral Norm")])
+lmbi4 <- lm(model$construct_scores[,"Behavioral Intention"] ~ model$construct_scores[,c("Subjective Norm")])
+lmbi4prox <- lm(proxymodel$construct_scores[,"Behavioral Intention"] ~ proxymodel$construct_scores[,c("Subjective Norm")])
+lmrb1 <- lm(model$construct_scores[,"Response Beliefs"] ~ model$construct_scores[,c("Distrusting Beliefs")])
+lmrb1prox <- lm(proxymodel$construct_scores[,"Response Beliefs"] ~ proxymodel$construct_scores[,c("Distrusting Beliefs")])
+lmrb2 <- lm(model$construct_scores[,"Response Beliefs"] ~ model$construct_scores[,c("Knowledge")])
+lmtb1 <- lm(model$construct_scores[,"Threat Beliefs"] ~ model$construct_scores[,c("Distrusting Beliefs")])
+lmtb1prox <- lm(proxymodel$construct_scores[,"Threat Beliefs"] ~ proxymodel$construct_scores[,c("Distrusting Beliefs")])
+lmtb2 <- lm(model$construct_scores[,"Threat Beliefs"] ~ model$construct_scores[,c("Knowledge")])
+# Apply reset test
+resettest(lmbi1)
+resettest(lmbi1prox)
+resettest(lmbi2)
+resettest(lmbi2prox)
+resettest(lmbi3)
+resettest(lmbi4)
+resettest(lmbi4prox)
+resettest(lmrb1)
+resettest(lmrb1prox)
+resettest(lmrb2)
+resettest(lmtb1)
+resettest(lmtb1prox)
+resettest(lmtb2)
+```
+Using p = 0.05 as a threshold, there are potential nonlinear effects in the partial regression equations for the influence of Response Beliefs (original: p  0.004, proxy: p = 0.006), Threat Beliefs (original and proxy: p < 0.001), and Subjective Norm (original: p = 0.03, proxy: p = 0.04) on Behavioral Intention.
+The same is potentially true for the effects of Distrusting Beliefs (original: p = 0.02, proxy: p = 0.1) and Knowledge (p = 0.006) on Response Beliefs, an for the effects of Distrusting Beliefs (original: p  0.003, proxy: p = 0.003) and Knowledge (p = 0.02) on Threat Beliefs.
+
+#Test alternate nonlinear effects
+To test for nonlinearity, one can model an interaction term of the exogenous construct with itself.
+
+##Response Beliefs on Behavioral Intention
+```{r bi1 alt nonlinear estimate, echo = FALSE}
+# Estimate alternate model with quadratic effect - HOCs as proxy
+mobi1alt <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Response Beliefs 1", multi_items("CORB", c(4:10)), weights = mode_B),
+    composite("Response Beliefs 2", multi_items("CORB", c(4:10)), weights = mode_B),
+    interaction_term("Response Beliefs 1", "Response Beliefs 2", method = two_stage),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs 1", "Response Beliefs 2", "Threat Beliefs")),
+    paths(from = c("Response Beliefs 1*Response Beliefs 2", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Estimate second model for f2 with construct excluded
+mobi1altex <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Threat Beliefs")),
+    paths(from = c("Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Bootstrap model for significance (500 samples)
+bomobi1alt <- bootstrap_model(mobi1alt)
+sumbomobi1alt <- summary(bomobi1alt)
+```
+```{r bi1 alt nonlinear assess}
+# Assess impact using f² and significance
+bi1compdf <- data.frame(
+  Model = c("Original Model", "Proxy Model", "Quadratic Model"), 
+  `f²` = c(
+    summo$fSquare["Response Beliefs", "Behavioral Intention"],
+    sumprmo$fSquare["Response Beliefs", "Behavioral Intention"],
+    (mobi1alt$rSquared[1,"Behavioral Intention"]-mobi1altex$rSquared[1,"Behavioral Intention"])/(1-mobi1alt$rSquared[1,"Behavioral Intention"])
+  ),
+  `t-value` = c(sumbomo$bootstrapped_paths[5,4], sumboprmo$bootstrapped_paths[5,4], sumbomobi1alt$bootstrapped_paths[7,4])
+)
+bi1compdf 
+```
+For the alternate model with Response Beliefs as a quadratic influence, the effect size is smaller, as well as the t-value.
+This points to a linear effect of Response Beliefs on Behavioral Intention.
+
+##Threat Beliefs on Behavioral Intention
+```{r bi2 alt nonlinear estimate}
+# Estimate alternate model with quadratic effect - HOCs as proxy
+mobi2alt <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Threat Beliefs 1", multi_items("COTB", 1:6), weights = mode_B),
+    composite("Threat Beliefs 2", multi_items("COTB", 1:6), weights = mode_B),
+    interaction_term("Threat Beliefs 1", "Threat Beliefs 2", method = two_stage),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs 1", "Threat Beliefs 2")),
+    paths(from = c("Response Beliefs", "Threat Beliefs 1*Threat Beliefs 2", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Estimate second model for f2 with construct excluded
+mobi2altex <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs")),
+    paths(from = c("Response Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Bootstrap model for significance (500 samples)
+bomobi2alt <- bootstrap_model(mobi2alt)
+sumbomobi2alt <- summary(bomobi2alt)
+```
+```{r bi2 alt nonlinear assess}
+# Assess impact using f² and significance
+bi2compdf <- data.frame(
+  Model = c("Original Model", "Proxy Model", "Quadratic Model"), 
+  `f²` = c(
+    summo$fSquare["Threat Beliefs", "Behavioral Intention"],
+    sumprmo$fSquare["Threat Beliefs", "Behavioral Intention"],
+    (mobi2alt$rSquared[1,"Behavioral Intention"]-mobi2altex$rSquared[1,"Behavioral Intention"])/(1-mobi2alt$rSquared[1,"Behavioral Intention"])
+  ),
+  `t-value` = c(sumbomo$bootstrapped_paths[6,4], sumboprmo$bootstrapped_paths[6,4], sumbomobi2alt$bootstrapped_paths[8,4])
+)
+bi2compdf 
+```
+For the alternate model with Threat Beliefs as a quadratic influence, the effect size is smaller, as is the t-value.
+This points to a linear effect of Threat Beliefs on Behavioral Intention.
+
+##Subjective Norm on Behavioral Intention
+```{r bi3 alt nonlinear estimate}
+# Estimate alternate model with quadratic effect (HOCs as proxy)
+# two-stage approach would be correct but does not work
+# use orthogonal and product indicator to find influence
+mobi3altortmm <- constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Subjective Norm 1", c(multi_items("CODN", 1:2), multi_items("COIN", 1:2)), mode_B),
+    composite("Subjective Norm 2", c(multi_items("CODN", 1:2), multi_items("COIN", 1:2)), mode_B),
+    interaction_term("Subjective Norm 1", "Subjective Norm 2", method = orthogonal),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  )
+mobi3altpimm <- constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Subjective Norm 1", c(multi_items("CODN", 1:2), multi_items("COIN", 1:2)), mode_B),
+    composite("Subjective Norm 2", c(multi_items("CODN", 1:2), multi_items("COIN", 1:2)), mode_B),
+    interaction_term("Subjective Norm 1", "Subjective Norm 2", method = product_indicator),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  )
+mobi3altsm <- relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm 1*Subjective Norm 2"), to = "Behavioral Intention"))
+mobi3altort <- estimate_pls(as.data.frame(model$data), mobi3altortmm, mobi3altsm)
+mobi3altpi <- estimate_pls(as.data.frame(model$data), mobi3altpimm, mobi3altsm)
+# Estimate second model for f2 with construct excluded
+mobi3altex <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Personal Moral Norm", "Threat Beliefs"), to = "Behavioral Intention")
+  )
+)
+# Bootstrap model for significance (500 samples)
+bommobi3altort <- bootstrap_model(mobi3altort)
+sumbomobi3altort <- summary(bommobi3altort)
+bommobi3altpi <- bootstrap_model(mobi3altpi)
+sumbomobi3altpi <- summary(bommobi3altpi)
+```
+```{r bi3 alt nonlinear assess}
+# Assess impact using f² and significance
+bi3compdf <- data.frame(
+  Model = c("Original Model", "Proxy Model", "Quadratic Model Orthogonal", "Quadratic Model Product-Indicator"),
+  `f²` = c(
+    summo$fSquare["Threat Beliefs", "Behavioral Intention"],
+    sumprmo$fSquare["Threat Beliefs", "Behavioral Intention"],
+    (mobi3altort$rSquared[1,"Behavioral Intention"]-mobi3altex$rSquared[1,"Behavioral Intention"])/(1-mobi3altort$rSquared[1,"Behavioral Intention"]),
+    (mobi3altpi$rSquared[1,"Behavioral Intention"]-mobi3altex$rSquared[1,"Behavioral Intention"])/(1-mobi3altpi$rSquared[1,"Behavioral Intention"])
+  ),
+  `t-value` = c(sumbomo$bootstrapped_paths[8,4], sumboprmo$bootstrapped_paths[8,4], sumbomobi3altort$bootstrapped_paths[8,4], sumbomobi3altpi$bootstrapped_paths[8,4])
+)
+bi3compdf
+```
+The Subjective Norm alternative model can only be assessed using the orthogonal and product-indicator approach, although the two-stage approach would be methodically correct.
+Neither of those alternate approaches shows a significant effect of a Subjective Norm quadratic term.
+This points to a linear effect of Subjective Norm on Behavioral Intention.
+
+##Distrusting Beliefs on Response Beliefs
+```{r rb1 alt nonlinear estimate}
+# Estimate alternate model with quadratic effect - HOCs as proxy
+# Again, two-stage, though correct, does not work -> use ort and pi
+morb1altort <- estimate_pls(
+  as.data.frame(model$data),
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Distrusting Beliefs 1", multi_items("CODI", 1:9), weights = mode_B),
+    composite("Distrusting Beliefs 2", multi_items("CODI", 1:9), weights = mode_B),
+    interaction_term("Distrusting Beliefs 1", "Distrusting Beliefs 2", method = orthogonal),
+    composite("Knowledge", single_item("COKN")),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs 1*Distrusting Beliefs 2", "Knowledge"), to = c("Response Beliefs")),
+    paths(from = c("Distrusting Beliefs 1", "Knowledge"), to = c("Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+morb1altpi <- estimate_pls(
+  as.data.frame(model$data),
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Distrusting Beliefs 1", multi_items("CODI", 1:9), weights = mode_B),
+    composite("Distrusting Beliefs 2", multi_items("CODI", 1:9), weights = mode_B),
+    interaction_term("Distrusting Beliefs 1", "Distrusting Beliefs 2", method = product_indicator),
+    composite("Knowledge", single_item("COKN")),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs 1*Distrusting Beliefs 2", "Knowledge"), to = c("Response Beliefs")),
+    paths(from = c("Distrusting Beliefs 1", "Knowledge"), to = c("Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Estimate second model for f2 with construct excluded
+morb1altex <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Knowledge", single_item("COKN")),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Bootstrap model for significance (500 samples)
+bomorb1altort <- bootstrap_model(morb1altort)
+sumbomorb1altort <- summary(bomorb1altort)
+bomorb1altpi <- bootstrap_model(morb1altpi)
+sumbomorb1altpi <- summary(bomorb1altpi)
+```
+```{r rb1 alt nonlinear assess}
+# Assess impact using f² and significance
+rb1compdf <- data.frame(
+  Model = c("Original Model", "Proxy Model", "Quadratic Model Orthogonal", "Quadratic Model Product-Indicator"),
+  `f²` = c(
+    summo$fSquare["Distrusting Beliefs", "Response Beliefs"],
+    sumprmo$fSquare["Distrusting Beliefs", "Response Beliefs"],
+    (morb1altort$rSquared[1,"Behavioral Intention"]-morb1altex$rSquared[1,"Behavioral Intention"])/(1-morb1altort$rSquared[1,"Behavioral Intention"]),
+    (morb1altpi$rSquared[1,"Behavioral Intention"]-morb1altex$rSquared[1,"Behavioral Intention"])/(1-morb1altpi$rSquared[1,"Behavioral Intention"])
+  ),
+  `t-value` = c(sumbomo$bootstrapped_paths[1,4], sumboprmo$bootstrapped_paths[1,4], sumbomorb1altort$bootstrapped_paths[1,4], sumbomorb1altpi$bootstrapped_paths[1,4])
+)
+rb1compdf
+```
+The Distrusting Beliefs - Response Beliefs alternative model can only be assessed using the orthogonal and product-indicator approach, although the two-stage approach would be methodically correct.
+Neither of those alternate approaches shows a significant effect of a Distrusting Beliefs quadratic term.
+This points to a linear effect of Distrusting Beliefs on Response Beliefs.
+
+##Knowledge on Response Beliefs
+```{r rb2 alt nonlinear estimate}
+# Estimate alternate model with quadratic effect - HOCs as proxy
+morb2alt <- estimate_pls(
+  as.data.frame(model$data),
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Knowledge1", single_item("COKN")),
+    composite("Knowledge2", single_item("COKN")),
+    interaction_term("Knowledge1", "Knowledge2", method = orthogonal),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs", "Knowledge1*Knowledge2"), to = c("Response Beliefs")),
+    paths(from = c("Distrusting Beliefs", "Knowledge1"), to = c("Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Estimate second model for f2 with construct excluded
+morb2altex <- estimate_pls(
+  data = model$data,
+  measurement_model = constructs(
+    composite("Perceived Self-Efficacy", single_item("CORB10")),
+    composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+    composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+    higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B),
+    composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+    composite("Perceived Severity", multi_items("COTB", 4:6)),
+    higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
+    composite("Benevolence", multi_items("CODI", 1:3)),
+    composite("Competence", multi_items("CODI", 4:6)),
+    composite("Integrity", multi_items("CODI", 7:9)),
+    higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+    composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+    composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+    composite("Injunctive Norm", multi_items("COIN", 1:2), mode_B),
+    higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
+    composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+  ),
+  structural_model = relationships(
+    paths(from = c("Distrusting Beliefs"), to = c("Response Beliefs", "Threat Beliefs")),
+    paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
+  )
+)
+# Bootstrap model for significance (500 samples)
+bomorb2alt <- bootstrap_model(morb2alt)
+sumbomorb2alt <- summary(bomorb2alt)
+```
+```{r rb2 alt nonlinear assess}
+# Assess impact using f² and significance
+rb2compdf <- data.frame(
+  Model = c("Original Model", "Proxy Model", "Quadratic Model"),
+  `f²` = c(
+    summo$fSquare["Threat Beliefs", "Behavioral Intention"],
+    sumprmo$fSquare["Threat Beliefs", "Behavioral Intention"],
+    (morb2alt$rSquared[1,"Behavioral Intention"]-morb2altex$rSquared[1,"Behavioral Intention"])/(1-morb2alt$rSquared[1,"Behavioral Intention"])
+  ),
+  `t-value` = c(sumbomo$bootstrapped_paths[3,4], sumboprmo$bootstrapped_paths[3,4], sumbomorb2alt$bootstrapped_paths[3,4])
+)
+rb2compdf
+```
+For the alternate model with Knowledge as a quadratic influence, the effect size is smaller, as well as the t-value.
+This points to a linear effect of Knowledge on Response Beliefs.
+
+#Summary
+Using the available tests, we did not find evidence for a quadratic influence of any of the exogenous variables.

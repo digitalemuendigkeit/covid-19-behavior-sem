@@ -9,14 +9,12 @@ datacrop <- datafull %>% select(starts_with("CC") & !paste0("CCS", 1:4)) %>% fil
 data <- as.matrix(datacrop %>% select(!starts_with("CCKN")) %>% cbind("CCKN" = rowMeans(datacrop %>% select(starts_with("CCKN")))))
 
 
-# The lower-order construct Injunctive Norm has to be deleted.
-# With that, Descriptive Norm substitutes the Subjective Norm construct.
+# The lower-order construct Perceived Response Costs has to be deleted.
 # Describe measurement model
 mm <- constructs(
   composite("Perceived Self-Efficacy", single_item("CCRB2")),
   composite("Perceived Response Efficacy", single_item("CCRB5")),
-  composite("Perceived Response Costs", single_item("CCRB8")),
-  higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy", "Perceived Response Costs"), weights = mode_B),
+  higher_composite("Response Beliefs", c("Perceived Self-Efficacy", "Perceived Response Efficacy"), weights = mode_B),
   composite("Benevolence", multi_items("CCDI", 1:3)),
   composite("Competence", multi_items("CCDI", 4:6)),
   composite("Integrity", multi_items("CCDI", 7:9)),
@@ -27,12 +25,14 @@ mm <- constructs(
   higher_composite("Threat Beliefs", c("Perceived Susceptibility", "Perceived Severity"), weights = mode_B),
   composite("Personal Moral Norm", multi_items("CCPN",c(1,3))),
   composite("Descriptive Norm", multi_items("CCDN", 1:2), mode_B),
+  composite("Injunctive Norm", multi_items("CCIN", 1:2), mode_B),
+  higher_composite("Subjective Norm", c("Descriptive Norm", "Injunctive Norm"), weights = mode_B),
   composite("Behavioral Intention", single_item("CCBI2"))
 )
 
 sm <- relationships(
   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
-  paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Descriptive Norm"), to = "Behavioral Intention")
+  paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
 )
 
 
@@ -48,6 +48,17 @@ plot(bootmodel)
 # saveRDS(bootfsmodel, "SEM Climate Crisis/Models/model-fs-boot-cc-2-b-2.RDS")
 
 # Models for estimation of convergent validity for formative constructs
+# Injunctive Norm
+mmin <- constructs(
+  composite("Injunctive Norm Formative", multi_items("CCIN", 1:2), mode_B),
+  composite("Injunctive Norm Reflective", single_item("CCIN4"))
+)
+smin <- relationships(
+  paths(from = "Injunctive Norm Formative", to = "Injunctive Norm Reflective")
+)
+rain <- estimate_pls(data, mmin, smin)
+saveRDS(rain, "SEM Climate Crisis/Models/rain-cc-2-b-2.RDS")
+
 # Descriptive Norm
 mmdn <- constructs(
   composite("Descriptive Norm Formative", multi_items("CCDN", 1:2), mode_B),
@@ -61,17 +72,17 @@ saveRDS(radn, "SEM Climate Crisis/Models/radn-cc-2-b-2.RDS")
 
 #Make proxy model for plspredict
 proxymm <- constructs(
-  composite("Response Beliefs", multi_items("CCRB", c(2,5,8)), weights = mode_B),
+  composite("Response Beliefs", multi_items("CCRB", c(2,5)), weights = mode_B),
   composite("Distrusting Beliefs", multi_items("CCDI", 1:9), weights = mode_B),
   composite("Knowledge", single_item("CCKN")),
   composite("Threat Beliefs", multi_items("CCTB", 1:6), weights = mode_B),
   composite("Personal Moral Norm", multi_items("CCPN",c(1,3))),
-  composite("Descriptive Norm", c("CCDN1", "CCDN2"), weights = mode_B),
+  composite("Subjective Norm", c(multi_items("CCDN", 1:2),multi_items("CCIN", 1:2)), weights = mode_B),
   composite("Behavioral Intention", single_item("CCBI2"))
 )
 proxysm <- relationships(
   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs", "Threat Beliefs")),
-  paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Descriptive Norm"), to = "Behavioral Intention")
+  paths(from = c("Response Beliefs", "Threat Beliefs", "Personal Moral Norm", "Subjective Norm"), to = "Behavioral Intention")
 )
 proxymodel <- estimate_pls(data = as.data.frame(data), proxymm, proxysm)
 saveRDS(proxymodel, "SEM Climate Crisis/Models/model-proxy-cc-2-b-2.RDS")
