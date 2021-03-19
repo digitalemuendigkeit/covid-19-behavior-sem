@@ -1,14 +1,19 @@
 library(tidyverse)
-# library(remotes)
-# remotes::install_github("sem-in-r/seminr", ref = "model-viz", force = TRUE)
 library(seminr)
-thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
-seminr_theme_set(thm)
 
+# Data Loading ----
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
 datafull <- read_rds("Data/S1-data-nm.RDS")
-datacrop <- datafull %>% select(starts_with("CO") & !paste0("COS", 1:7)) %>% filter(!is.na(COSKN))
-data <- as.matrix(datacrop %>% select(!starts_with("COKN")) %>% cbind("COKN" = rowMeans(datacrop %>% select(starts_with("COKN")))))
+
+data <- datafull %>%
+  select(starts_with("CO")) %>%
+  select(-paste0("COS", 1:7)) %>%
+  filter(!is.na(COSKN)) %>% # other condition
+  mutate(COKN = rowMeans(across(starts_with("COKN"))))
+  #select(!starts_with("COKN")) %>%
+
+
+# Model Description ----
 
 # Describe measurement model
 mm <- constructs(
@@ -37,17 +42,45 @@ sm <- relationships(
 )
 
 
-# model <- estimate_pls(data, mm, sm)
-# saveRDS(model, "SEM COVID-19/Models/model-co-1.RDS")
-model <- readRDS("SEM COVID-19/Models/model-co-1.RDS")
-plot(model)
-summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
-# bootmodel <- bootstrap_model(model, nboot = 5000)
-# saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-1.RDS")
-bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-1.RDS")
-# bootfsmodel <- bootstrap_model(model$first_stage_model, nboot = 5000)
-# saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-1.RDS")
+# Model Estimation ----
+
+model <- estimate_pls(data, mm, sm)
+
+saveRDS(model, "SEM COVID-19/Models/model-co-1.RDS")
+#model <- readRDS("SEM COVID-19/Models/model-co-1.RDS")
+#plot(model)
+
+# summo <- summary(model)
+# sumfs <- summary(model$first_stage_model)
+bootmodel <- bootstrap_model(model, nboot = 5000)
+saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-1.RDS")
+# bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-1.RDS")
+bootfsmodel <- bootstrap_model(model$first_stage_model, nboot = 5000)
+saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-1.RDS")
+
+
+
+
+# Proxy Model ----
+# Make proxy model for PLSpredict
+proxymm <- constructs(
+  composite("Response Beliefs", multi_items("CORB", c(1:2, 4:9)), weights = mode_B),
+  composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B),
+  composite("Knowledge", single_item("COKN")),
+  composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
+  composite("Perceived Severity", multi_items("COTB", 4:6)),
+  composite("Threat Beliefs", multi_items("COTB", 1:6), weights = mode_B),
+  composite("Personal Moral Norm", multi_items("COPN", 1:3)),
+  composite("Subjective Norm", c(multi_items("CODN", 1:2), multi_items("COIN", 1:2)), weights = mode_B),
+  composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
+)
+proxymodel <- estimate_pls(as.data.frame(data), proxymm, sm)
+saveRDS(proxymodel, "SEM COVID-19/Models/model-proxy-co-1.RDS")
+
+
+
+
+# Convergent Validity ----
 
 # Models for estimation of convergent validity for formative constructs
 # Perceived Self-Efficacy
@@ -116,17 +149,5 @@ smbi <- relationships(
 rabi <- estimate_pls(data, mmbi, smbi)
 saveRDS(rabi, "SEM COVID-19/Models/rabi-co-1.RDS")
 
-# Make proxy model for PLSpredict
-proxymm <- constructs(
-  composite("Response Beliefs", multi_items("CORB", c(1:2, 4:9)), weights = mode_B),
-  composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B),
-  composite("Knowledge", single_item("COKN")),
-  composite("Perceived Susceptibility", multi_items("COTB", 1:3)),
-  composite("Perceived Severity", multi_items("COTB", 4:6)),
-  composite("Threat Beliefs", multi_items("COTB", 1:6), weights = mode_B),
-  composite("Personal Moral Norm", multi_items("COPN", 1:3)),
-  composite("Subjective Norm", c(multi_items("CODN", 1:2), multi_items("COIN", 1:2)), weights = mode_B),
-  composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B)
-)
-proxymodel <- estimate_pls(as.data.frame(data), proxymm, sm)
-saveRDS(proxymodel, "SEM COVID-19/Models/model-proxy-co-1.RDS")
+
+
