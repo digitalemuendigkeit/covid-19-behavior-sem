@@ -1,6 +1,7 @@
 ---
 title: "COVID-19 Model Iteration 1 Measurement Model Evaluation"
-output: html_document
+output: 
+  distill::distill_article
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -10,6 +11,7 @@ library(tidyverse)
 library(seminr)
 library(DT)
 library(htmltools)
+library(distill)
 source(here::here("helpers.R"))
 
 # Load models and create summaries
@@ -42,7 +44,7 @@ seminr_theme_set(thm)
 # Model plots
 ## Original Estimate Path Model
 This is the original estimate path model.
-```{r plot model, echo=FALSE}
+```{r plot model, echo=FALSE, layout="l-screen"}
 plot(model, title = "Original Estimate Model")
 ```
 
