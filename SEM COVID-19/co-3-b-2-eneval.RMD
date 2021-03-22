@@ -529,48 +529,48 @@ There is nothing pointing to hidden endogeneity in any of the other predictors.
 
 The copula will be integrated in the final model to improve the model.
 
-<!-- ```{r model with copula} -->
-<!-- modelwc <- estimate_pls(data = model$data %>% cbind(PRE_star),  -->
-<!--                         measurement_model = constructs( -->
-<!--                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B), -->
-<!--                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B), -->
-<!--                         composite("Benevolence", multi_items("CODI", 1:3)), -->
-<!--                         composite("Competence", multi_items("CODI", 4:6)), -->
-<!--                         composite("Integrity", multi_items("CODI", 7:9)), -->
-<!--                         higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B), -->
-<!--                         composite("Knowledge", single_item("COKN")), -->
-<!--                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))), -->
-<!--                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B), -->
-<!--                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B), -->
-<!--                         composite("Copula Perceived Response Efficacy", single_item("PRE_star")) -->
-<!--                         ),  -->
-<!--   structural_model = relationships( -->
-<!--   paths(from = c("Distrusting Beliefs"), to = c("Perceived Response Efficacy", "Perceived Response Costs")), -->
-<!--   paths(from = c("Knowledge"), to = c("Perceived Response Efficacy")), -->
-<!--   paths(from = c("Perceived Response Efficacy", "Perceived Response Costs", "Personal Moral Norm", "Descriptive Norm", "Copula Perceived Response Efficacy"), to = "Behavioral Intention") -->
-<!-- )) -->
-<!-- saveRDS(modelwc, "Models/model-co-3-b-2-cop.RDS") -->
-<!-- bootmodelwc <- bootstrap_model(modelwc, nboot = 5000) -->
-<!-- saveRDS(bootmodelwc, "Models/model-boot-co-3-b-2-cop.RDS") -->
-<!-- bootfsmodel <- bootstrap_model(modelwc$first_stage_model, nboot = 5000) -->
-<!-- saveRDS(bootmodelwc, "Models/model-fs-boot-co-3-b-2-cop.RDS") -->
-<!-- proxymodelwc <- estimate_pls(data = as.data.frame(model$data %>% cbind(PRE_star)),  -->
-<!--                         measurement_model = constructs( -->
-<!--                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B), -->
-<!--                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B), -->
-<!--                         composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B), -->
-<!--                         composite("Knowledge", single_item("COKN")), -->
-<!--                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))), -->
-<!--                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B), -->
-<!--                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B), -->
-<!--                         composite("Copula Perceived Response Efficacy", single_item("PRE_star")) -->
-<!--                         ),  -->
-<!--   structural_model = relationships( -->
-<!--   paths(from = c("Distrusting Beliefs"), to = c("Perceived Response Efficacy", "Perceived Response Costs")), -->
-<!--   paths(from = c("Knowledge"), to = c("Perceived Response Efficacy")), -->
-<!--   paths(from = c("Perceived Response Efficacy", "Perceived Response Costs", "Personal Moral Norm", "Descriptive Norm", "Copula Perceived Response Efficacy"), to = "Behavioral Intention") -->
-<!--   ) -->
-<!-- ) -->
-<!-- saveRDS(proxymodelwc, "Models/model-proxy-co-3-b-2-cop.RDS") -->
-<!-- ``` -->
+```{r model with copula}
+# modelwc <- estimate_pls(data = model$data %>% cbind(PRE_star),
+#                         measurement_model = constructs(
+#                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+#                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+#                         composite("Benevolence", multi_items("CODI", 1:3)),
+#                         composite("Competence", multi_items("CODI", 4:6)),
+#                         composite("Integrity", multi_items("CODI", 7:9)),
+#                         higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
+#                         composite("Knowledge", single_item("COKN")),
+#                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+#                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+#                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B),
+#                         composite("Copula Perceived Response Efficacy", single_item("PRE_star"))
+#                         ),
+#   structural_model = relationships(
+#   paths(from = c("Distrusting Beliefs"), to = c("Perceived Response Efficacy", "Perceived Response Costs")),
+#   paths(from = c("Knowledge"), to = c("Perceived Response Efficacy")),
+#   paths(from = c("Perceived Response Efficacy", "Perceived Response Costs", "Personal Moral Norm", "Descriptive Norm", "Copula Perceived Response Efficacy"), to = "Behavioral Intention")
+# ))
+# saveRDS(modelwc, "Models/model-co-3-b-2-cop.RDS")
+# bootmodelwc <- bootstrap_model(modelwc, nboot = 5000)
+# saveRDS(bootmodelwc, "Models/model-boot-co-3-b-2-cop.RDS")
+# bootfsmodel <- bootstrap_model(modelwc$first_stage_model, nboot = 5000)
+# saveRDS(bootfsmodel, "Models/model-fs-boot-co-3-b-2-cop.RDS")
+# proxymodelwc <- estimate_pls(data = as.data.frame(model$data %>% cbind(PRE_star)),
+#                         measurement_model = constructs(
+#                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
+#                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
+#                         composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B),
+#                         composite("Knowledge", single_item("COKN")),
+#                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
+#                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
+#                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B),
+#                         composite("Copula Perceived Response Efficacy", single_item("PRE_star"))
+#                         ),
+#   structural_model = relationships(
+#   paths(from = c("Distrusting Beliefs"), to = c("Perceived Response Efficacy", "Perceived Response Costs")),
+#   paths(from = c("Knowledge"), to = c("Perceived Response Efficacy")),
+#   paths(from = c("Perceived Response Efficacy", "Perceived Response Costs", "Personal Moral Norm", "Descriptive Norm", "Copula Perceived Response Efficacy"), to = "Behavioral Intention")
+#   )
+# )
+# saveRDS(proxymodelwc, "Models/model-proxy-co-3-b-2-cop.RDS")
+```
 

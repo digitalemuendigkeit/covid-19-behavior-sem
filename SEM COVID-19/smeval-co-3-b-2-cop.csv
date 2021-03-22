@@ -1,0 +1,9 @@
+﻿Exogenous Construct;Endogenous Construct;Path Coefficient Bootstrap Mean;0 in Path Coefficient CI;Path Coefficient t(431);Path Coefficient p;f^2;VIF
+Distrusting Beliefs;Perceived Response Efficacy;-0.62;FALSE;16.45;0;0.64;1.11
+Distrusting Beliefs;Perceived Response Costs;-0.58;FALSE;13.48;0;0.5;NA
+Knowledge;Perceived Response Efficacy;0.15;FALSE;3.84;0;0.03;1.11
+Perceived Response Efficacy;Behavioral Intention;0.53;FALSE;7.58;0;0.17;4.99
+Perceived Response Costs;Behavioral Intention;0.1;FALSE;2.17;0.02;0.03;1.36
+Personal Moral Norm;Behavioral Intention;0.22;FALSE;3.22;0;0.05;2.95
+Descriptive Norm;Behavioral Intention;0.14;FALSE;2.17;0.02;0.02;1.92
+Copula Perceived Response Efficacy;Behavioral Intention;-0.05;TRUE;1.48;0.07;0;2.76

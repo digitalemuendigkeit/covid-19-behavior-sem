@@ -1,0 +1,403 @@
+---
+title: "COVID-19 Model Iteration 3-b-2 with copula Measurement Model Evaluation"
+output: html_document
+---
+
+```{r setup, echo=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Include libraries
+library(tidyverse)
+library(seminr)
+library(DT)
+library(htmltools)
+library(distill)
+source(here::here("helpers.R"))
+
+# Load models and create summaries
+# Load PLS Model
+model <- readRDS("Models/model-co-3-b-2-cop.RDS")
+# Load bootstrapped PLS Model
+bootmodel <- readRDS("Models/model-boot-co-3-b-2-cop.RDS")
+# Load bootstrapped first stage PLS model
+bootfsmodel <- readRDS("Models/model-fs-boot-co-3-b-2-cop.RDS")
+# Make summaries?
+summo <- summary(model)
+sumfs <- summary(model$first_stage_model)
+sumbomo <- summary(bootmodel)
+sumbofsmo <- summary(bootfsmodel)
+# Load redundancy analysis models
+rapre <- readRDS("Models/rapre-co-3-b-2.RDS")
+raprc <- readRDS("Models/raprc-co-3-b-2.RDS")
+radn <- readRDS("Models/radn-co-3-b-2.RDS")
+rabi <- readRDS("Models/rabi-co-3-b-2.RDS")
+# Set seminr plot theme
+thm <-
+  seminr_theme_create(
+    construct.compositeA.arrow = "backward",
+    construct.compositeA.use_weights = FALSE,
+    plot.adj = FALSE,
+    construct.compositeA.shape = "ellipse",
+    construct.compositeB.shape = "ellipse"
+  )
+seminr_theme_set(thm)
+```
+
+# Model plots
+## Original Estimate Path Model
+This is the original estimate path model.
+```{r plot model, echo=FALSE}
+plot(model, title = "Original Estimate Model")
+```
+
+## Bootstrapped Path Model
+This is the bootstrapped path model.
+```{r plot bootmodel, echo=FALSE}
+plot(bootmodel, title = "Bootstrapped Model")
+```
+
+## Measurement Model Only
+This is a path model showing only the measurement model components.
+```{r plot mm model, echo=FALSE}
+plot(bootmodel, measurement_only = TRUE)
+```
+```{r eval-df, echo = FALSE, include=FALSE}
+# Base DF
+evalmm <- get_mm_details(model)
+```
+
+# Evaluation of the reflective measurement model
+```{r ref-eval prep, echo = FALSE, include=FALSE}
+# get measurement evaluation
+refevalmmbase <- measurement_evaluation_composite_A(model)
+
+#Next step is HTMT
+boothtmt <- get_htmt(bootmodel, bootfsmodel)
+htmt_problems <- get_htmt_problems(boothtmt)
+
+# Make final data frame
+refevalmm <- refevalmmbase %>% 
+  left_join(htmt_problems, by = "Construct")
+```
+
+## Convergent validity
+Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
+
+## Internal consistency reliability
+Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
+
+## Discriminant validity
+Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
+
+```{r ref-eval, echo=FALSE}
+print_composite_A_evaluation_DT(refevalmm)
+```
+
+```{r ref-eval-HTMT,echo=FALSE}
+#If there are problems with the HTMT, here is a detailed table
+datatable(boothtmt,
+          filter = 'top',
+          options = list(pageLength = nrow(boothtmt)),
+          rownames = FALSE,
+          colnames = c("Construct 1" = 1,
+                        "Construct 2" = 2, 
+                       "Lower CI HTMT" = 3, 
+                       "Upper CI HTMT" = 4),
+          caption = 'Details of the bootstrapped HTMT ratios') %>%
+  formatRound(3:4,
+              digits = 3) %>%
+    formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
+  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999')))
+```
+
+## Results of the evaluation of the reflective measurement model
+
+# Evaluation of the formative measurement model
+```{r for-eval prep, echo = FALSE, include=FALSE}
+forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Indicator.or.LOC) %>% 
+  mutate(Type = NULL, Mode = NULL)
+```
+## Convergent validity
+To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
+
+
+```{r for-eval rapre, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(rapre, title = "Redundancy Analysis Perceived Response Efficacy")
+sumrapre <- summary(rapre)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvpre <- data.frame(Construct = "Perceived Response Efficacy", 'C.V.R^2' = sumrapre$paths[1], 'C.V.PC' = sumrapre$paths[3])
+```
+
+```{r for-eval raprc, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(raprc, title = "Redundancy Analysis Perceived Response Costs")
+sumraprc <- summary(raprc)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvprc <- data.frame(Construct = "Perceived Response Costs", 'C.V.R^2' = sumraprc$paths[1], 'C.V.PC' = sumraprc$paths[3])
+```
+
+```{r for-eval radn, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(radn, title = "Redundancy Analysis Descriptive Norm")
+sumradn <- summary(radn)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1], 'C.V.PC' = sumradn$paths[3])
+```
+
+
+```{r for-eval rabi, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(rabi, title = "Redundancy Analysis Behavioral Intention")
+sumrabi <- summary(rabi)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvbi <- data.frame(Construct = "Behavioral Intention", 'C.V.R^2' = sumrabi$paths[1], 'C.V.PC' = sumrabi$paths[3])
+```
+```{r for-eval cv,echo=FALSE, include=FALSE}
+# put together all dataframes, this has also to be done manually
+forevalci <- bind_rows(cvpre, cvprc, cvdn, cvbi)
+forevalbase <- evalmm %>%
+  filter(Mode == "B") %>%
+  rename(Indicator = Indicator.or.LOC) %>%
+  select(!c(Type, Mode))
+```
+
+Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
+
+## Collinearity
+The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
+
+```{r for-eval col, echo = FALSE, include = FALSE}
+mmvif <- data.frame(Construct = character(),
+                      Indicator = character(),
+                      VIF = double())
+for (i in 1:length(unique(forevalbase$Construct))){
+  for (j in 1:nrow(filter(forevalbase, Construct == unique(forevalbase$Construct)[i]))){
+    x = unique(forevalbase$Construct)[i]
+    y = (filter(forevalbase, Construct == x))[j,"Indicator"]
+    mmvif <- mmvif %>% rbind(data.frame(Construct = x,
+                              Indicator = y,
+                              VIF = unlist(sumfs$validity$vif_items)[paste0({{x}}, ".", {{y}})]))
+  }}
+```
+
+## Significance and relevance
+Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+
+```{r for-eval sar, echo=FALSE, include=FALSE}
+# Make weights df
+btwtbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_weights)) %>% rename (
+  Construct.Rel. = rowname,
+  Original.Est.Wt. = "Original Est.",
+  Bootstrap.Mean.Wt. = "Bootstrap Mean",
+  Bootstrap.SD.Wt. = "Bootstrap SD",
+  T.Stat.Wt. = "T Stat.",
+  Lower.Bounds.CI.Wt. = "2.5% CI",
+  Upper.Bounds.CI.Wt. = "97.5% CI"
+)
+btwtsplit <- base::strsplit(btwtbase$Construct.Rel., "  ->  ")
+btwtsplit1 <- c()
+btwtsplit2 <- c()
+for (i in 1:length(btwtsplit)){
+  btwtsplit1 <- append(btwtsplit1, btwtsplit[[i]][1])
+  btwtsplit2 <- append(btwtsplit2, btwtsplit[[i]][2])
+}
+btwt <- btwtbase %>%
+  cbind(data.frame(Indicator = btwtsplit1, Construct = btwtsplit2)) %>%
+  mutate(Construct.Rel. = NULL,
+         Bootstrap.SD.Wt. = NULL,
+         '0.in.Wt.CI' = ifelse(Lower.Bounds.CI.Wt. < 0 &  Upper.Bounds.CI.Wt. > 0, TRUE, FALSE),
+         Lower.Bounds.CI.Wt. = NULL,
+         Upper.Bounds.CI.Wt. = NULL)
+# Make loadings df
+btldbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_loadings)) %>% rename(
+  Construct.Rel. = rowname,
+  Original.Est.Ld. = "Original Est.",
+  Bootstrap.Mean.Ld. = "Bootstrap Mean",
+  Bootstrap.SD.Ld. = "Bootstrap SD",
+  T.Stat.Ld. = "T Stat.",
+  Lower.Bounds.CI.Ld. = "2.5% CI",
+  Upper.Bounds.CI.Ld. = "97.5% CI"
+)
+btldsplit <- base::strsplit(btldbase$Construct.Rel., "  ->  ")
+btldsplit1 <- c()
+btldsplit2 <- c()
+for (i in 1:length(btldsplit)){
+  btldsplit1 <- append(btldsplit1, btldsplit[[i]][1])
+  btldsplit2 <- append(btldsplit1, btldsplit[[i]][2])
+}
+btld <- btldbase %>%
+  cbind(data.frame(Indicator = btldsplit1, Construct = btldsplit1)) %>%
+  mutate(Construct.Rel. = NULL,
+         Bootstrap.SD.Ld. = NULL,
+         '0.in.Ld.CI' = ifelse(Lower.Bounds.CI.Ld. < 0 &  Upper.Bounds.CI.Ld. > 0, TRUE, FALSE),
+         Lower.Bounds.CI.Ld. = NULL,
+         Upper.Bounds.CI.Ld. = NULL)
+
+#Make final data frame
+forevalmm <- forevalbase %>% 
+  left_join(forevalci) %>%
+  left_join(mmvif[,2:3]) %>%
+  left_join(btwt[,-5]) %>%
+  left_join(btld[,-5])
+colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
+colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
+```
+
+```{r for-eval, echo=FALSE}
+datatable(forevalmm,
+          filter = 'top',
+          options = list(pageLength = nrow(forevalmm)),
+          rownames = FALSE,
+          colnames = c("CV R^2" = 3,
+                        "CV pc" = 4, 
+                       "Weight (original estimate)" = 6, 
+                       "Weight (bootstrap mean)" = 7,
+                       "0 in CI (weight)" = 9,
+                       "Loading (original estimate)" = 10,
+                       "Loading (bootstrap mean)" = 11,
+                       "0 in CI (loading)" = 13),
+          caption = 'Results of the formative measurement model evaluation') %>%
+  formatRound(c(3:8, 10:12),
+              digits = 3) %>%
+  formatStyle('CV R^2', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle('CV pc', backgroundColor = styleInterval(cuts = c(0.699), values = c('#ff9999', '#00'))) %>%
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
+  formatStyle(colnames(forevalmm)[8], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ffe5e5', '#00'))) %>%
+  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
+  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
+  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
+```
+
+## Results of the evaluation of the formative measurement model
+
+
+# Evaluation of the formative higher-order constructs
+```{r hoc-eval base, echo=FALSE, include=FALSE}
+forhocevalbase <- evalmm %>%
+  filter(Mode == "HOCB") %>% 
+  rename(HOC = Construct, 
+         LOC = Indicator.or.LOC) %>% 
+  select(!c(Type, Mode))
+```
+
+## Convergent validity
+Convergent validity cannot be evaluated.
+
+## Collinearity
+The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
+```{r hoc-for-eval col, echo = FALSE, include = FALSE}
+hocvif <- data.frame(HOC = character(),
+                    LOC = character(),
+                    VIF = double())
+for (i in 1:length(unique(forhocevalbase$HOC))){
+  for (j in 1:nrow(filter(forhocevalbase, HOC == unique(forhocevalbase$HOC)[i]))){
+    x = unique(forhocevalbase$HOC)[i]
+    y = (filter(forhocevalbase, HOC == x))[j,"LOC"]
+    hocvif <- hocvif %>% rbind(data.frame(HOC = x,
+                              LOC = y,
+                              VIF = unlist(summo$validity$vif_items)[paste0({{x}}, ".", {{y}})]))
+  }}
+```
+
+## Significance and relevance
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+
+```{r hoc-for-eval sar, echo=FALSE, include=FALSE}
+# Make weights df
+bthocwtbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_weights)) %>% rename (
+  Construct.Rel. = rowname,
+  Original.Est.Wt. = "Original Est.",
+  Bootstrap.Mean.Wt. = "Bootstrap Mean",
+  Bootstrap.SD.Wt. = "Bootstrap SD",
+  T.Stat.Wt. = "T Stat.",
+  Lower.Bounds.CI.Wt. = "2.5% CI",
+  Upper.Bounds.CI.Wt. = "97.5% CI"
+)
+bthocwtsplit <- base::strsplit(bthocwtbase$Construct.Rel., "  ->  ")
+bthocwtsplit1 <- c()
+bthocwtsplit2 <- c()
+for (i in 1:length(bthocwtsplit)){
+  bthocwtsplit1 <- append(bthocwtsplit1, bthocwtsplit[[i]][1])
+  bthocwtsplit2 <- append(bthocwtsplit2, bthocwtsplit[[i]][2])
+}
+bthocwt <- bthocwtbase %>%
+  cbind(data.frame(LOC = bthocwtsplit1, HOC = bthocwtsplit2)) %>%
+  mutate(Construct.Rel. = NULL,
+         Bootstrap.SD.Wt. = NULL,
+         '0.in.Wt.CI' = ifelse(Lower.Bounds.CI.Wt. < 0 &  Upper.Bounds.CI.Wt. > 0, TRUE, FALSE),
+         Lower.Bounds.CI.Wt. = NULL,
+         Upper.Bounds.CI.Wt. = NULL)
+# Make loadings df
+bthocldbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_loadings)) %>% rename(
+  Construct.Rel. = rowname,
+  Original.Est.Ld. = "Original Est.",
+  Bootstrap.Mean.Ld. = "Bootstrap Mean",
+  Bootstrap.SD.Ld. = "Bootstrap SD",
+  T.Stat.Ld. = "T Stat.",
+  Lower.Bounds.CI.Ld. = "2.5% CI",
+  Upper.Bounds.CI.Ld. = "97.5% CI"
+)
+bthocldsplit <- base::strsplit(bthocldbase$Construct.Rel., "  ->  ")
+bthocldsplit1 <- c()
+bthocldsplit2 <- c()
+for (i in 1:length(bthocldsplit)){
+  bthocldsplit1 <- append(bthocldsplit1, bthocldsplit[[i]][1])
+  bthocldsplit2 <- append(bthocldsplit1, bthocldsplit[[i]][2])
+}
+bthocld <- btldbase %>%
+  cbind(data.frame(LOC = btldsplit1, HOC = btldsplit1)) %>%
+  mutate(Construct.Rel. = NULL,
+         Bootstrap.SD.Ld. = NULL,
+         '0.in.Ld.CI' = ifelse(Lower.Bounds.CI.Ld. < 0 &  Upper.Bounds.CI.Ld. > 0, TRUE, FALSE),
+         Lower.Bounds.CI.Ld. = NULL,
+         Upper.Bounds.CI.Ld. = NULL)
+
+#Make final data frame
+forhocevalmm <- forhocevalbase %>%
+  left_join(hocvif[,2:3]) %>%
+  left_join(bthocwt[,-5]) %>%
+  left_join(bthocld[,-5])
+colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
+colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
+```
+
+```{r hoc-for-eval, echo=FALSE}
+datatable(forhocevalmm,
+          filter = 'top',
+          options = list(pageLength = nrow(forhocevalmm)),
+          rownames = FALSE,
+          colnames = c("Weight (original estimate)" = 4, 
+                       "Weight (bootstrap mean)" = 5,
+                       "0 in CI (weight)" = 7,
+                       "Loading (original estimate)" = 8,
+                       "Loading (bootstrap mean)" = 9,
+                       "0 in CI (loading)" = 11),
+          caption = 'Results of the formative higher-order construct evaluation') %>%
+  formatRound(c(3:6, 8:10),
+              digits = 3) %>%
+  formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999'))) %>%
+  formatStyle(colnames(forhocevalmm)[6], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ffe5e5', '#00'))) %>%
+  formatStyle('Loading (original estimate)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle('Loading (bootstrap mean)', backgroundColor = styleInterval(cuts = c(0.499), values = c('#ff9999', '#00'))) %>%
+  formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
+  formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
+  formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
+```
+
+## Results of the formative higher-order constructs evaluation
+
+# Results summary
+
+```{r table-getter, echo = FALSE, include = FALSE}
+write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "mmevalref-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "htmt-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "mmevalfor-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "mmevalhoc-co-3-b-2-cop.csv",delim = ";")
+```
+

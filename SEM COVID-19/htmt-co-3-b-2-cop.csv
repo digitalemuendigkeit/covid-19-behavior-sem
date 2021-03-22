@@ -1,0 +1,19 @@
+﻿Construct.1;Construct.2;Lower.CI;Upper.CI
+Knowledge;Personal Moral Norm;0.24;0.44
+Knowledge;Copula Perceived Response Efficacy;0.1;0.29
+Personal Moral Norm;Copula Perceived Response Efficacy;0.48;0.59
+Knowledge;Personal Moral Norm;0.24;0.44
+Knowledge;Copula Perceived Response Efficacy;0.1;0.29
+Knowledge;Benevolence;0.17;0.4
+Knowledge;Competence;0.23;0.44
+Knowledge;Integrity;0.25;0.47
+Personal Moral Norm;Copula Perceived Response Efficacy;0.47;0.59
+Personal Moral Norm;Benevolence;0.6;0.76
+Personal Moral Norm;Competence;0.6;0.76
+Personal Moral Norm;Integrity;0.59;0.75
+Copula Perceived Response Efficacy;Benevolence;0.39;0.56
+Copula Perceived Response Efficacy;Competence;0.44;0.6
+Copula Perceived Response Efficacy;Integrity;0.46;0.61
+Benevolence;Competence;0.92;1
+Benevolence;Integrity;0.97;1.06
+Competence;Integrity;0.97;1.06

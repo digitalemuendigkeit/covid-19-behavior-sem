@@ -432,3 +432,11 @@ datatable(forhocevalmm,
 ## Results of the formative higher-order constructs evaluation
 
 # Results summary
+
+```{r table-getter, echo = FALSE, include = FALSE}
+
+summo$descriptives
+bootmodel$
+
+```
+
