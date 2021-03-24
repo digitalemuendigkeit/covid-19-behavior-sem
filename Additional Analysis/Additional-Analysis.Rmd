@@ -108,6 +108,7 @@ data.frame(Variable = paste(1:17, rownames(cormv))) %>%
 
 ```
 
+
 This correlation contains all variables corresponding to constructs in the model, albeit differently specified (see Descriptive Statistics table).
 Further, Knowledge is specified differently: Instead of a pseudo-continuous scale with 1 corresponding to an incorrect answer, 2 to a 'don't know' and 3 to an correct answer, there are counts of how often a respondent answered correctly, incorrectly, or 'don't know'.
 There is also a Subjective Knowledge variable which measures the amount of COVID-19 related knowledge a respondent perceives to possess.
@@ -201,7 +202,7 @@ Neither is there a significant difference for education or occupation.
 ```{r income, echo = FALSE, layout="l-page"}
 ggplot(data, aes(Income, Behavior)) +
   geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90))
+  theme(axis.text.x = element_text(angle = 90)) 
 kruskal.test(data$Behavior ~ data$Income)
 ```
 ```{r income2, echo = FALSE, layout="l-page"}
@@ -229,6 +230,20 @@ wtor$p.value %>%
                            ordering = FALSE)) %>%
     formatRound(1:ncol(wtor$p.value),
               digits = 3)
+data.frame(p = wilcox.test(Behavior ~ `Own Risk COVID-19`, data %>% filter(!(`Own Risk COVID-19` == "do not know")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value,
+           Z = qnorm(wilcox.test(Behavior ~ `Own Risk COVID-19`, data %>% filter(!(`Own Risk COVID-19` == "do not know")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value/2),
+           Median.yes = median((data %>% filter(`Own Risk COVID-19` == "yes"))[,"Behavior"], na.rm = TRUE),
+           Median.no = median((data %>% filter(`Own Risk COVID-19` == "no"))[,"Behavior"], na.rm = TRUE),
+           Mean.yes = mean((data %>% filter(`Own Risk COVID-19` == "yes"))[,"Behavior"], na.rm = TRUE),
+           Mean.no = mean((data %>% filter(`Own Risk COVID-19` == "no"))[,"Behavior"], na.rm = TRUE)) %>%
+  datatable(caption = 'Wilcoxon Rank Sum Test',
+            autoHideNavigation = TRUE,
+            rownames = FALSE,
+            options = list(pageLength = nrow(wtor$p.value),
+                           ordering = FALSE)) %>%
+    formatRound(c(1:2,5:6),
+              digits = 3)
+
 ```
 There is a barely significant different in Behavior between people who know they are at risk for an especially severe COVID-19 infection and those who know that they are not.
 
@@ -262,6 +277,32 @@ wtco$p.value %>%
             options = list(pageLength = nrow(wtco$p.value),
                            ordering = FALSE)) %>%
     formatRound(1:ncol(wtco$p.value),
+              digits = 3)
+data.frame(p = wilcox.test(Behavior ~ `Cohabitate Risk COVID-19`, data %>% filter(!(`Cohabitate Risk COVID-19` == "do not know")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value,
+           Z = qnorm(wilcox.test(Behavior ~ `Cohabitate Risk COVID-19`, data %>% filter(!(`Cohabitate Risk COVID-19` == "do not know")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value/2),
+           Median.yes = median((data %>% filter(`Cohabitate Risk COVID-19` == "yes"))[,"Behavior"], na.rm = TRUE),
+           Median.no = median((data %>% filter(`Cohabitate Risk COVID-19` == "no"))[,"Behavior"], na.rm = TRUE),
+           Mean.yes = mean((data %>% filter(`Cohabitate Risk COVID-19` == "yes"))[,"Behavior"], na.rm = TRUE),
+           Mean.no = mean((data %>% filter(`Cohabitate Risk COVID-19` == "no"))[,"Behavior"], na.rm = TRUE)) %>%
+  datatable(caption = 'Wilcoxon Rank Sum Test',
+            autoHideNavigation = TRUE,
+            rownames = FALSE,
+            options = list(pageLength = nrow(wtor$p.value),
+                           ordering = FALSE)) %>%
+    formatRound(c(1:2,5:6),
+              digits = 3)
+data.frame(p = wilcox.test(Behavior ~ `Cohabitate Risk COVID-19`, data %>% filter(!(`Cohabitate Risk COVID-19` == "yes")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value,
+           Z = qnorm(wilcox.test(Behavior ~ `Cohabitate Risk COVID-19`, data %>% filter(!(`Cohabitate Risk COVID-19` == "yes")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value/2),
+           Median.do.not.know = median((data %>% filter(`Cohabitate Risk COVID-19` == "do not know"))[,"Behavior"], na.rm = TRUE),
+           Median.no = median((data %>% filter(`Cohabitate Risk COVID-19` == "no"))[,"Behavior"], na.rm = TRUE),
+           Mean.do.not.know = mean((data %>% filter(`Cohabitate Risk COVID-19` == "do not know"))[,"Behavior"], na.rm = TRUE),
+           Mean.no = mean((data %>% filter(`Cohabitate Risk COVID-19` == "no"))[,"Behavior"], na.rm = TRUE)) %>%
+  datatable(caption = 'Wilcoxon Rank Sum Test',
+            autoHideNavigation = TRUE,
+            rownames = FALSE,
+            options = list(pageLength = nrow(wtor$p.value),
+                           ordering = FALSE)) %>%
+    formatRound(c(1:2,5:6),
               digits = 3)
 ```
 Respondents who know that they live with a high-risk person and those who are not sure show a slightly significantly (p < 0.05) higher Behavior than respondents who think they do not live with a high-risk person.
@@ -347,6 +388,18 @@ wtbcokn2_1$p.value %>%
                            ordering = FALSE)) %>%
     formatRound(1:ncol(wtbcokn2_1$p.value),
               digits = 3)
+data.frame(p = wilcox.test(Behavior ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == "do not know")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value,
+           Z = qnorm(wilcox.test(Behavior ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == "do not know")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value/2),
+           Median.correct = median((data %>% filter(`COKN2_1` == "correct"))[,"Behavior"], na.rm = TRUE),
+           Median.incorrect = median((data %>% filter(`COKN2_1` == "incorrect"))[,"Behavior"], na.rm = TRUE),
+           Mean.correct = mean((data %>% filter(`COKN2_1` == "correct"))[,"Behavior"], na.rm = TRUE),
+           Mean.incorrect = mean((data %>% filter(`COKN2_1` == "incorrect"))[,"Behavior"], na.rm = TRUE)) %>%
+  datatable(caption = 'Wilcoxon Rank Sum Test',
+            autoHideNavigation = TRUE,
+            rownames = FALSE,
+            options = list(ordering = FALSE)) %>%
+    formatRound(c(1:2,5:6),
+              digits = 3)
 ggplot(data %>% filter(!is.na(COKN2_1)), aes(COKN2_1, `Subjective Knowledge`)) +
   geom_boxplot()
 kruskal.test(data$`Subjective Knowledge` ~ data$COKN2_1)
@@ -357,6 +410,30 @@ wtscokn2_1$p.value %>%
             options = list(pageLength = nrow(wtscokn2_1$p.value),
                            ordering = FALSE)) %>%
     formatRound(1:ncol(wtscokn2_1$p.value),
+              digits = 3)
+data.frame(p = wilcox.test(`Subjective Knowledge` ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == "correct")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value,
+           Z = qnorm(wilcox.test(`Subjective Knowledge` ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == "correct")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value/2),
+           Median.do.not.know = median((data %>% filter(`COKN2_1` == "do not know"))[,"Subjective Knowledge"], na.rm = TRUE),
+           Median.incorrect = median((data %>% filter(`COKN2_1` == "incorrect"))[,"Subjective Knowledge"], na.rm = TRUE),
+           Mean.do.not.know = mean((data %>% filter(`COKN2_1` == "do not know"))[,"Subjective Knowledge"], na.rm = TRUE),
+           Mean.incorrect = mean((data %>% filter(`COKN2_1` == "incorrect"))[,"Subjective Knowledge"], na.rm = TRUE)) %>%
+  datatable(caption = 'Wilcoxon Rank Sum Test',
+            autoHideNavigation = TRUE,
+            rownames = FALSE,
+            options = list(ordering = FALSE)) %>%
+    formatRound(c(1:2,5:6),
+              digits = 3)
+data.frame(p = wilcox.test(`Subjective Knowledge` ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == "incorrect")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value,
+           Z = qnorm(wilcox.test(`Subjective Knowledge` ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == "incorrect")), na.action = "na.omit", paired = FALSE, p.adjust = "bonferroni")$p.value/2),
+           Median.do.not.know = median((data %>% filter(`COKN2_1` == "do not know"))[,"Subjective Knowledge"], na.rm = TRUE),
+           Median.correct = median((data %>% filter(`COKN2_1` == "correct"))[,"Subjective Knowledge"], na.rm = TRUE),
+           Mean.do.not.know = mean((data %>% filter(`COKN2_1` == "do not know"))[,"Subjective Knowledge"], na.rm = TRUE),
+           Mean.correct = mean((data %>% filter(`COKN2_1` == "correct"))[,"Subjective Knowledge"], na.rm = TRUE)) %>%
+  datatable(caption = 'Wilcoxon Rank Sum Test',
+            autoHideNavigation = TRUE,
+            rownames = FALSE,
+            options = list(ordering = FALSE)) %>%
+    formatRound(c(1:2,5:6),
               digits = 3)
 ```
 Respondents who hold incorrect information about this show significantly less Behavior.
