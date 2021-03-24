@@ -296,7 +296,7 @@ for (i in 1:length(unique(forhocevalbase$HOC))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r hoc-for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
