@@ -322,18 +322,6 @@ decstatcovid <- descstatshort %>%
                 grepl('General', Variable)))) %>%
   mutate(Variable = gsub('COVID-19 ', '', Variable))
 
-descstatcovidlong <- data.frame(Variable = rownames(psych::describe(datacoded)),
-                                psych::describe(datacoded)) %>%
-  filter(!grepl('Climate', Variable)) %>%
-  mutate(Variable = gsub('COVID-19 ', '', Variable)) %>%
-  left_join(rbind(anperalpha2,
-                  ancoalpha) %>%
-              group_by(Variable) %>%
-              mutate(Items = paste0(Item, collapse = ", "),
-                     Item = NULL) %>%
-              distinct(Variable, .keep_all = TRUE)) %>%
-    select(c(Variable, Items, n, Cs.Alpha, mean, sd, median, min, max, skew, kurtosis))
-saveRDS(descstatcovidlong, "Additional Analysis/desc-stat-covid.RDS")
 
 
 
@@ -363,6 +351,22 @@ datacodedkn$'Climate Crisis Knowledge Sum Incorrect' <- rowSums(datacodedkn %>% 
 datacodedkn$'COVID-19 Knowledge Sum Correct' <- rowSums(datacodedkn %>% select(contains("COKN")) == 3)
 datacodedkn$'COVID-19 Knowledge Sum DK' <- rowSums(datacodedkn %>% select(contains("COKN")) == 2)
 datacodedkn$'COVID-19 Knowledge Sum Incorrect' <- rowSums(datacodedkn %>% select(contains("COKN")) == 1)
+
+descstatcovidlong <- data.frame(Variable = rownames(psych::describe(datacodedkn)),
+                                psych::describe(datacodedkn)) %>%
+  filter(!grepl('Climate', Variable), !grepl('CCKN', Variable), !grepl('COKN', Variable)) %>%
+  mutate(Variable = gsub('COVID-19 ', '', Variable)) %>%
+  left_join(rbind(anperalpha2,
+                  ancoalpha) %>%
+              group_by(Variable) %>%
+              mutate(Items = paste0(Item, collapse = ", "),
+                     Item = NULL) %>%
+              distinct(Variable, .keep_all = TRUE)) %>%
+  select(c(Variable, Items, n, Cs.Alpha, mean, sd, median, min, max, skew, kurtosis))
+descstatcovidlong[grepl("Knowledge Sum", descstatcovidlong$Variable),] <- descstatcovidlong[grepl("Knowledge Sum", descstatcovidlong$Variable),] %>%
+  mutate(Items = c("COKN1, COKN2, COKN2_1, COKN3, COKN4, COKN5, COKN6"))
+saveRDS(descstatcovidlong, "Additional Analysis/desc-stat-covid.RDS")
+
 
 # Append demographic and other vars
 datarest <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
@@ -467,7 +471,8 @@ datarest <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
                                       'Cohabitate Risk COVID-19' = car::recode(COS4,
                                                                         "2 = 'do not know';
                                                                         1 = 'no';
-                                                                        3 = 'yes'",
+                                                                        3 = 'yes';
+                                                                        NA = 'no'",
                                                                         as.factor = TRUE,
                                                                         levels = c('no', 'do not know', 'yes')),
                                       'Acquaintances Infection COVID-19' = COS5,
