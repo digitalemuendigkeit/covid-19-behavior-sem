@@ -1,0 +1,163 @@
+---
+title: "Additional Analysis"
+author: "Lilian Kojan"
+output: 
+  distill::distill_article
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(psych)
+library(Hmisc)
+library(DT)
+library(htmltools)
+library(distill)
+source(here::here("helpers.R"))
+knitr::opts_chunk$set(echo = TRUE)
+# Get data
+descstat <- readRDS("desc-stat-covid.RDS")
+data <- readRDS("datacodedfull.RDS") %>%
+  select(!c(starts_with("Climate"),
+            "Diet",
+            "Car Ownership",
+            starts_with("Distance"),
+            starts_with("CC"))) %>%
+  rename_with(~ gsub("COVID-19 ", "", .x))
+col_order_1 <- c("Behavior",
+               grep(colnames(data), 
+                    pattern = "Behavior ", 
+                    value = TRUE),
+               grep(colnames(data), 
+                    pattern = "Behavioral", 
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Perceived Sel",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Perceived Response E",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Perceived Response C",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Perceived Sus",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Perceived Sev",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Norm",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Distr",
+                    value = TRUE),
+               grep(colnames(data),
+                    pattern = "Know",
+               value = TRUE))
+col_order_2 <- c(colnames(data)[!colnames(data) %in% col_order_1])
+col_order <- c(col_order_1, col_order_2)
+data <- data[,col_order]
+data[,grepl("COKN", colnames(data))] <- data[,grepl("COKN", colnames(data))] %>%
+  lapply(FUN = function(x) car::recode(x,
+    "1 = 'incorrect';
+      2 = 'do not know';
+      3 = 'correct'",
+    as.factor = TRUE,
+    levels = c('incorrect',
+               'do not know',
+               'correct')
+  ))
+```
+
+# Descriptive Statistics
+
+
+```{r descstat, echo = FALSE}
+datatable(
+  descstat[order(descstat$Variable),],
+  filter = 'top',
+  rownames = FALSE,
+  caption = 'Descriptive statistics for all continuous variables',
+  colnames = c("Cronbach\'s alpha" = "Cs.Alpha")
+) %>%
+  formatRound(-c(1:3, 8:9),
+              digits = 3)
+```
+For variables where a Cronbach's alpha $\geq$ 0.7 could not be attained, we chose the item with the highest item-total correlation or, in case of Internal and External Control Conviction, one of the items based on content.
+
+# Correlation analysis of continous variables
+As becomes apparent from the descriptive statistics, response data is not normally distributed.
+Therefore, we use Spearman's rank correlation.
+
+## Correlation of the model variables and behavior
+```{r corm, echo=FALSE}
+cormv <- correlation_matrix(df = data[,1:34] %>%
+                     select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))),
+                   type = "spearman",
+                   use = "lower")
+cormv %>%
+  as.data.frame() %>%
+  # knitr::kable(caption = 'Spearman\'s rank correlation , * p < 0.05, ** p < 0.01, *** p < 0.001')  #
+  datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
+            options = list(pageLength = nrow(cormv)))
+
+
+
+
+```
+Most of the correlation mirror relationships already expressed in the model.
+Additionally, there are correlations
+
+## Correlation of all continuous with behavior and behavioral intention
+```{r corall, echo=FALSE}
+cormv2 <- correlation_matrix_2(df1 = select(data, 
+                                            c("Behavior", 
+                                              starts_with("Behavior "), 
+                                              ends_with("Intention"))),
+                               df2 = select(data, 
+                                            !c(starts_with("Behavior"),
+                                               starts_with("COKN"),
+                                               ends_with("App"),
+                                               ends_with("Contact"),
+                                               ends_with("General"),
+                                               ends_with("Mask"))),
+                   type = "spearman")
+# rownames(cormv2[,]) <-
+#             rownames = c('Administrative District Infection Count Survey 1' = 'AD S1 Count COVID-19',
+#                          'Administrative District Infection Count Survey 2' = 'AD S2 Count COVID-19', 
+#                          'Administrative District Incidence Survey 1' = 'AD S1 Incidence COVID-19',
+#                          'Administrative District Incidence Survey 2' = 'AD S2 Incidence COVID-19')
+cormv2 %>%
+  as.data.frame() %>%
+  datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
+            options = list(pageLength = nrow(cormv2),
+                           list(className = 'dt-right',
+                                targets = 0:6)),
+            filter = 'top')
+```
+Perceived Susceptibility and Severity are both moderately and significantly correlated with Behavior and Behavioral Intention.
+Correct Knowledge is positively and significantly correlated with Behavior and Behavioral Intention.
+
+```{r knowledge}
+corkn <- correlation_matrix(df = select(data, contains("Knowledge")),
+                            type = "spearman",
+                            use = "lower")
+# for knowledge: code COKN as factors
+summary(aov(data$`Subjective Knowledge` ~ data$COKN1))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN1))
+summary(aov(data$`Subjective Knowledge` ~ data$COKN2))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN2))
+summary(aov(data$`Subjective Knowledge` ~ data$COKN2_1))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN2_1))
+summary(aov(data$`Subjective Knowledge` ~ data$COKN3))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN3))
+summary(aov(data$`Subjective Knowledge` ~ data$COKN4))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN4))
+summary(aov(data$`Subjective Knowledge` ~ data$COKN5))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN5))
+summary(aov(data$`Subjective Knowledge` ~ data$COKN6))
+TukeyHSD(aov(data$`Subjective Knowledge` ~ data$COKN6))
+```
+
+People who don't know things are sure about that.
+People who are informed incorrectly or correctly are less sure.

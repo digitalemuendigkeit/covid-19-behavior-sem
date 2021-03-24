@@ -132,6 +132,8 @@ anperalpha <- anper %>% left_join(anperun)
 # EC: Choose EC1 (content)
 keepper <- c("BFE2", "BFA1", "BFC2", "BFN1", "BFN2", "BFN3", "BFO3", "IC2", "EC1")
 codeper <- anper %>% filter(Item %in% keepper)
+anperalpha2 <- anperalpha %>% filter(Item %in% keepper)
+anperalpha2[anperalpha2 < 0.7] <- NA
 
 # Make scales for CC data
 
@@ -293,6 +295,8 @@ descstat <- data.frame(Variable = rownames(psych::describe(datacoded)), psych::d
               distinct(Variable, .keep_all = TRUE)
 
   )
+
+
 # order by groups and alphabetical
 descstatalph <- descstat[c(order(descstat$Variable)[order(descstat$Variable) %in% grep("Climate Crisis", descstat$Variable)],
                           order(descstat$Variable)[order(descstat$Variable) %in% grep("COVID-19", descstat$Variable)],
@@ -307,6 +311,41 @@ descstatshort <- descstat %>%
   Mean = round(mean,2),
   SD = round(sd,2)
 )
+
+decstatcovid <- descstatshort %>%
+  filter(!grepl('Climate', Variable)) %>%
+  filter(!((grepl('Perceived', Variable) |
+            grepl('Intention', Variable)) &
+             (grepl('Contact', Variable) |
+                grepl('Mask', Variable) |
+                grepl('App', Variable) |
+                grepl('General', Variable)))) %>%
+  mutate(Variable = gsub('COVID-19 ', '', Variable))
+
+descstatcovidlong <- data.frame(Variable = rownames(psych::describe(datacoded)),
+                                psych::describe(datacoded)) %>%
+  filter(!grepl('Climate', Variable)) %>%
+  mutate(Variable = gsub('COVID-19 ', '', Variable)) %>%
+  left_join(rbind(anperalpha2,
+                  ancoalpha) %>%
+              group_by(Variable) %>%
+              mutate(Items = paste0(Item, collapse = ", "),
+                     Item = NULL) %>%
+              distinct(Variable, .keep_all = TRUE)) %>%
+    select(c(Variable, Items, n, Cs.Alpha, mean, sd, median, min, max, skew, kurtosis))
+saveRDS(descstatcovidlong, "Additional Analysis/desc-stat-covid.RDS")
+
+
+
+decstatcovidlong <- descstat %>%
+  mutate(Cs.Alpha = ifelse(is.na(Cs.Alpha),
+                           "-",
+                           Cs.Alpha)) %>%
+  select(c(Variable, Items, n, Cs))
+  filter(!grepl('Climate', Variable)) %>%
+  mutate(Variable = gsub('COVID-19 ', '', Variable))
+
+#write_excel_csv(decstatcovid, "Additional Analysis/descriptive-statistics.csv", delim = ";")
 
 # Make only covid descriptive stats
 covidpls <- readRDS("SEM COVID-19/Models/model-co-3-a-1.RDS")
@@ -498,6 +537,7 @@ datarest <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
                                                                                          'do not know'))
                                       )
 datacodedfull <- datacodedkn %>% cbind(datarest)
+saveRDS(datacodedfull, "Additional Analysis/datacodedfull.RDS")
 # psych::describe(datafull$SD8)
 # # Are Behavior or Behavioral Intention correlated with count or incidence?
 # correlation_matrix(datafull %>% select(starts_with("COB") | starts_with("COTB") | starts_with("Count") | starts_with("Incidence")),
