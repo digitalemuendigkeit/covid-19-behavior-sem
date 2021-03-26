@@ -5,8 +5,8 @@ library(hcictools)
 # Import data
 # First 2 rows are descriptors
 # Next 6 rows are tests
-NameRD <- data.frame(read_csv("Data/S1-Raw-Data-20210118.csv"))
-RD <- read_csv("Data/S1-Raw-Data-20210118.csv", skip = 8, col_names = colnames(NameRD))
+NameRD <- data.frame(read_csv(here::here("Data", "raw", "S1-Raw-Data-20210118.csv")))
+RD <- read_csv(here::here("Data", "raw", "S1-Raw-Data-20210118.csv"), skip = 8, col_names = colnames(NameRD))
 
 # Crop Data
 # From Descriptive Cols keep only Duration, RecordedDate, ResponseId, gid
