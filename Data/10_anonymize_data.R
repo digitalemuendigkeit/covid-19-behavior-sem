@@ -23,8 +23,9 @@ osf_protected_node <- osf_retrieve_node(osf_id_protected)
 
 
 
+files_to_upload <- dir(open_path, pattern = "*.txt", recursive = T)
 
-
-
-
-osf_open_node %>% osf_upload()
+osf_open_node %>%
+  osf_upload(path = paste0("Data/open/", files_to_upload),
+             conflicts = "overwrite",
+             recurse = T, progress = T)
