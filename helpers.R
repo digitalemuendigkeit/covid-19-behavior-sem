@@ -266,23 +266,20 @@ correlation_matrix <- function(df,
 
 ## Based on function by https://paulvanderlaken.com/2020/07/28/publication-ready-correlation-matrix-significance-r/
 #' correlation_matrix
-#' Creates a publication-ready / formatted correlation matrix, using `Hmisc::rcorr` in the backend.
+#' Creates a publication-ready / formatted correlation matrix with different variables for columns on rows, using `Hmisc::rcorr` in the backend.
 #'
-#' @param df dataframe; containing numeric and/or logical columns to calculate correlations for
+#' @param df1 dataframe 1; containing numeric and/or logical columns to calculate correlations for; passed on to the rows
+#' @param df2 dataframe 2; containing numeric and/or logical columns to calculate correlations for; passed on to the cols
 #' @param type character; specifies the type of correlations to compute; gets passed to `Hmisc::rcorr`; options are `"pearson"` or `"spearman"`; defaults to `"pearson"`
 #' @param digits integer/double; number of decimals to show in the correlation matrix; gets passed to `formatC`; defaults to `3`
 #' @param decimal.mark character; which decimal.mark to use; gets passed to `formatC`; defaults to `.`
-#' @param use character; which part of the correlation matrix to display; options are `"all"`, `"upper"`, `"lower"`; defaults to `"all"`
 #' @param show_significance boolean; whether to add `*` to represent the significance levels for the correlations; defaults to `TRUE`
-#' @param replace_diagonal boolean; whether to replace the correlations on the diagonal; defaults to `FALSE`
-#' @param replacement character; what to replace the diagonal and/or upper/lower triangles with; defaults to `""` (empty string)
 #'
 #' @return a correlation matrix
 #' @export
 #'
 #' @examples
-#' `correlation_matrix(iris)`
-#' `correlation_matrix(mtcars)`
+#' `correlation_matrix_2(iris %>% select(starts_with("Sepal")), iris %>% select(starts_with("Petal")))`
 correlation_matrix_2 <- function(df1,
                                  df2,
                                type = "pearson",
@@ -298,6 +295,7 @@ correlation_matrix_2 <- function(df1,
   })
   # we need the Hmisc package for this
   require(Hmisc)
+  require(tidyverse)
 
   # retain only numeric and boolean columns
   isNumericOrBoolean1 = vapply(df1, function(x) is.numeric(x) | is.logical(x), logical(1))
@@ -341,8 +339,8 @@ correlation_matrix_2 <- function(df1,
   Rnew <- data.frame(Rnew)
   colnames(Rnew) <- c(colnames(x1), colnames(x2))
   Rnew <- Rnew %>%
-    select(colnames(x1))  %>%
-    filter(rownames(Rnew) %in% colnames(x2))
+    select(colnames(x2))  %>%
+    filter(rownames(Rnew) %in% colnames(x1))
 
   return(Rnew)
 }

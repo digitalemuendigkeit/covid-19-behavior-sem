@@ -1,8 +1,10 @@
 ---
-title: "Additional Analysis"
+title: "Additional Analysis COVID-19 Behavior Study"
 author: "Lilian Kojan"
 output: 
-  distill::distill_article
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, include=FALSE}
