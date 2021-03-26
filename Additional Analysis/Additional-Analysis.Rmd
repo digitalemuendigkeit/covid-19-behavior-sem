@@ -93,20 +93,24 @@ As becomes apparent from the descriptive statistics, response data is not normal
 Therefore, we use Spearman's rank correlation.
 
 ## Correlation of all model variables, different Knowledge measures and Behavior
-```{r corm, echo=FALSE, layout="l-page"}
-cormv <- correlation_matrix(df = data[,1:37] %>%
-                     select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))),
-                   type = "spearman",
-                   use = "lower",
-                   digits = 2)
-data.frame(Variable = paste(1:17, rownames(cormv))) %>% 
-  cbind(as.data.frame(cormv) %>% 
-  rename_with(~ c(1:17))) %>%
-  datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
-            rownames = FALSE,
-            autoHideNavigation = TRUE,
-            options = list(pageLength = nrow(cormv),
-                           ordering = FALSE))
+```{r corm, echo=FALSE, layout="l-width"}
+# cormv <- correlation_matrix(df = data[,1:37] %>%
+#                      select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))),
+#                    type = "spearman",
+#                    use = "lower",
+#                    digits = 2)
+{png("test.png", width = 1000, height = 1000)
+hcictools::cor.matrix.plot(data[,1:37] %>%
+                     select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))))
+dev.off()}
+# data.frame(Variable = paste(1:17, rownames(cormv))) %>% 
+#   cbind(as.data.frame(cormv) %>% 
+#   rename_with(~ c(1:17))) %>%
+#   datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
+#             rownames = FALSE,
+#             autoHideNavigation = TRUE,
+#             options = list(pageLength = nrow(cormv),
+#                            ordering = FALSE))
 
 ```
 
@@ -143,11 +147,11 @@ Finally, not surprisingly, there are negative correlations between the counts of
 
 ## Correlation of all continuous variables with behavior and behavioral intention
 ```{r corall, echo=FALSE}
-cormv2 <- correlation_matrix_2(df1 = select(data, 
+cormv2 <- correlation_matrix_2(df2 = select(data, 
                                             c("Behavior", 
                                               starts_with("Behavior "), 
                                               ends_with("Intention"))),
-                               df2 = select(data, 
+                               df1 = select(data, 
                                             !c(starts_with("Behavior"),
                                                starts_with("COKN"),
                                                ends_with("App"),
@@ -318,7 +322,7 @@ kruskal.test(data$Behavior ~ data$`Work From Home COVID-19`)
 There is no significant difference in Behavior between respondents who have to work or go to school outside and those who do not.
 
 ## Knowledge
-In this section, we examine the correlation between specific questions and Behavior as well as Subjective Knowledge.
+In this section, we examine the relationship between specific questions and Behavior as well as Subjective Knowledge.
 
 ### Fever is a symptom of coronavirus disease. Correct answer: True.
 ```{r knowledge1, echo = FALSE}
