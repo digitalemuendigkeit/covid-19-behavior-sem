@@ -1,8 +1,7 @@
 library(tidyverse)
 
-data1 <- read_rds(here::here("Data",
-                             "open",
-                             "S1-data-nd.RDS"))
+
+data1 <- read_rds("Data/S1-data-nd.RDS")
 
 # Data should be only missing (=7) for the colleagues questions, i.e., CCIN3, CCNDN3, COIN3, CODN3
 # Data should only be replaced if amount < 15%
@@ -11,9 +10,9 @@ nrow(data1 %>% filter(CCIN3 == 7))/nrow(data1 %>% filter(!is.na(CCIN3)))
 nrow(data1 %>% filter(CCDN3 == 7))/nrow(data1 %>% filter(!is.na(CCIN3)))
 # 19.5 % -> drop CCDN3 (strange difference)
 nrow(data1 %>% filter(COIN3 == 7))/nrow(data1 %>% filter(!is.na(COIN3)))
-# 30.0 % -> drop COIN3
+# 30.0 % -> drop CCIN3
 nrow(data1 %>% filter(CODN3 == 7))/nrow(data1 %>% filter(!is.na(COIN3)))
-# 30.0 % -> drop CODN3
+# 30.0 % -> drop CCDN3
 
 # Is there any other data randomly missing?
 # cc data
@@ -42,11 +41,5 @@ dataimp[dataimp$ResponseId == missingr$ResponseId[2],"CCDN4"] <- imput2
 
 # Delete other values
 datanomissing <- dataimp %>% select(-c("CCIN3", "CCDN3", "COIN3", "CODN3"))
-write_csv2(datanomissing,
-           here::here("Data",
-                      "open",
-                      "S1-Data-nm.csv"))
-write_rds(datanomissing,
-          here::here("Data",
-                     "open",
-                     "S1-Data-nm.RDS"))
+write_csv2(datanomissing, "Data/S1-Data-nm.csv")
+write_rds(datanomissing, "Data/S1-Data-nm.RDS")

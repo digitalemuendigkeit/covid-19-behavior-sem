@@ -7,14 +7,12 @@ raw_path <- here::here("Data", "raw")
 open_path <- raw_path <- here::here("Data", "open")
 
 # Anonymization and data prep ----
-
+# Import, cleaning, anonymization
 source(here::here("dataprep/", "10_Data-Import-and-Examination.R"))
-
-
-
-
-#
-
+# PLS prep: Remove variables exhibiting extreme skewness or kurtosis
+source(here::here("dataprep/", "20_Data-Distribution.R"))
+# PLS prep: Imputate missing data or remove variables
+source(here::here("dataprep/", "30_Data-Missing.R"))
 
 
 # Upload final data to OSF ----
