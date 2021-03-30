@@ -294,12 +294,10 @@ s1dataqualcl <- (datacareless %>%
 s1dataqualclun <-
   s1dataqualcl %>%
   select(!c(gid,
-            Anmerkungen,
-            SD2_3_TEXT,
-            SD3_8_TEXT))
-write_csv2(s1dataqualcl,
+            Anmerkungen))
+write_csv2(s1dataqualclun,
            here::here("Data", "open","S1-data-qualcl.csv"))
-write_rds(s1dataqualcl,
+write_rds(s1dataqualclun,
           here::here("Data", "open","S1-data-qualcl.RDS"))
 
 # Import data from survey 2 2
@@ -336,9 +334,7 @@ sdatacheck <- sdata[!is.na(sdata$COB1), c(1, 6:7, 143:144)] %>%
 sdataqualcl <-
   sdata %>% filter(ResponseId %notin% (sdatacheck %>% filter(AgeDiff == TRUE))$ResponseId) %>%
   select(!c(gid,
-            Anmerkungen,
-            SD2_3_TEXT,
-            SD3_8_TEXT))
+            Anmerkungen))
 write_csv2(sdataqualcl,
            here::here("Data", "open","data-qualcl.csv"))
 write_rds(sdataqualcl,
