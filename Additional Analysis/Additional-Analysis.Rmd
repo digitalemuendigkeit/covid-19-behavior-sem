@@ -93,25 +93,27 @@ As becomes apparent from the descriptive statistics, response data is not normal
 Therefore, we use Spearman's rank correlation.
 
 ## Correlation of all model variables, different Knowledge measures and Behavior
-```{r corm, echo=FALSE, layout="l-width"}
-# cormv <- correlation_matrix(df = data[,1:37] %>%
-#                      select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))),
-#                    type = "spearman",
-#                    use = "lower",
-#                    digits = 2)
-{png("test.png", width = 1000, height = 1000)
-hcictools::cor.matrix.plot(data[,1:37] %>%
-                     select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))))
-dev.off()}
-# data.frame(Variable = paste(1:17, rownames(cormv))) %>% 
-#   cbind(as.data.frame(cormv) %>% 
-#   rename_with(~ c(1:17))) %>%
-#   datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
-#             rownames = FALSE,
-#             autoHideNavigation = TRUE,
-#             options = list(pageLength = nrow(cormv),
-#                            ordering = FALSE))
-
+```{r corm, echo=FALSE, layout="l-page"}
+cormv <- correlation_matrix_full(df = data[,1:37] %>%
+                     select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))),
+                   type = "spearman",
+                   digits = 3,
+                   replace_diagonal = TRUE,
+                   replacement = "")
+clrspal <- grDevices::colorRampPalette(c("#EE6677", "#FFFFFF", "#4477AA"))
+brks <- seq(-0.9, 0.9, 0.1)
+clrs <- clrspal(length(brks)+1)
+cormvn <- data.frame(Variable = paste(1:17, rownames(cormv))) %>%
+  cbind(as.data.frame(cormv) %>%
+  rename_with(~ c(1:17)))
+cormvn %>%
+  datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
+            rownames = FALSE,
+            autoHideNavigation = TRUE,
+            options = list(pageLength = nrow(cormv),
+                           ordering = FALSE)) %>%
+  formatStyle(names(cormvn[,-1]), 
+              backgroundColor = styleInterval(brks, clrs))
 ```
 
 
@@ -146,7 +148,7 @@ Subjective Knowledge is weakly and negatively correlated with the number of ques
 Finally, not surprisingly, there are negative correlations between the counts of correct, incorrect and 'don't know' answers.
 
 ## Correlation of all continuous variables with behavior and behavioral intention
-```{r corall, echo=FALSE}
+```{r corall, echo=FALSE, include = FALSE}
 cormv2 <- correlation_matrix_2(df2 = select(data, 
                                             c("Behavior", 
                                               starts_with("Behavior "), 
@@ -159,11 +161,9 @@ cormv2 <- correlation_matrix_2(df2 = select(data,
                                                ends_with("General"),
                                                ends_with("Mask"))),
                    type = "spearman")
-# rownames(cormv2[,]) <-
-#             rownames = c('Administrative District Infection Count Survey 1' = 'AD S1 Count COVID-19',
-#                          'Administrative District Infection Count Survey 2' = 'AD S2 Count COVID-19', 
-#                          'Administrative District Incidence Survey 1' = 'AD S1 Incidence COVID-19',
-#                          'Administrative District Incidence Survey 2' = 'AD S2 Incidence COVID-19')
+
+```
+```{r corallvis, echo = FALSE}
 cormv2 %>%
   as.data.frame() %>%
   datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
@@ -171,6 +171,7 @@ cormv2 %>%
                                 targets = 0:6)),
             filter = 'top')
 ```
+
 Next, we focus in on the correlations between all continuous variables and Behavioral Intention as well as Behavior and the different types of Behavior.
 Apart from the correlations already discussed, it becomes apparent that correlations differ between the different types of Behavior.
 For example, usage of the warning app shows the weakest correlation with almost all model variables.
@@ -205,7 +206,7 @@ kruskal.test(data$Behavior ~ data$Occupation)
 Neither is there a significant difference for education or occupation.
 
 ## Income
-```{r income, echo = FALSE, layout="l-page"}
+```{r income, echo = FALSE}
 ggplot(data, aes(Income, Behavior)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90)) 
