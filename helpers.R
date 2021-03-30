@@ -178,6 +178,21 @@ redundancy_analysis <- function(model, construct_name) {
   cvpse
 }
 
+redundancy_analysis_graph <- function(model, construct_name) {
+  print(plot(model, title = paste("Redundancy Analysis", construct_name)))
+}
+
+redundancy_analysis_df <- function(model, construct_name) {
+  modelsum <- summary(model)
+  df <- data.frame('Construct' = c(construct_name),
+                   'C.V.R^2' = modelsum$paths[1],
+                   'C.V.PC' = modelsum$paths[3])
+  colnames(df) <- c('Construct',
+                    'C.V.R^2',
+                    'C.V.PC')
+  return(df)
+}
+
 ## Function by https://paulvanderlaken.com/2020/07/28/publication-ready-correlation-matrix-significance-r/
 #' correlation_matrix
 #' Creates a publication-ready / formatted correlation matrix, using `Hmisc::rcorr` in the backend.
@@ -470,4 +485,30 @@ correlation_matrix_full <- function(df,
   }
 
   return(Rnew)
+}
+
+
+nonnormaltest <- function(model,
+                          variable){
+  sw <-  shapiro.test(model$construct_scores[, variable])
+  lf <- lillie.test(model$construct_scores[, variable])
+  df <- data.frame('Variable' = variable,
+             'Shapiro-Wilk W' = sw[[1]],
+             'Shapiro Wilk p' = sw[[2]],
+             'Lilliefors D' = lf[[1]],
+             'Lilliefors p' = lf[[2]])
+  colnames(df) <- c('Variable',
+                    'Shapiro-Wilk W',
+                    'Shapiro Wilk p',
+                    'Lilliefors D',
+                    'Lilliefors p')
+  return(df)
+}
+
+nonnormalgraph <- function(model,
+                          variable){
+  print(ggplot(
+    as.data.frame(model$construct_scores),
+    aes(.data[[variable]])) +
+      geom_density())
 }

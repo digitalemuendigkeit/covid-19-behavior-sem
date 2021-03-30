@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 2 Structural Model Evaluation"
-output: html_document
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -10,6 +13,7 @@ library(tidyverse)
 library(seminr)
 library(DT)
 library(htmltools)
+library(distill)
 # Load models and create summaries
 # Load PLS Model
 model <- readRDS("Models/model-co-2.RDS")
@@ -30,14 +34,18 @@ seminr_theme_set(thm)
 ```
 
 # Model plots
+
 ## Structural Model Only
+
 This is a path model showing only the structural model components.
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, structure_only = TRUE)
 ```
 
 # Collinearity
+
 Collinearity is assessed using the variance inflation factor (VIF). VIF should be < 5, ideally $\leq$ 3.
+
 ```{r collinearity vif, echo = FALSE}
 vif <- data.frame('Exogenous Construct' = character(),
                   'Endogenous Construct' = character(),
@@ -106,6 +114,7 @@ All other R² values are above 0.25, indicating weak in-sample predictive power 
 For Response Beliefs and Behavioral Intention, R² is above 0.5, indicating moderate in-sample predictive power.
 
 # Effect size
+
 Effect size f2² measures the impact of a predictor construct on an endogenous construct. f² $\geq$ 0.35 indicates a large effect, f² $\geq$ 0.15 a medium and f² $\geq$ 0.02 a small effect.
 
 ```{r effect size f^2, echo=FALSE}
@@ -142,6 +151,7 @@ datatable(f2,
               digits = 3) %>%
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
+
 The effect sizes of the relationships including many lower-order constructs are below 0.2.
 Benevolence has only an effect on Perceived Response Costs and Perceived Severity.
 Competence has an effect on all its descendant lower-order constructs except Perceived Susceptibility.
@@ -154,10 +164,13 @@ Other than that, all effects are small at a minimum.
 The effects of Perceived Response Efficacy and Response Beliefs on Behavioral Intention are medium.
 The effect of Distrusting Beliefs on both Threat Beliefs and Response Beliefs is large.
 
-# Out-of-sample predictive power
-Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
-If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive power.
-```{r plspredict, echo = FALSE}
+# Out-of-sample predictive performance
+
+Out-of-sample predictive performance has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC.
+If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive performance.
+However, a lack of predictive performance does not imply a lack of explanatory power.
+
+```{r plspredict, echo = FALSE, layout="l-page"}
 plspre <- predict_pls(proxymodel, noFolds = 10)
 sumplspre <- summary(plspre)
 oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
@@ -168,16 +181,19 @@ oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
 datatable(oospp,
           options = list(pageLength = nrow(oospp)),
           rownames = FALSE,
-          caption = 'Out-of-sample predictive power') %>%
+          caption = 'Out-of-sample predictive performance') %>%
   formatRound(-1,
               digits = 3) %>%
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
+
 Only COTB1, COTB3 and COBI3 are predicted better by the model than the LM in terms of both RMSE and MAD.
 
 # Significance and relevance of path coefficients
+
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
-```{r path-coeff, echo = FALSE}
+
+```{r path-coeff, echo = FALSE, layout="l-page"}
 pcbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_paths)) %>% rename (
   Construct.Rel. = rowname)
 pcbasesplit <- base::strsplit(pcbase$Construct.Rel., "  ->  ")
@@ -228,10 +244,12 @@ datatable(pcalldf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.049), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
+
 Concerning higher-order and regular constructs, only the path from Threat Beliefs to Behavioral Intention is non-significant.
 With lower-order constructs, non-significant paths are those from Knowledge to Perceived Response Costs and Perceived Self-Efficacy, all from Benevolence except those from Perceived Response Costs and Perceived Severity, the path from Competence to Perceived Susceptibility,  all from Integrity except to Perceived Response Efficacy, all from the Threat Beliefs lower-order constructs and the one from Perceived Self-Efficacy,and both the paths from Descriptive and from Injunctive Norm to Behavioral Intention.
 
 # Summary table
+
 ```{r summary table-df, echo = FALSE, include = FALSE}
 sumsm <- pcdf[,-c(3,5:7)] %>% 
   left_join(hocf2)  %>%
@@ -242,7 +260,7 @@ sumsm <- pcdf[,-c(3,5:7)] %>%
          'Path Coefficient p' = 'p')
 colnames(sumsm)[5] <- paste0("Path Coefficient t(", nrow(model$data), ")")
 ```
-```{r summary table-df print, echo = FALSE}
+```{r summary table-df print, echo = FALSE, layout="l-page"}
 datatable(sumsm,
           filter = 'top',
           options = list(pageLength = nrow(sumsm)),

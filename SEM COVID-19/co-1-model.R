@@ -3,14 +3,15 @@ library(seminr)
 
 # Data Loading ----
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
-datafull <- read_rds("Data/S1-data-nm.RDS")
+datafull <- read_rds(here::here("Data",
+                                "open",
+                                "S1-data-nm.RDS"))
 
 data <- datafull %>%
   select(starts_with("CO")) %>%
   select(-paste0("COS", 1:7)) %>%
   filter(!is.na(COSKN)) %>% # other condition
   mutate(COKN = rowMeans(across(starts_with("COKN"))))
-  #select(!starts_with("COKN")) %>%
 
 
 # Model Description ----
@@ -47,14 +48,8 @@ sm <- relationships(
 model <- estimate_pls(data, mm, sm)
 
 saveRDS(model, "SEM COVID-19/Models/model-co-1.RDS")
-#model <- readRDS("SEM COVID-19/Models/model-co-1.RDS")
-#plot(model)
-
-# summo <- summary(model)
-# sumfs <- summary(model$first_stage_model)
 bootmodel <- bootstrap_model(model, nboot = 5000)
 saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-1.RDS")
-# bootmodel <- readRDS("SEM COVID-19/Models/model-boot-co-1.RDS")
 bootfsmodel <- bootstrap_model(model$first_stage_model, nboot = 5000)
 saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-1.RDS")
 
@@ -148,6 +143,3 @@ smbi <- relationships(
 )
 rabi <- estimate_pls(data, mmbi, smbi)
 saveRDS(rabi, "SEM COVID-19/Models/rabi-co-1.RDS")
-
-
-

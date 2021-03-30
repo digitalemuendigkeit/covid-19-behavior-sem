@@ -1,7 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 1 Measurement Model Evaluation"
 output: 
-  distill::distill_article
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -43,19 +45,25 @@ seminr_theme_set(thm)
 
 # Model plots
 ## Original Estimate Path Model
+
 This is the original estimate path model.
-```{r plot model, echo=FALSE, layout="l-screen"}
+
+```{r plot model, echo=FALSE, layout="l-page"}
 plot(model, title = "Original Estimate Model")
 ```
 
 ## Bootstrapped Path Model
+
 This is the bootstrapped path model.
-```{r plot bootmodel, echo=FALSE}
+
+```{r plot bootmodel, echo=FALSE, layout="l-page"}
 plot(bootmodel, title = "Bootstrapped Model")
 ```
 
 ## Measurement Model Only
+
 This is a path model showing only the measurement model components.
+
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, measurement_only = TRUE)
 ```
@@ -80,19 +88,22 @@ refevalmm <- refevalmmbase %>%
 ```
 
 ## Convergent validity
+
 Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
 
 ## Internal consistency reliability
+
 Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
 
 ## Discriminant validity
+
 Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
 
 ```{r ref-eval, echo=FALSE}
 print_composite_A_evaluation_DT(refevalmm)
 ```
 
-```{r ref-eval-HTMT,echo=FALSE}
+```{r ref-eval-HTMT,echo=FALSE, layout="l-page"}
 #If there are problems with the HTMT, here is a detailed table
 datatable(
   boothtmt,
@@ -120,15 +131,25 @@ datatable(
 ```
 
 ## Results of the evaluation of the reflective measurement model
+
 All indicators and constructs show sufficient convergent validity and discriminant validity. 
 The HTMT bootstrap CIs include 1 for all the Distrusting Beliefs lower-order constructs.
 As they are associated with the same higher-order construct, this is permissible.
 All constructs except Personal Moral Norm also show internal consistency reliability, with the composite reliability for Personal Moral Norm being too high.
 This means that one indicator should be deleted.
-```{r indicator deletion personal norm, echo = FALSE, include = FALSE}
-unlist(summo$descriptives$correlations$items)[model$mmMatrix[33:35,2],model$mmMatrix[33:35,2]]
+
+```{r indicator deletion personal norm, echo = FALSE}
+unlist(summo$descriptives$correlations$items)[model$mmMatrix[33:35, 2], model$mmMatrix[33:35, 2]] %>%
+  data.frame() %>%
+  datatable(caption = 'Personal Moral Norm Item Intercorrelations',
+    autoHideNavigation = TRUE,
+    options = list(ordering = FALSE,
+                   pagelength = 3)) %>%
+  formatRound(1:3,
+              digits = 3)
+
 ```
-COPN2 shows the highest intercorrelation with the other indicators (r=0.833 and r=0.834) and should therefore be deleted. All other reflective indicators can be retained as-is.
+COPN2 shows the highest intercorrelation with the other indicators and should therefore be deleted. All other reflective indicators can be retained as-is.
 
 # Evaluation of the formative measurement model
 ```{r for-eval prep, echo = FALSE, include=FALSE}
@@ -138,10 +159,10 @@ forevalbase <- evalmm %>%
   mutate(Type = NULL, Mode = NULL)
 ```
 ## Convergent validity
-To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
-```{r for-eval rapse, echo=FALSE}
+To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient $\beta$ should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
+```{r for-eval redundancy analysis, echo=FALSE}
 all_reduds <- list(model = list(rapse, rapre, raprc, radn, rain, rabi), 
                    title = list("Perceived Self-Efficacy", 
                                 "Perceived Response Efficacy",
@@ -150,10 +171,43 @@ all_reduds <- list(model = list(rapse, rapre, raprc, radn, rain, rabi),
                                 "Injunctive Norm",
                                 "Behavioral Intention"
                                 ))
-
-forevalci <- purrr::map2_df(all_reduds$model, all_reduds$title, redundancy_analysis)
+# Unfortunately, this does not knit 
+# forevalci <- purrr::map2_df(all_reduds$model, all_reduds$title, redundancy_analysis)
+# distill does not seem to plot multiple html widgets in one block
+# for (i in 1:length(all_reduds$title)) {
+#    print(plot(all_reduds$model[[i]], title = all_reduds$title[[i]]))
+#   }
+# Alternate approach
+forevalci <- data.frame(
+    'Construct' = character(),
+    'C.V.R^2' = double(),
+    'C.V.PC' = double())
+for (i in 1:length(all_reduds$title)) {
+  forevalci <- forevalci %>% rbind(
+    redundancy_analysis_df(all_reduds$model[[i]], all_reduds$title[[i]]),
+    deparse.level = 0)
+}
+```
+```{r ra1, echo =FALSE}
+plot(all_reduds$model[[1]], title = all_reduds$title[[1]])
+```
+```{r ra2, echo =FALSE}
+plot(all_reduds$model[[2]], title = all_reduds$title[[2]])
+```
+```{r ra3, echo =FALSE}
+plot(all_reduds$model[[3]], title = all_reduds$title[[3]])
+```
+```{r ra4, echo=FALSE}
+plot(all_reduds$model[[4]], title = all_reduds$title[[4]])
+```
+```{r ra5, echo =FALSE}
+plot(all_reduds$model[[5]],  title = all_reduds$title[[5]])
 ```
 
+```{r ra6, echo =FALSE}
+plot(all_reduds$model[[6]], 
+     title = all_reduds$title[[6]])
+```
 
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
@@ -175,7 +229,8 @@ for (i in 1:length(unique(forevalbase$Construct))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -237,7 +292,7 @@ colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r for-eval, echo=FALSE}
+```{r for-eval, echo=FALSE, layout="l-page"}
 datatable(forevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forevalmm)),
@@ -357,7 +412,7 @@ colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r hoc-for-eval, echo=FALSE}
+```{r hoc-for-eval, echo=FALSE, layout="l-page"}
 datatable(forhocevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forhocevalmm)),
@@ -383,7 +438,7 @@ datatable(forhocevalmm,
 
 ## Results of the formative higher-order constructs evaluation
 For the formative higher-order constructs, there are no issues with collinearity (VIF above 3, but below 5).
-The weight for Distrusting Beliefs Integrity is not significant, but the loading is sufficiently large and significant.
+The weight for Distrusting Beliefs Integrity is not significant, but the loading is sufficiently large.
 All other weights are significant and relevant.
 The formative higher-order constructs can be retained as hypothesized.
 
