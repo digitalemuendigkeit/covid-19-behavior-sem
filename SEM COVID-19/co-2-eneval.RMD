@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 2 Endogeneity Evaluation"
-output: html_document
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -12,22 +15,15 @@ library(htmltools)
 library(lmtest)
 library(nortest)
 library(car)
+library(distill)
+source(here::here("helpers.R"))
 # Load models and create summaries
 # Load PLS Model
 model <- readRDS("Models/model-co-2.RDS")
-bootmodel <- readRDS("Models/model-boot-co-2.RDS")
-# Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-2.RDS")
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
 proxymodel <- readRDS("Models/model-proxy-co-2.RDS")
 summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
-sumbomo <- summary(bootmodel)
-sumbofsmo <- summary(bootfsmodel)
 sumprmo <- summary(proxymodel)
-# # Bootstrap proxy model (500 samples) for comparability
-# bootprmodel <- bootstrap_model(proxymodel)
-# sumboprmo <- summary(bootprmodel)
 # Function for Gaussian Capula Approach
 createCopula <- function(P){
 	H.p <- stats::ecdf(P)
@@ -56,6 +52,7 @@ bootSig <- function(dataset, bootstrapresults, numIndependentVariables, numCopul
   return(bootSigvec)
 }
 ```
+
 The code for the assessment of endogeneity using the Gaussian Copula approach comes from
 
 Hult, G. T. M., J. F. Hair, D. Proksch, M. Sarstedt, A. Pinkwart, & C. M. Ringle (2018).
@@ -63,47 +60,47 @@ Addressing Endogeneity in International Marketing Applications of Partial Least 
 
 
 # Test of non-normality
+
 The Gaussian Copula approach can only be used if the independent variable in question is non-normally distributed.
-```{r}
+So we first test the distribution of the construct scores
+
+```{r distribution test, echo = FALSE}
 # Find out if independent (i.e., exogenous) variables are non-normally distributed
 # If yes, Gaussian Copula approach can be used.
-#Distrusting Beliefs
-shapiro.test(model$construct_scores[,"Distrusting Beliefs"])
-lillie.test(model$construct_scores[,"Distrusting Beliefs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Distrusting Beliefs`)) +
-  geom_density()
-# Knowledge
-shapiro.test(model$construct_scores[,"Knowledge"])
-lillie.test(model$construct_scores[,"Knowledge"])
-ggplot(as.data.frame(model$construct_scores), aes(`Knowledge`)) +
-  geom_density()
-# Response Beliefs
-shapiro.test(model$construct_scores[,"Response Beliefs"])
-lillie.test(model$construct_scores[,"Response Beliefs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Response Beliefs`)) +
-  geom_density()
-# Threat Beliefs
-shapiro.test(model$construct_scores[,"Threat Beliefs"])
-lillie.test(model$construct_scores[,"Threat Beliefs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Threat Beliefs`)) +
-  geom_density()
-# Personal Moral Norm
-shapiro.test(model$construct_scores[,"Personal Moral Norm"])
-lillie.test(model$construct_scores[,"Personal Moral Norm"])
-ggplot(as.data.frame(model$construct_scores), aes(`Personal Moral Norm`)) +
-  geom_density()
-# Subjective Norm
-shapiro.test(model$construct_scores[,"Subjective Norm"])
-lillie.test(model$construct_scores[,"Subjective Norm"])
-ggplot(as.data.frame(model$construct_scores), aes(`Subjective Norm`)) +
-  geom_density()
+testlist <- c(rownames(summo$paths)[-c(1:2)])
+nntest <- data.frame('Variable' = character(),
+             'Shapiro-Wilk W' = double(),
+             'Shapiro Wilk p' = double(),
+             'Lilliefors D' = double(),
+             'Lilliefors p' = double())
+for (i in 1:length(testlist)) {
+  nntest <- nntest %>% base::rbind(nonnormaltest(model, testlist[i]),
+                             deparse.level = 0)
+}
+nntest %>%
+  datatable(
+    caption = 'Results of normality tests',
+    rownames = FALSE,
+    options = list(pageLength = nrow(nntest))
+  ) %>%
+  formatRound(-1,
+              digits = 3)
 ```
+```{r distribution graph, echo = FALSE}
+for (i in 1:length(testlist)) {
+  nonnormalgraph(model, testlist[i])
+}
+```
+
+
+
 All independent (or endogenous) variables are non-normally distributed.
 Therefore, the Gaussian Copula approach can be used for all of them.
 
 
 # Regression of Response Beliefs on Distrusting Beliefs and Knowledge
-```{r gca rb}
+
+```{r gca rb, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 KN <- model$construct_scores[,"Knowledge"]
 DI <- model$construct_scores[,"Distrusting Beliefs"]
@@ -176,14 +173,32 @@ rbdf <- rbdf %>% cbind(
   DIKN.Co.Model.Value = c(summary(bootcopuladiknrb)[1:4,5]),
   DIKN.Co.Model.p = c(bootSig(model$data, bootcopuladiknrb, 2, 2))
 )
-datatable(rbdf) %>%
-  formatRound(-1,
+colnames(rbdf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "DI copula model value",
+                    "DI copula model p",
+                    "KN copula model value",
+                    "KN copula model p",
+                    "DI & KN copula model value",
+                    "DI & KN copula model p"
+                    )
+```
+```{r gca rb table, echo = FALSE}
+rbdft <- rbdf[,-1] %>% t() %>% as.data.frame()
+colnames(rbdft) <- rbdf[,1]
+rbdft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Response Beliefs') %>%
+  formatRound(1:ncol(rbdft),
               digits = 3)
 ```
-Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no hidden endogeneity in the regression of Response Beliefs on its predictors.
+
+
+Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no endogeneity in the regression of Response Beliefs on its predictors.
 
 # Regression of Threat Beliefs on Distrusting Beliefs and Knowledge
-```{r gca tb}
+
+```{r gca tb, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 TB <- model$construct_scores[,"Threat Beliefs"]
 
@@ -254,14 +269,33 @@ tbdf <- tbdf %>% cbind(
   DIKN.Co.Model.Value = c(summary(bootcopuladikntb)[1:4,5]),
   DIKN.Co.Model.p = c(bootSig(model$data, bootcopuladikntb, 2, 2))
 )
-datatable(tbdf) %>%
-  formatRound(-1,
+colnames(tbdf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "DI copula model value",
+                    "DI copula model p",
+                    "KN copula model value",
+                    "KN copula model p",
+                    "DI & KN copula model value",
+                    "DI & KN copula model p"
+                    )
+
+
+```
+```{r gca tb table, echo = FALSE}
+tbdft <- tbdf[,-1] %>% t() %>% as.data.frame()
+colnames(tbdft) <- tbdf[,1]
+tbdft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Threat Beliefs') %>%
+  formatRound(1:ncol(tbdft),
               digits = 3)
 ```
-Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no hidden endogeneity in the regression of Threat Beliefs on its predictors.
+
+
+Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no endogeneity in the regression of Threat Beliefs on its predictors.
 
 # Regression of Behavioral Intention on its predictors
-```{r gca bi}
+```{r gca bi, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 BI <- model$construct_scores[,"Behavioral Intention"]
 PN <- model$construct_scores[,"Personal Moral Norm"]
@@ -527,17 +561,55 @@ bidf <- bidf %>% cbind(
   RB.TB.PN.SN.Co.Model.Value = c(summary(bootcopularbtbpnsnbi)[,5]),
   RB.TB.PN.SN.Co.Model.p = c(bootSig(model$data, bootcopularbtbpnsnbi, 4,4))
 )
+colnames(bidf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "RB copula model value",
+                    "RB copula model p",
+                    "TB copula model value",
+                    "TB copula model p",
+                    "PN copula model value",
+                    "PN copula model p",
+                    "SN copula model value",
+                    "SN copula model p",
+                    "RB & TB copula model value",
+                    "RB & TB copula model p",
+                    "RB & PN copula model value",
+                    "RB & PN copula model p",
+                    "RB & SN copula model value",
+                    "RB & SN copula model p",
+                    "TB & PN copula model value",
+                    "TB & PN copula model p",
+                    "TB & SN copula model value",
+                    "TB & SN copula model p",
+                    "PN & SN copula model value",
+                    "PN & SN copula model p",
+                    "RB & TB & PN copula model value",
+                    "RB & TB & PN copula model p",
+                    "RB & TB & SN copula model value",
+                    "RB & TB & SN copula model p",
+                    "RB & PN & SN copula model value",
+                    "RB & PN & SN copula model p",
+                    "TB & PN & SN copula model value",
+                    "TB & PN & SN copula model p",
+                    "RB & TB & PN & SN copula model value",
+                    "RB & TB & PN & SN copula model p"
+                    )
 
-datatable(bidf) %>%
-  formatRound(-1,
+```
+```{r gca bi table, echo = FALSE, layout = "l-page"}
+bidft <- bidf[,-1] %>% t() %>% as.data.frame()
+colnames(bidft) <- bidf[,1]
+bidft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Behavioral Intention') %>%
+  formatRound(1:ncol(bidft),
               digits = 3)
 ```
 
-
 In looking only at single copulas, none of copulas achieves a significant p-value.
 However, when combining multiple copulas, the copula for Response Beliefs achieves a significant p-value in some cases (p < 0.1).
-Further, adding the single copula increases the path coefficient by 0.057 from 0.488 in the original model to 0.545.
+Further, adding the single copula increases the path coefficient by about 0.06 .
 Both of this indicates that Response Beliefs might be endogenous.
-There is nothing pointing to hidden endogeneity in any of the other predictors.
+There is nothing pointing to endogeneity in any of the other predictors.
 
-As the capula cannot be integrated in iterative model improvement, the capula test will be repeated for the final models.
+As the copula cannot be integrated in iterative model improvement, the copula test will be repeated for the final models.
