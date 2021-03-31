@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 3-a-1 Structural Model Evaluation"
-output: html_document
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -10,6 +13,7 @@ library(tidyverse)
 library(seminr)
 library(DT)
 library(htmltools)
+library(distill)
 # Load models and create summaries
 # Load PLS Model
 model <- readRDS("Models/model-co-3-a-1.RDS")
@@ -30,14 +34,19 @@ seminr_theme_set(thm)
 ```
 
 # Model plots
+
 ## Structural Model Only
+
 This is a path model showing only the structural model components.
+
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, structure_only = TRUE)
 ```
 
 # Collinearity
+
 Collinearity is assessed using the variance inflation factor (VIF). VIF should be < 5, ideally $\leq$ 3.
+
 ```{r collinearity vif, echo = FALSE}
 vif <- data.frame('Exogenous Construct' = character(),
                   'Endogenous Construct' = character(),
@@ -80,7 +89,9 @@ VIF is above 3 for some constructs, specifically lower-order constructs.
 But it is not above 5 for any constructs.
 
 # In-sample predictive power
+
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
+
 ```{r in-sample pp r^2, echo=FALSE}
 r2hoc <- data.frame(Construct = colnames(summo$paths),
                     "R^2" = summo$paths[1,],
@@ -101,10 +112,12 @@ datatable(r2,
               digits = 3) %>%
   formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
+
 All R² values are above 0.25, indicating weak in-sample predictive power at a minimum.
 For Response Beliefs and Behavioral Intention, R² is above 0.5, indicating moderate in-sample predictive power.
 
 # Effect size
+
 Effect size f2² measures the impact of a predictor construct on an endogenous construct. f² $\geq$ 0.35 indicates a large effect, f² $\geq$ 0.15 a medium and f² $\geq$ 0.02 a small effect.
 
 ```{r effect size f^2, echo=FALSE}
@@ -150,9 +163,12 @@ The effects of Perceived Response Efficacy and Response Beliefs on Behavioral In
 The effect of Distrusting Beliefs on Response Beliefs is large.
 
 # Out-of-sample predictive power
-Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
-If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive power.
-```{r plspredict, echo = FALSE}
+
+Out-of-sample predictive performance has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC.
+If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive performance.
+However, a lack of predictive performance does not imply a lack of explanatory power.
+
+```{r plspredict, echo = FALSE, layout = "l-page"}
 plspre <- predict_pls(proxymodel, noFolds = 10)
 sumplspre <- summary(plspre)
 oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
@@ -168,12 +184,15 @@ datatable(oospp,
               digits = 3) %>%
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
+
 No indicator is predicted better by the model than the LM in terms of both RMSE and MAD.
-This points to a lack of out-of-sample predictive power.
+The difference is mostly very small.
 
 # Significance and relevance of path coefficients
+
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
-```{r path-coeff, echo = FALSE}
+
+```{r path-coeff, echo = FALSE, layout = "l-page"}
 pcbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_paths)) %>% rename (
   Construct.Rel. = rowname)
 pcbasesplit <- base::strsplit(pcbase$Construct.Rel., "  ->  ")
@@ -224,9 +243,11 @@ datatable(pcalldf,
   formatStyle('p', backgroundColor = styleInterval(cuts = c(0.049), values = c( '#00', '#ff9999'))) %>%
   formatStyle('0 in CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
 ```
+
 The only insignificant paths are those from Knowledge and Integrity to Perceived Response Costs and from Benevolence to Perceived Response Efficacy.
 
 # Summary table
+
 ```{r summary table-df, echo = FALSE, include = FALSE}
 sumsm <- pcdf[,-c(3,5:7)] %>% 
   left_join(hocf2)  %>%
@@ -237,7 +258,7 @@ sumsm <- pcdf[,-c(3,5:7)] %>%
          'Path Coefficient p' = 'p')
 colnames(sumsm)[5] <- paste0("Path Coefficient t(", nrow(model$data), ")")
 ```
-```{r summary table-df print, echo = FALSE}
+```{r summary table-df print, echo = FALSE, layout = "l-page"}
 datatable(sumsm,
           filter = 'top',
           options = list(pageLength = nrow(sumsm)),
@@ -254,5 +275,6 @@ datatable(sumsm,
 ```
 
 # Results summary
+
 All construct and higher-order construct paths are significant, altough the effect size for the path from Knowledge to Response Beliefs is negligible.
 The model can be compared with other models.

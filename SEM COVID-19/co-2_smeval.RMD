@@ -38,6 +38,7 @@ seminr_theme_set(thm)
 ## Structural Model Only
 
 This is a path model showing only the structural model components.
+
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, structure_only = TRUE)
 ```
@@ -88,7 +89,9 @@ VIF is above 3 for some constructs, specifically lower-order constructs.
 But it is not above 5 for any constructs.
 
 # In-sample predictive power
+
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
+
 ```{r in-sample pp r^2, echo=FALSE}
 r2hoc <- data.frame(Construct = colnames(summo$paths),
                     "R^2" = summo$paths[1,],
@@ -109,6 +112,7 @@ datatable(r2,
               digits = 3) %>%
   formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
+
 R² is below 0.25 for the Threat Beliefs lower-order constructs, but not below 0.1.
 All other R² values are above 0.25, indicating weak in-sample predictive power at a minimum.
 For Response Beliefs and Behavioral Intention, R² is above 0.5, indicating moderate in-sample predictive power.
