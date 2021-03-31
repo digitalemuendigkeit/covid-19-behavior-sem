@@ -512,3 +512,130 @@ nonnormalgraph <- function(model,
     aes(.data[[variable]])) +
       geom_density())
 }
+
+
+resetfun <- function(invar,
+                     revar) {
+  lm <-
+    lm(model$construct_scores[, revar] ~ model$construct_scores[, invar]) %>%
+    resettest()
+  lmprox  <-
+    lm(proxymodel$construct_scores[, revar] ~ proxymodel$construct_scores[, invar]) %>%
+  resettest()
+  df <- data.frame(
+    'Independent variable' = c({{ invar }}, paste0({{ invar }}, " proxy")),
+    'Response variable' = c({{ revar }}, paste0({{ revar }}, " proxy")),
+    'Test statistic' = c(lm[[1]],
+                         lmprox[[1]]),
+    'p' = c(lm[[4]],
+            lmprox[[4]]),
+    'DF 1' = c(lm[[2]][1],
+               lmprox[[2]][1]),
+    'DF 2' = c(lm[[2]][2],
+               lmprox[[2]][2]))
+  colnames(df) <- c('Independent variable',
+                    'Response variable',
+                    'Test statistic',
+                    'p',
+                    'DF 1',
+                    'DF 2')
+  return(df)
+}
+
+nldf <- function(exvar,
+                  envar,
+                  altmodel,
+                  altmodelex,
+                  sumaltboot
+                  ){
+  df <- data.frame(
+    'Exogenous variable' = c(rep({{ exvar }}, 3)),
+    'Endogenous variable' = c(rep({{ envar }}, 3)),
+    'Model' = c("Original", "Proxy", "Quadratic"),
+    'f^2' = c(
+      summo$fSquare[{{ exvar }}, {{ envar }}],
+      sumprmo$fSquare[{{ exvar }}, {{ envar }}],
+      (altmodel$rSquared[1, {{ envar }}] - altmodelex$rSquared[1, {{ envar }}]) /
+        (1 - altmodel$rSquared[1, {{ envar }}])
+    ),
+    't-value' = c(
+      sumbomo$bootstrapped_paths[(grepl(pattern = {{ exvar }},
+                                        rownames(sumbomo$bootstrapped_paths)
+                                        ) &
+                                    grepl(rownames(sumbomo$bootstrapped_paths),
+                                          pattern = {{ envar }}
+                                          )), 4],
+      sumboprmo$bootstrapped_paths[(grepl(rownames(sumboprmo$bootstrapped_paths),
+                                          pattern = {{ exvar }}
+                                          ) &
+                                      grepl(rownames(sumboprmo$bootstrapped_paths),
+                                            pattern = {{ envar }}
+                                              )), 4],
+      sumaltboot$bootstrapped_paths[(grepl(rownames(sumaltboot$bootstrapped_paths),
+                                           pattern = {{ exvar }}
+                                           ) &
+                                       grepl(rownames(sumaltboot$bootstrapped_paths),
+                                             pattern = {{ envar }}
+                                             )), 4]
+    )
+  )
+  colnames(df) <- c(
+    'Exogenous variable',
+    'Endogenous variable',
+    'Model',
+    'f^2',
+    paste0('t (', nrow(model$data), ')')
+  )
+  return(df)
+}
+
+nldfdt <- function(exvar,
+                 envar,
+                 altmodel,
+                 altmodelex,
+                 sumaltboot
+){
+  df <- data.frame(
+    'Exogenous variable' = c(rep({{ exvar }}, 3)),
+    'Endogenous variable' = c(rep({{ envar }}, 3)),
+    'Model' = c("Original", "Proxy", "Quadratic"),
+    'f^2' = c(
+      summo$fSquare[{{ exvar }}, {{ envar }}],
+      sumprmo$fSquare[{{ exvar }}, {{ envar }}],
+      (altmodel$rSquared[1, {{ envar }}] - altmodelex$rSquared[1, {{ envar }}]) /
+        (1 - altmodel$rSquared[1, {{ envar }}])
+    ),
+    't-value' = c(
+      sumbomo$bootstrapped_paths[(grepl(pattern = {{ exvar }},
+                                        rownames(sumbomo$bootstrapped_paths)
+      ) &
+        grepl(rownames(sumbomo$bootstrapped_paths),
+              pattern = {{ envar }}
+        )), 4],
+      sumboprmo$bootstrapped_paths[(grepl(rownames(sumboprmo$bootstrapped_paths),
+                                          pattern = {{ exvar }}
+      ) &
+        grepl(rownames(sumboprmo$bootstrapped_paths),
+              pattern = {{ envar }}
+        )), 4],
+      sumaltboot$bootstrapped_paths[(grepl(rownames(sumaltboot$bootstrapped_paths),
+                                           pattern = {{ exvar }}
+      ) &
+        grepl(rownames(sumaltboot$bootstrapped_paths),
+              pattern = {{ envar }}
+        )), 4]
+    )
+  )
+  colnames(df) <- c(
+    'Exogenous variable',
+    'Endogenous variable',
+    'Model',
+    'f^2',
+    paste0('t (', nrow(model$data), ')')
+  )
+  return(df %>%
+           datatable(rownames = FALSE,
+                     caption = paste0("Comparative effects of ", {{ exvar }}, " on ", {{ envar }})) %>%
+    formatRound(c(4:5),
+               digits = 3))
+}
