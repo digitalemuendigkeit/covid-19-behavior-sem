@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation"
-output: html_document
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -12,18 +15,14 @@ library(htmltools)
 library(lmtest)
 library(nortest)
 library(car)
+library(distill)
+source(here::here("helpers.R"))
 # Load models and create summaries
 # Load PLS Model
 model <- readRDS("Models/model-co-3-a-1.RDS")
-bootmodel <- readRDS("Models/model-boot-co-3-a-1.RDS")
-# Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-3-a-1.RDS")
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
 proxymodel <- readRDS("Models/model-proxy-co-3-a-1.RDS")
 summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
-sumbomo <- summary(bootmodel)
-sumbofsmo <- summary(bootfsmodel)
 sumprmo <- summary(proxymodel)
 # # Bootstrap proxy model (500 samples) for comparability
 # bootprmodel <- bootstrap_model(proxymodel)
@@ -56,6 +55,7 @@ bootSig <- function(dataset, bootstrapresults, numIndependentVariables, numCopul
   return(bootSigvec)
 }
 ```
+
 The code for the assessment of endogeneity using the Gaussian Copula approach comes from
 
 Hult, G. T. M., J. F. Hair, D. Proksch, M. Sarstedt, A. Pinkwart, & C. M. Ringle (2018).
@@ -63,42 +63,45 @@ Addressing Endogeneity in International Marketing Applications of Partial Least 
 
 
 # Test of non-normality
+
 The Gaussian Copula approach can only be used if the independent variable in question is non-normally distributed.
-```{r}
+So we first test the distribution of the construct scores.
+
+```{r distribution test, echo = FALSE}
 # Find out if independent (i.e., exogenous) variables are non-normally distributed
 # If yes, Gaussian Copula approach can be used.
-#Distrusting Beliefs
-shapiro.test(model$construct_scores[,"Distrusting Beliefs"])
-lillie.test(model$construct_scores[,"Distrusting Beliefs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Distrusting Beliefs`)) +
-  geom_density()
-# Knowledge
-shapiro.test(model$construct_scores[,"Knowledge"])
-lillie.test(model$construct_scores[,"Knowledge"])
-ggplot(as.data.frame(model$construct_scores), aes(`Knowledge`)) +
-  geom_density()
-# Response Beliefs
-shapiro.test(model$construct_scores[,"Response Beliefs"])
-lillie.test(model$construct_scores[,"Response Beliefs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Response Beliefs`)) +
-  geom_density()
-# Personal Moral Norm
-shapiro.test(model$construct_scores[,"Personal Moral Norm"])
-lillie.test(model$construct_scores[,"Personal Moral Norm"])
-ggplot(as.data.frame(model$construct_scores), aes(`Personal Moral Norm`)) +
-  geom_density()
-# Descriptive Norm
-shapiro.test(model$construct_scores[,"Descriptive Norm"])
-lillie.test(model$construct_scores[,"Descriptive Norm"])
-ggplot(as.data.frame(model$construct_scores), aes(`Descriptive Norm`)) +
-  geom_density()
+testlist <- c(rownames(summo$paths)[-c(1:2)])
+nntest <- data.frame('Variable' = character(),
+             'Shapiro-Wilk W' = double(),
+             'Shapiro Wilk p' = double(),
+             'Lilliefors D' = double(),
+             'Lilliefors p' = double())
+for (i in 1:length(testlist)) {
+  nntest <- nntest %>% base::rbind(nonnormaltest(model, testlist[i]),
+                             deparse.level = 0)
+}
+nntest %>%
+  datatable(
+    caption = 'Results of normality tests',
+    rownames = FALSE,
+    options = list(pageLength = nrow(nntest))
+  ) %>%
+  formatRound(-1,
+              digits = 3)
 ```
+
 All independent (or endogenous) variables are non-normally distributed.
 Therefore, the Gaussian Copula approach can be used for all of them.
 
+```{r distribution graph, echo = FALSE}
+for (i in 1:length(testlist)) {
+  nonnormalgraph(model, testlist[i])
+}
+```
 
 # Regression of Response Beliefs on Distrusting Beliefs and Knowledge
-```{r gca rb}
+
+```{r gca rb, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 KN <- model$construct_scores[,"Knowledge"]
 DI <- model$construct_scores[,"Distrusting Beliefs"]
@@ -171,14 +174,32 @@ rbdf <- rbdf %>% cbind(
   DIKN.Co.Model.Value = c(summary(bootcopuladiknrb)[1:4,5]),
   DIKN.Co.Model.p = c(bootSig(model$data, bootcopuladiknrb, 2, 2))
 )
-datatable(rbdf) %>%
-  formatRound(-1,
+colnames(rbdf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "DI copula model value",
+                    "DI copula model p",
+                    "KN copula model value",
+                    "KN copula model p",
+                    "DI & KN copula model value",
+                    "DI & KN copula model p"
+                    )
+```
+
+```{r gca rb table, echo = FALSE}
+rbdft <- rbdf[,-1] %>% t() %>% as.data.frame()
+colnames(rbdft) <- rbdf[,1]
+rbdft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Response Beliefs') %>%
+  formatRound(1:ncol(rbdft),
               digits = 3)
 ```
-Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no hidden endogeneity in the regression of Response Beliefs on its predictors.
+
+Neither the Distrusting Beliefs nor the Knowledge copula is significant, indicating that there is no endogeneity in the regression of Response Beliefs on its predictors.
 
 # Regression of Behavioral Intention on its predictors
-```{r gca bi}
+
+```{r gca bi, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 BI <- model$construct_scores[,"Behavioral Intention"]
 PN <- model$construct_scores[,"Personal Moral Norm"]
@@ -318,59 +339,46 @@ bidf <- bidf %>% cbind(
   RB.PN.DN.Co.Model.Value = c(summary(bootcopularbpndnbi)[,5]),
   RB.PN.DN.Co.Model.p = c(bootSig(model$data, bootcopularbpndnbi, 3,3))
 )
-
-datatable(bidf) %>%
-  formatRound(-1,
-              digits = 3)
+colnames(bidf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "RB copula model value",
+                    "RB copula model p",
+                    "PN copula model value",
+                    "PN copula model p",
+                    "DN copula model value",
+                    "DN copula model p",
+                    "RB & PN copula model value",
+                    "RB & PN copula model p",
+                    "RB & DN copula model value",
+                    "RB & DN copula model p",
+                    "PN & DN copula model value",
+                    "PN & DN copula model p",
+                    "RB & PN & DN copula model value",
+                    "RB & PN & DN copula model p"
+                    )
 ```
 
+
+```{r gca bi table, echo = FALSE, layout = "l-page"}
+bidft <- bidf[,-1] %>% t() %>% as.data.frame()
+colnames(bidft) <- bidf[,1]
+bidft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Behavioral Intention') %>%
+  formatRound(1:ncol(bidft),
+              digits = 3)
+```
 
 The  copula for Response Beliefs achieves a significant p-value in almost all constellations (p < 0.1).
 Further, adding the single copula increases the Response Belief path coefficient by about 0.06.
 Both of this indicates that Response Beliefs might be endogenous.
-There is nothing pointing to hidden endogeneity in any of the other predictors.
+There is nothing pointing to endogeneity in any of the other predictors.
 
 The copula will be integrated in the final model to improve the model.
 
-<!-- ```{r model with copula} -->
-<!-- modelwc <- estimate_pls(data = model$data %>% cbind(RB_star),  -->
-<!--                         measurement_model = constructs( -->
-<!--                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B), -->
-<!--                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B), -->
-<!--                         higher_composite("Response Beliefs", c("Perceived Response Efficacy", "Perceived Response Costs"), weights =  mode_B), -->
-<!--                         composite("Benevolence", multi_items("CODI", 1:3)), -->
-<!--                         composite("Competence", multi_items("CODI", 4:6)), -->
-<!--                         composite("Integrity", multi_items("CODI", 7:9)), -->
-<!--                         higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B), -->
-<!--                         composite("Knowledge", single_item("COKN")), -->
-<!--                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))), -->
-<!--                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B), -->
-<!--                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B), -->
-<!--                         composite("Copula Response Beliefs", single_item("RB_star")) -->
-<!--                         ),  -->
-<!--   structural_model = relationships( -->
-<!--   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs")), -->
-<!--   paths(from = c("Response Beliefs", "Personal Moral Norm", "Descriptive Norm", "Copula Response Beliefs"), to = "Behavioral Intention") -->
-<!-- )) -->
-<!-- saveRDS(modelwc, "Models/model-co-3-a-1-cop.RDS") -->
-<!-- bootmodelwc <- bootstrap_model(modelwc, nboot = 5000) -->
-<!-- saveRDS(bootmodelwc, "Models/model-boot-co-3-a-1-cop.RDS") -->
-<!-- bootfsmodel <- bootstrap_model(modelwc$first_stage_model, nboot = 5000) -->
-<!-- saveRDS(bootmodelwc, "Models/model-fs-boot-co-3-a-1-cop.RDS") -->
-<!-- proxymodelwc <- estimate_pls(data = as.data.frame(model$data %>% cbind(RB_star)),  -->
-<!--                            measurement_model = constructs( -->
-<!--   composite("Response Beliefs", multi_items("CORB", c(4:9)), weights = mode_B), -->
-<!--   composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B), -->
-<!--   composite("Knowledge", single_item("COKN")), -->
-<!--   composite("Personal Moral Norm", multi_items("COPN", c(1,3))), -->
-<!--   composite("Descriptive Norm", multi_items("CODN", 1:2), weights = mode_B), -->
-<!--   composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B), -->
-<!--                         composite("Copula Response Beliefs", single_item("RB_star")) -->
-<!--                                                           ), -->
-<!-- structural_model = relationships( -->
-<!--   paths(from = c("Distrusting Beliefs", "Knowledge"), to = c("Response Beliefs")), -->
-<!--   paths(from = c("Response Beliefs", "Personal Moral Norm", "Descriptive Norm", "Copula Response Beliefs"), to = "Behavioral Intention") -->
-<!-- )) -->
-<!-- saveRDS(proxymodelwc, "Models/model-proxy-co-3-a-1-cop.RDS") -->
-<!-- ``` -->
-
+```{r save copula, echo = FALSE, include = false}
+saveRDS(RB_star,
+        here::here("SEM COVID-19",
+                   "Models",
+                   "copula-rb-model-co-3-a-1.RDS"))
+```

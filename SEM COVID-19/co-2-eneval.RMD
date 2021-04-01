@@ -62,7 +62,7 @@ Addressing Endogeneity in International Marketing Applications of Partial Least 
 # Test of non-normality
 
 The Gaussian Copula approach can only be used if the independent variable in question is non-normally distributed.
-So we first test the distribution of the construct scores
+So we first test the distribution of the construct scores.
 
 ```{r distribution test, echo = FALSE}
 # Find out if independent (i.e., exogenous) variables are non-normally distributed
@@ -184,6 +184,7 @@ colnames(rbdf) <- c("Construct",
                     "DI & KN copula model p"
                     )
 ```
+
 ```{r gca rb table, echo = FALSE}
 rbdft <- rbdf[,-1] %>% t() %>% as.data.frame()
 colnames(rbdft) <- rbdf[,1]
@@ -194,7 +195,7 @@ rbdft %>%
 ```
 
 
-Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no endogeneity in the regression of Response Beliefs on its predictors.
+Neither the Distrusting Beliefs nor the Knowledge copula is significant, indicating that there is no endogeneity in the regression of Response Beliefs on its predictors.
 
 # Regression of Threat Beliefs on Distrusting Beliefs and Knowledge
 
