@@ -647,3 +647,11 @@ nldfdt <- function(exvar,
     formatRound(c(4:5),
                digits = 3))
 }
+
+closest <- function(value, vector){
+  vector[which(abs(vector-value)==min(abs(vector-value)))]
+}
+
+closestpos <- function(value, vector){
+  which(abs(vector-value)==min(abs(vector-value)))
+}
