@@ -1,5 +1,13 @@
 
 
+#' Gets the measurement model details from the SEMinR model object
+#'
+#' @param model A SEMinR model
+#'
+#' @return a data frame with construct, type and indicators
+#' @export
+#'
+#' @examples
 get_mm_details <- function(model) {
   data.frame(Construct = model$mmMatrix[,1],
              Type = ifelse(str_starts(model$mmMatrix[,3], "HOC"),
