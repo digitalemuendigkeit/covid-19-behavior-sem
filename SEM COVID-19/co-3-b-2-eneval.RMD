@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 3-b-2 Endogeneity Evaluation"
-output: html_document
+output:
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -12,18 +15,14 @@ library(htmltools)
 library(lmtest)
 library(nortest)
 library(car)
+library(distill)
+source(here::here("helpers.R"))
 # Load models and create summaries
 # Load PLS Model
 model <- readRDS("Models/model-co-3-b-2.RDS")
-bootmodel <- readRDS("Models/model-boot-co-3-b-2.RDS")
-# Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-3-b-2.RDS")
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
 proxymodel <- readRDS("Models/model-proxy-co-3-b-2.RDS")
 summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
-sumbomo <- summary(bootmodel)
-sumbofsmo <- summary(bootfsmodel)
 sumprmo <- summary(proxymodel)
 # # Bootstrap proxy model (500 samples) for comparability
 # bootprmodel <- bootstrap_model(proxymodel)
@@ -56,6 +55,7 @@ bootSig <- function(dataset, bootstrapresults, numIndependentVariables, numCopul
   return(bootSigvec)
 }
 ```
+
 The code for the assessment of endogeneity using the Gaussian Copula approach comes from
 
 Hult, G. T. M., J. F. Hair, D. Proksch, M. Sarstedt, A. Pinkwart, & C. M. Ringle (2018).
@@ -63,47 +63,45 @@ Addressing Endogeneity in International Marketing Applications of Partial Least 
 
 
 # Test of non-normality
+
 The Gaussian Copula approach can only be used if the independent variable in question is non-normally distributed.
-```{r}
+
+```{r distribution test, echo = FALSE}
 # Find out if independent (i.e., exogenous) variables are non-normally distributed
 # If yes, Gaussian Copula approach can be used.
-#Distrusting Beliefs
-shapiro.test(model$construct_scores[,"Distrusting Beliefs"])
-lillie.test(model$construct_scores[,"Distrusting Beliefs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Distrusting Beliefs`)) +
-  geom_density()
-# Knowledge
-shapiro.test(model$construct_scores[,"Knowledge"])
-lillie.test(model$construct_scores[,"Knowledge"])
-ggplot(as.data.frame(model$construct_scores), aes(`Knowledge`)) +
-  geom_density()
-# Perceived Response Efficacy
-shapiro.test(model$construct_scores[,"Perceived Response Efficacy"])
-lillie.test(model$construct_scores[,"Perceived Response Efficacy"])
-ggplot(as.data.frame(model$construct_scores), aes(`Perceived Response Efficacy`)) +
-  geom_density()
-# Perceived Response Costs
-shapiro.test(model$construct_scores[,"Perceived Response Costs"])
-lillie.test(model$construct_scores[,"Perceived Response Costs"])
-ggplot(as.data.frame(model$construct_scores), aes(`Perceived Response Costs`)) +
-  geom_density()
-# Personal Moral Norm
-shapiro.test(model$construct_scores[,"Personal Moral Norm"])
-lillie.test(model$construct_scores[,"Personal Moral Norm"])
-ggplot(as.data.frame(model$construct_scores), aes(`Personal Moral Norm`)) +
-  geom_density()
-# Descriptive Norm
-shapiro.test(model$construct_scores[,"Descriptive Norm"])
-lillie.test(model$construct_scores[,"Descriptive Norm"])
-ggplot(as.data.frame(model$construct_scores), aes(`Descriptive Norm`)) +
-  geom_density()
+testlist <- c(rownames(summo$paths)[-c(1:2)])
+nntest <- data.frame('Variable' = character(),
+             'Shapiro-Wilk W' = double(),
+             'Shapiro Wilk p' = double(),
+             'Lilliefors D' = double(),
+             'Lilliefors p' = double())
+for (i in 1:length(testlist)) {
+  nntest <- nntest %>% base::rbind(nonnormaltest(model, testlist[i]),
+                             deparse.level = 0)
+}
+nntest %>%
+  datatable(
+    caption = 'Results of normality tests',
+    rownames = FALSE,
+    options = list(pageLength = nrow(nntest))
+  ) %>%
+  formatRound(-1,
+              digits = 3)
 ```
+
+```{r distribution graph, echo = FALSE}
+for (i in 1:length(testlist)) {
+  nonnormalgraph(model, testlist[i])
+}
+```
+
 All independent (or endogenous) variables are non-normally distributed.
 Therefore, the Gaussian Copula approach can be used for all of them.
 
 
 # Regression of Perceived Response Efficacy Beliefs on Distrusting Beliefs and Knowledge
-```{r gca pre}
+
+```{r gca pre, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 KN <- model$construct_scores[,"Knowledge"]
 DI <- model$construct_scores[,"Distrusting Beliefs"]
@@ -176,14 +174,32 @@ predf <- predf %>% cbind(
   DIKN.Co.Model.Value = c(summary(bootcopuladiknpre)[1:4,5]),
   DIKN.Co.Model.p = c(bootSig(model$data, bootcopuladiknpre, 2, 2))
 )
-datatable(predf) %>%
-  formatRound(-1,
+colnames(predf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "DI copula model value",
+                    "DI copula model p",
+                    "KN copula model value",
+                    "KN copula model p",
+                    "DI & KN copula model value",
+                    "DI & KN copula model p"
+                    ) 
+```
+
+```{r gca pre table, echo = FALSE}
+predft <- predf[,-1] %>% t() %>% as.data.frame()
+colnames(predft) <- predf[,1]
+predft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Perceived Response Efficacy') %>%
+  formatRound(1:ncol(predft),
               digits = 3)
 ```
-Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no hidden endogeneity in the regression of Perceived Response Efficacy on its predictors.
+
+Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no endogeneity in the regression of Perceived Response Efficacy on its predictors.
 
 # Regression of Perceived Response Costs Beliefs on Distrusting Beliefs and Knowledge
-```{r gca prc}
+
+```{r gca prc, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 KN <- model$construct_scores[,"Knowledge"]
 DI <- model$construct_scores[,"Distrusting Beliefs"]
@@ -256,14 +272,33 @@ prcdf <- prcdf %>% cbind(
   DIKN.Co.Model.Value = c(summary(bootcopuladiknprc)[1:4,5]),
   DIKN.Co.Model.p = c(bootSig(model$data, bootcopuladiknprc, 2, 2))
 )
-datatable(prcdf) %>%
-  formatRound(-1,
+colnames(prcdf) <- c(
+  "Construct",
+  "Original model value",
+  "Original model p",
+  "DI copula model value",
+  "DI copula model p",
+  "KN copula model value",
+  "KN copula model p",
+  "DI & KN copula model value",
+  "DI & KN copula model p"
+                    ) 
+```
+
+```{r gca prc table, echo = FALSE}
+prcdft <- prcdf[,-1] %>% t() %>% as.data.frame()
+colnames(prcdft) <- prcdf[,1]
+prcdft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Perceived Response Costs') %>%
+  formatRound(1:ncol(prcdft),
               digits = 3)
 ```
-Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no hidden endogeneity in the regression of Perceived Response Costs on its predictors.
+
+Neither the Distrusting Beliefs nor the Knowledge Copula is significant, indicating that there is no endogeneity in the regression of Perceived Response Costs on its predictors.
 
 # Regression of Behavioral Intention on its predictors
-```{r gca bi}
+
+```{r gca bi, echo = FALSE, include = FALSE}
 # Define Variables for easy access
 BI <- model$construct_scores[,"Behavioral Intention"]
 PN <- model$construct_scores[,"Personal Moral Norm"]
@@ -496,8 +531,8 @@ summary(bootcopulaprcpndnbi)
 bootSig(model$data, bootcopulaprcpndnbi, 4,3)
 # Attach to df
 bidf <- bidf %>% cbind(
-  PRE.PRC.DN.Co.Model.Value = c(summary(bootcopulaprcpndnbi)[1:4,5], NA, summary(bootcopulaprcpndnbi)[5:7,5]),
-  PRE.PRC.DN.Co.Model.p = c(bootSig(model$data, bootcopulaprcpndnbi, 4,3)[1:4], NA, bootSig(model$data, bootcopulaprcpndnbi, 4,3)[5:7])
+  PRC.PN.DN.Co.Model.Value = c(summary(bootcopulaprcpndnbi)[1:4,5], NA, summary(bootcopulaprcpndnbi)[5:7,5]),
+  PRC.PN.DN.Co.Model.p = c(bootSig(model$data, bootcopulaprcpndnbi, 4,3)[1:4], NA, bootSig(model$data, bootcopulaprcpndnbi, 4,3)[5:7])
 )
 
 # Calculate results with copula for Perceived Response Efficacy, Perceived Response Costs, Perceived Moral Norm and Descriptive Norm
@@ -515,62 +550,60 @@ bidf <- bidf %>% cbind(
   PRE.PRC.PN.DN.Co.Model.Value = c(summary(bootcopulapreprcpndnbi)[,5]),
   PRE.PRC.PN.DN.Co.Model.p = c(bootSig(model$data, bootcopulapreprcpndnbi, 4,4))
 )
+colnames(bidf) <- c("Construct",
+                    "Original model value",
+                    "Original model p",
+                    "PRE copula model value",
+                    "PRE copula model p",
+                    "PRC copula model value",
+                    "PRC copula model p",
+                    "PN copula model value",
+                    "PN copula model p",
+                    "DN copula model value",
+                    "DN copula model p",
+                    "PRE & PRC copula model value",
+                    "PRE & PRC copula model p",
+                    "PRE & PN copula model value",
+                    "PRE & PN copula model p",
+                    "PRE & DN copula model value",
+                    "PRE & DN copula model p",
+                    "PRC & PN copula model value",
+                    "PRC & PN copula model p",
+                    "PRC & DN copula model value",
+                    "PRC & DN copula model p",        
+                    "PN & DN copula model value",
+                    "PN & DN copula model p",
+                    "PRE & PRC & PN copula model value",
+                    "PRE & PRC & PN copula model p",
+                    "PRE & PRC & DN copula model value",
+                    "PRE & PRC & DN copula model p",
+                    "PRC & PN & DN copula model value",
+                    "PRC & PN & DN copula model p",
+                    "PRE & PRC & PN & DN copula model value",
+                    "PRE & PRC & PN & DN copula model p"
+                    )
+```
 
-datatable(bidf) %>%
-  formatRound(-1,
+```{r gca bi table, echo = FALSE, layout = "l-page"}
+bidft <- bidf[,-1] %>% t() %>% as.data.frame()
+colnames(bidft) <- bidf[,1]
+bidft %>% 
+  datatable(caption = 'Results of the copula procedure for the regression of Behavioral Intention') %>%
+  formatRound(1:ncol(bidft),
               digits = 3)
 ```
 
 
 The copula for Perceived Response Efficacy achieves a significant p-value in some constellations (p < 0.1).
-Further, adding the single copula increases the Perceived Response Efficacy coefficient by about 0.05.
+Further, adding the single copula increases the Perceived Response Efficacy coefficient by about 0.06.
 Both of this indicates that Perceived Response Efficacy might be endogenous.
-There is nothing pointing to hidden endogeneity in any of the other predictors.
+There is nothing pointing to endogeneity in any of the other predictors.
 
 The copula will be integrated in the final model to improve the model.
 
-```{r model with copula}
-# modelwc <- estimate_pls(data = model$data %>% cbind(PRE_star),
-#                         measurement_model = constructs(
-#                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
-#                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
-#                         composite("Benevolence", multi_items("CODI", 1:3)),
-#                         composite("Competence", multi_items("CODI", 4:6)),
-#                         composite("Integrity", multi_items("CODI", 7:9)),
-#                         higher_composite("Distrusting Beliefs", c("Benevolence", "Competence", "Integrity"), weights = mode_B),
-#                         composite("Knowledge", single_item("COKN")),
-#                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
-#                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
-#                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B),
-#                         composite("Copula Perceived Response Efficacy", single_item("PRE_star"))
-#                         ),
-#   structural_model = relationships(
-#   paths(from = c("Distrusting Beliefs"), to = c("Perceived Response Efficacy", "Perceived Response Costs")),
-#   paths(from = c("Knowledge"), to = c("Perceived Response Efficacy")),
-#   paths(from = c("Perceived Response Efficacy", "Perceived Response Costs", "Personal Moral Norm", "Descriptive Norm", "Copula Perceived Response Efficacy"), to = "Behavioral Intention")
-# ))
-# saveRDS(modelwc, "Models/model-co-3-b-2-cop.RDS")
-# bootmodelwc <- bootstrap_model(modelwc, nboot = 5000)
-# saveRDS(bootmodelwc, "Models/model-boot-co-3-b-2-cop.RDS")
-# bootfsmodel <- bootstrap_model(modelwc$first_stage_model, nboot = 5000)
-# saveRDS(bootfsmodel, "Models/model-fs-boot-co-3-b-2-cop.RDS")
-# proxymodelwc <- estimate_pls(data = as.data.frame(model$data %>% cbind(PRE_star)),
-#                         measurement_model = constructs(
-#                         composite("Perceived Response Efficacy", multi_items("CORB", 4:6), mode_B),
-#                         composite("Perceived Response Costs", multi_items("CORB", 7:9), mode_B),
-#                         composite("Distrusting Beliefs", multi_items("CODI", 1:9), weights = mode_B),
-#                         composite("Knowledge", single_item("COKN")),
-#                         composite("Personal Moral Norm", multi_items("COPN", c(1,3))),
-#                         composite("Descriptive Norm", multi_items("CODN", 1:2), mode_B),
-#                         composite("Behavioral Intention", multi_items("COBI", 1:3), mode_B),
-#                         composite("Copula Perceived Response Efficacy", single_item("PRE_star"))
-#                         ),
-#   structural_model = relationships(
-#   paths(from = c("Distrusting Beliefs"), to = c("Perceived Response Efficacy", "Perceived Response Costs")),
-#   paths(from = c("Knowledge"), to = c("Perceived Response Efficacy")),
-#   paths(from = c("Perceived Response Efficacy", "Perceived Response Costs", "Personal Moral Norm", "Descriptive Norm", "Copula Perceived Response Efficacy"), to = "Behavioral Intention")
-#   )
-# )
-# saveRDS(proxymodelwc, "Models/model-proxy-co-3-b-2-cop.RDS")
+```{r save copula, echo = FALSE, include = FALSE}
+saveRDS(PRE_star,
+        here::here("SEM COVID-19",
+                   "Models",
+                   "copula-pre-model-co-3-b-2.RDS"))
 ```
-

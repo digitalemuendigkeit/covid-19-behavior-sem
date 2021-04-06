@@ -1,4 +1,4 @@
-﻿HOC;LOC;VIF;Original.Est.Wt.;Bootstrap.Mean.Wt.;t(431) (weight);0.in.Wt.CI;Original.Est.Ld.;Bootstrap.Mean.Ld.;t(431) (loading);0.in.Ld.CI
-Distrusting Beliefs;Benevolence;3.97;0.39;0.39;3.41;FALSE;0.94;0.94;42.33;FALSE
-Distrusting Beliefs;Competence;3.7;0.47;0.47;5;FALSE;0.95;0.95;55.67;FALSE
-Distrusting Beliefs;Integrity;4.28;0.2;0.2;1.9;TRUE;0.92;0.92;41.96;FALSE
+﻿HOC;LOC;VIF;Original.Est.Wt.;Bootstrap.Mean.Wt.;t(437) (weight);0.in.Wt.CI;Original.Est.Ld.;Bootstrap.Mean.Ld.;t(437) (loading);0.in.Ld.CI
+Distrusting Beliefs;Benevolence;3.98;0.42;0.42;3.88;FALSE;0.95;0.94;48.82;FALSE
+Distrusting Beliefs;Competence;3.72;0.46;0.46;5.05;FALSE;0.95;0.95;55.88;FALSE
+Distrusting Beliefs;Integrity;4.24;0.18;0.17;1.66;TRUE;0.91;0.91;40.65;FALSE

@@ -3,13 +3,16 @@ library(car)
 library(data.table)
 library(patchwork)
 
+# Data Loading ----
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
-datafull <- read_rds("Data/S1-data-nm.RDS")
+datafull <- read_rds(here::here("Data",
+                                "open",
+                                "S1-data-nm.RDS"))
 dataco <- datafull %>% filter(!is.na(COSKN))
 datacc <- datafull %>% filter(!is.na(CCSKN))
 
 
-agge <- data.frame(read_csv2("Descriptive Statistics/age-gender-germany.csv", skip = 8))[-c(87:90),-1]
+agge <- data.frame(read_csv2("Additional Analysis/age-gender-germany.csv", skip = 8))[-c(87:90),-1]
 agge$X2 <- c(0:85)
 agge[agge == "-"] <- NA
 colnames(agge)[1] <- "Age"
@@ -79,7 +82,7 @@ ocge <- data.frame(Occupation = c("employed", "in vocational training", "student
 
 
 # Source: Statistisches Bundesamt, Haushaltsbuch, 2019
-nekge <-  data.frame(read_csv2("Descriptive Statistics/household-income-classes.csv", skip = 7, skip_empty_rows = TRUE, ))[-c(4:6),]
+nekge <-  data.frame(read_csv2("Additional Analysis/household-income-classes.csv", skip = 7, skip_empty_rows = TRUE, ))[-c(4:6),]
 nekge[,1] <- c("Erfasste Haushalte", "Hochgerechnete Haushalte", "Durchschnittliches monatliches Haushaltsnettoeinkommen in EUR")
 colnames(nekge)[1] <- "Nettoeinkommensklasse"
 nekge <- nekge[,-c(2:4,11)]
@@ -91,7 +94,7 @@ iccldf <- data.frame(Nettoeinkommensklasse = c("up to 1299 EUR",
                                              "more than 5000 EUR"),
                    Count = unlist(nekge[2,-1]))
 # Source: Statistisches Bundesamt, Haushaltsbuch, 2019
-negge <-  data.frame(read_csv2("Descriptive Statistics/household-income-size.csv", skip = 7, skip_empty_rows = TRUE, ))[-c(4:6),-c(1:3)]
+negge <-  data.frame(read_csv2("Additional Analysis/household-income-size.csv", skip = 7, skip_empty_rows = TRUE, ))[-c(4:6),-c(1:3)]
 negge[,1] <- c("Erfasste Haushalte", "Hochgerechnete Haushalte", "Durchschnittliches monatliches Haushaltsnettoeinkommen in EUR")
 ichsdf <- data.frame("Household.Size" = c("1 person", "2 persons", "3 persons", "4 persons", "5 persons or more"),
                      "Mean.Household.Net.Income.EUR" = unlist(negge[3,-c(1,7)]))
@@ -348,7 +351,8 @@ eduplot2
 
 ocsam <- datavis %>% group_by(Occupation) %>% summarise(Sample.Count = n())
 ocsam <- ocsam %>% rbind(data.frame(Occupation = "employed", Sample.Count = sum(ocsam[1:2,2])))
-ocfull <- ocge %>% left_join(ocsam) %>%
+ocfull <- ocge %>% left_join(ocsam)
+ocfull <- ocfull %>%
   mutate(Ger.p = Ger.Count/sum(ocfull$Ger.Count),
          Sam.p = Sample.Count/sum(ocfull$Sample.Count)) %>%
   mutate(Occupation = rev(c("not in paid employment", "student (school)**", "student (university)", "in vocational training", "employed")))
@@ -396,7 +400,8 @@ icclsample2 <- data.frame(Net.Income.Class = c("up to 1000 EUR",
 icclfull <- (iccldf %>%
                rename(Net.Income.Class = Nettoeinkommensklasse,
                                Pop.Count = Count)) %>%
-  full_join(icclsample2) %>%
+  full_join(icclsample2)
+icclfull <- icclfull %>%
   mutate(Pop.p = Pop.Count/sum(icclfull$Pop.Count, na.rm = TRUE),
          Sam.p = Sample.Count/sum(icclfull$Sample.Count, na.rm = TRUE))
 

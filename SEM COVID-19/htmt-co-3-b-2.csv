@@ -1,12 +1,12 @@
 ﻿Construct.1;Construct.2;Lower.CI;Upper.CI
-Knowledge;Personal Moral Norm;0.25;0.44
-Knowledge;Personal Moral Norm;0.24;0.44
-Knowledge;Benevolence;0.17;0.4
-Knowledge;Competence;0.23;0.44
-Knowledge;Integrity;0.25;0.47
+Knowledge;Personal Moral Norm;0.22;0.43
+Knowledge;Personal Moral Norm;0.21;0.43
+Knowledge;Benevolence;0.15;0.39
+Knowledge;Competence;0.21;0.43
+Knowledge;Integrity;0.25;0.46
 Personal Moral Norm;Benevolence;0.61;0.76
-Personal Moral Norm;Competence;0.6;0.76
-Personal Moral Norm;Integrity;0.59;0.75
-Benevolence;Competence;0.92;1
-Benevolence;Integrity;0.98;1.06
-Competence;Integrity;0.97;1.05
+Personal Moral Norm;Competence;0.6;0.77
+Personal Moral Norm;Integrity;0.58;0.74
+Benevolence;Competence;0.92;1.01
+Benevolence;Integrity;0.98;1.07
+Competence;Integrity;0.98;1.07

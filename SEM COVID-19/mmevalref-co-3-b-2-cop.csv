@@ -1,14 +1,14 @@
 ﻿Construct;Indicator;Loading;AVE;Calpha;rhoC;rhoA;1.in.HTMT.CI
-Benevolence;CODI1;0.89;0.76;0.85;0.91;0.85;TRUE
-Benevolence;CODI2;0.86;0.76;0.85;0.91;0.85;TRUE
-Benevolence;CODI3;0.87;0.76;0.85;0.91;0.85;TRUE
-Competence;CODI4;0.83;0.75;0.83;0.9;0.84;TRUE
-Competence;CODI5;0.86;0.75;0.83;0.9;0.84;TRUE
-Competence;CODI6;0.91;0.75;0.83;0.9;0.84;TRUE
-Integrity;CODI7;0.88;0.71;0.8;0.88;0.8;TRUE
-Integrity;CODI8;0.84;0.71;0.8;0.88;0.8;TRUE
-Integrity;CODI9;0.81;0.71;0.8;0.88;0.8;TRUE
+Benevolence;CODI1;0.89;0.76;0.84;0.91;0.85;TRUE
+Benevolence;CODI2;0.86;0.76;0.84;0.91;0.85;TRUE
+Benevolence;CODI3;0.87;0.76;0.84;0.91;0.85;TRUE
+Competence;CODI4;0.82;0.74;0.83;0.9;0.83;TRUE
+Competence;CODI5;0.86;0.74;0.83;0.9;0.83;TRUE
+Competence;CODI6;0.91;0.74;0.83;0.9;0.83;TRUE
+Integrity;CODI7;0.87;0.7;0.79;0.88;0.79;TRUE
+Integrity;CODI8;0.84;0.7;0.79;0.88;0.79;TRUE
+Integrity;CODI9;0.81;0.7;0.79;0.88;0.79;TRUE
 Knowledge;COKN;1;1;1;1;1;FALSE
-Personal Moral Norm;COPN1;0.95;0.91;0.9;0.95;0.9;FALSE
-Personal Moral Norm;COPN3;0.95;0.91;0.9;0.95;0.9;FALSE
+Personal Moral Norm;COPN1;0.96;0.91;0.9;0.95;0.9;FALSE
+Personal Moral Norm;COPN3;0.96;0.91;0.9;0.95;0.9;FALSE
 Copula Perceived Response Efficacy;PRE_star;1;1;1;1;1;FALSE

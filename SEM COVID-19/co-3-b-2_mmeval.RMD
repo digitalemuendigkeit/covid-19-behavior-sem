@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 3-b-2 Measurement Model Evaluation"
-output: html_document
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -10,6 +13,9 @@ library(tidyverse)
 library(seminr)
 library(DT)
 library(htmltools)
+library(distill)
+source(here::here("helpers.R"))
+
 # Load models and create summaries
 # Load PLS Model
 model <- readRDS("Models/model-co-3-b-2.RDS")
@@ -33,181 +39,153 @@ seminr_theme_set(thm)
 ```
 
 # Model plots
+
 ## Original Estimate Path Model
+
 This is the original estimate path model.
+
 ```{r plot model, echo=FALSE}
 plot(model, title = "Original Estimate Model")
 ```
 
 ## Bootstrapped Path Model
+
 This is the bootstrapped path model.
+
 ```{r plot bootmodel, echo=FALSE}
 plot(bootmodel, title = "Bootstrapped Model")
 ```
 
 ## Measurement Model Only
+
 This is a path model showing only the measurement model components.
+
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, measurement_only = TRUE)
 ```
+
 ```{r eval-df, echo = FALSE, include=FALSE}
 # Base DF
-evalmm <- data.frame(Construct = model$mmMatrix[,1],
-                           Type = ifelse(grepl("HOCB", model$mmMatrix[,3]),
-                                         "HOC", "Construct"),
-                           Mode = dplyr::recode(model$mmMatrix[,3],
-                                         "A" = "reflective",
-                                         "B" = "formative",
-                                         "HOCB" = "higher-order"),
-                           Indicator.or.LOC = model$mmMatrix[,2])
+evalmm <- get_mm_details(model)
 ```
 
 # Evaluation of the reflective measurement model
-```{r ref-eval prep, echo = FALSE, include=FALSE}
-refevalmmbase <- evalmm %>% filter(Mode == "reflective") %>% rename(Indicator = Indicator.or.LOC) %>% 
-  mutate(Type = NULL, Mode = NULL)
-refloadings <- c()
-for (i in 1:nrow(refevalmmbase)){
-  refloadings <<- append(refloadings, sumfs$loadings[refevalmmbase$Indicator[i], refevalmmbase$Construct[i]])
-}
 
-cicr <- data.frame(Construct = row.names(sumfs$reliability), 
-                   AVE = as.numeric(sumfs$reliability[,3]), 
-                   Calpha = as.numeric(sumfs$reliability[,1]),
-                   rhoC = as.numeric(sumfs$reliability[,2]),
-                   rhoA = as.numeric(sumfs$reliability[,4]))
+```{r ref-eval prep, echo = FALSE, include=FALSE}
+# get measurement evaluation
+refevalmmbase <- measurement_evaluation_composite_A(model)
+
 #Next step is HTMT
-boothtmtbase <- data.frame(Construct.Rel. = row.names(sumbomo$bootstrapped_HTMT),
-                          Lower.CI = as.numeric(sumbomo$bootstrapped_HTMT[,5]),
-                          Upper.CI = as.numeric(sumbomo$bootstrapped_HTMT[,6])) %>%
-  rbind(data.frame(Construct.Rel. = row.names(sumbofsmo$bootstrapped_HTMT),
-                          Lower.CI = as.numeric(sumbofsmo$bootstrapped_HTMT[,5]),
-                          Upper.CI = as.numeric(sumbofsmo$bootstrapped_HTMT[,6])))
-#For HTMT evaluation, one should consider only reflective constructs and LOCs
-htmtvec <- c(unique(refevalmmbase$Construct))
-# Transform "Relationships" Column into two distinct columns
-boothtmtsplit <- base::strsplit(boothtmtbase$Construct.Rel., "  ->  ")
-boothtmtsplit1 <- c()
-boothtmtsplit2 <- c()
-for (i in 1:length(boothtmtsplit)){
- boothtmtsplit1 <<- append(boothtmtsplit1, boothtmtsplit[[i]][1])
- boothtmtsplit2 <<- append(boothtmtsplit2, boothtmtsplit[[i]][2])
-}
-boothtmt <- (boothtmtbase %>% mutate(Construct.Rel. = NULL, Construct.1 = boothtmtsplit1, Construct.2 = boothtmtsplit2))[,c(3:4,1:2)] %>%
-  filter(Construct.1 %in% htmtvec & Construct.2 %in% htmtvec)
-maxhtmt <- data.frame(Construct = boothtmt[,1], Max.HTMT =  boothtmt[,4]) %>% 
-  rbind(data.frame(Construct = boothtmt[,2], Max.HTMT =  boothtmt[,4])) %>%
-  group_by(Construct) %>%
-  summarise(Max.HTMT = max(Max.HTMT)) %>%
-  mutate('1.in.HTMT.CI' = ifelse(Max.HTMT >=1, TRUE, FALSE))
+boothtmt <- get_htmt(bootmodel, bootfsmodel)
+htmt_problems <- get_htmt_problems(boothtmt)
+
 # Make final data frame
-refevalmm <- refevalmmbase %>% cbind(Loadings = refloadings) %>% left_join(cicr) %>% left_join(maxhtmt[,c(1,3)])
+refevalmm <- refevalmmbase %>% 
+  left_join(htmt_problems, by = "Construct")
 ```
 
 ## Convergent validity
+
 Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
 
 ## Internal consistency reliability
+
 Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
 
 ## Discriminant validity
+
 Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
 
 ```{r ref-eval, echo=FALSE}
-datatable(refevalmm,
-          filter = 'top',
-          options = list(pageLength = nrow(refevalmm)),
-          rownames = FALSE,
-          colnames = c("Loading" = 3,
-                        "Cronbach\'s alpha" = 5, 
-                       "Composite reliability" = 6,
-                       "Construct reliability" = 7,
-                       "1 in HTMT CI" = 8),
-          caption = 'Results of the reflective measurement model evaluation') %>%
-  formatRound(3:7,
-              digits = 3) %>%
-  formatStyle('Loading', backgroundColor = styleInterval(cuts = c(0.4, 0.708), values = c('#ff9999', '#ffe5e5', '#00'))) %>%
-  formatStyle('AVE', backgroundColor = styleInterval(cuts = c(0.5), values = c('#ff9999', '#00'))) %>%
-  formatStyle('Cronbach\'s alpha', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
-  formatStyle('Composite reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00', '#ffe5e5', '#ff9999', '#00'))) %>%
-    formatStyle('Construct reliability', backgroundColor = styleInterval(cuts = c(0.6,0.9,0.95,0.999), values = c('#ff9999', '#00','#ffe5e5',  '#ff9999', '#00'))) %>%
-  formatStyle('1 in HTMT CI', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-#write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "mmevalref-co-3-b-2.csv",delim = ";")
+print_composite_A_evaluation_DT(refevalmm)
 ```
 
-```{r ref-eval-HTMT,echo=FALSE}
+```{r ref-eval-HTMT,echo=FALSE, layout = "l-page"}
 #If there are problems with the HTMT, here is a detailed table
-datatable(boothtmt,
-          filter = 'top',
-          options = list(pageLength = nrow(boothtmt)),
-          rownames = FALSE,
-          colnames = c("Construct 1" = 1,
-                        "Construct 2" = 2, 
-                       "Lower CI HTMT" = 3, 
-                       "Upper CI HTMT" = 4),
-          caption = 'Details of the bootstrapped HTMT ratios') %>%
+datatable(
+  boothtmt,
+  filter = 'top',
+  options = list(pageLength = nrow(boothtmt)),
+  rownames = FALSE,
+  colnames = c(
+    "Construct 1" = 1,
+    "Construct 2" = 2,
+    "Lower CI HTMT" = 3,
+    "Upper CI HTMT" = 4
+  ),
+  caption = 'Details of the bootstrapped HTMT ratios'
+) %>%
   formatRound(3:4,
               digits = 3) %>%
-    formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
-  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999')))
-#write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "htmt-co-3-b-2.csv",delim = ";")
+  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(
+    cuts = c(0.9, 1),
+    values = c('#00', '#ffe5e5', '#ff9999')
+  )) %>%
+  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(
+    cuts = c(0.9, 1),
+    values = c('#00', '#ffe5e5', '#ff9999')
+  ))
 ```
 
 ## Results of the evaluation of the reflective measurement model
 
 # Evaluation of the formative measurement model
 ```{r for-eval prep, echo = FALSE, include=FALSE}
-forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Indicator.or.LOC) %>% 
+forevalbase <- evalmm %>% 
+  filter(Mode == "B") %>% 
+  rename(Indicator = Indicator.or.LOC) %>% 
   mutate(Type = NULL, Mode = NULL)
 ```
+
 ## Convergent validity
+
+```{r for-eval redundancy analysis,, echo = FALSE, include=FALSE}
+all_reduds <- list(model = list(rapre, raprc, radn, rabi), 
+                   title = list("Perceived Response Efficacy",
+                                "Perceived Response Costs",
+                                "Descriptive Norm",
+                                "Behavioral Intention"
+                                ))
+# Unfortunately, this does not knit 
+# forevalci <- purrr::map2_df(all_reduds$model, all_reduds$title, redundancy_analysis)
+# distill does not seem to plot multiple html widgets in one block
+# for (i in 1:length(all_reduds$title)) {
+#    print(plot(all_reduds$model[[i]], title = all_reduds$title[[i]]))
+#   }
+# Alternate approach
+forevalci <- data.frame(
+    'Construct' = character(),
+    'C.V.R^2' = double(),
+    'C.V.PC' = double())
+for (i in 1:length(all_reduds$title)) {
+  forevalci <- forevalci %>% rbind(
+    redundancy_analysis_df(all_reduds$model[[i]], all_reduds$title[[i]]),
+    deparse.level = 0)
+}
+```
+
 To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
-
-```{r for-eval rapre, echo=FALSE}
-# Unfortunately, this has to be done partially manually
-# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-plot(rapre, title = "Redundancy Analysis Perceived Response Efficacy")
-sumrapre <- summary(rapre)
-# For the final dataframe, you should set a custom name and put the the name of the construct
-cvpre <- data.frame(Construct = "Perceived Response Efficacy", 'C.V.R^2' = sumrapre$paths[1], 'C.V.PC' = sumrapre$paths[3])
+```{r ra1, echo =FALSE}
+plot(all_reduds$model[[1]], title = all_reduds$title[[1]])
 ```
 
-```{r for-eval raprc, echo=FALSE}
-# Unfortunately, this has to be done partially manually
-# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-plot(raprc, title = "Redundancy Analysis Perceived Response Costs")
-sumraprc <- summary(raprc)
-# For the final dataframe, you should set a custom name and put the the name of the construct
-cvprc <- data.frame(Construct = "Perceived Response Costs", 'C.V.R^2' = sumraprc$paths[1], 'C.V.PC' = sumraprc$paths[3])
+```{r ra2, echo =FALSE}
+plot(all_reduds$model[[2]], title = all_reduds$title[[2]])
 ```
 
-```{r for-eval radn, echo=FALSE}
-# Unfortunately, this has to be done partially manually
-# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-plot(radn, title = "Redundancy Analysis Descriptive Norm")
-sumradn <- summary(radn)
-# For the final dataframe, you should set a custom name and put the the name of the construct
-cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1], 'C.V.PC' = sumradn$paths[3])
+```{r ra3, echo =FALSE}
+plot(all_reduds$model[[3]], title = all_reduds$title[[3]])
 ```
 
-
-```{r for-eval rabi, echo=FALSE}
-# Unfortunately, this has to be done partially manually
-# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
-plot(rabi, title = "Redundancy Analysis Behavioral Intention")
-sumrabi <- summary(rabi)
-# For the final dataframe, you should set a custom name and put the the name of the construct
-cvbi <- data.frame(Construct = "Behavioral Intention", 'C.V.R^2' = sumrabi$paths[1], 'C.V.PC' = sumrabi$paths[3])
-```
-```{r for-eval cv,echo=FALSE, include=FALSE}
-# put together all dataframes, this has also to be done manually
-forevalci <- bind_rows(cvpre, cvprc, cvdn, cvbi)
+```{r ra4, echo=FALSE}
+plot(all_reduds$model[[4]], title = all_reduds$title[[4]])
 ```
 
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
 ## Collinearity
+
 The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
 
 ```{r for-eval col, echo = FALSE, include = FALSE}
@@ -225,7 +203,8 @@ for (i in 1:length(unique(forevalbase$Construct))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+
+Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -287,7 +266,7 @@ colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r for-eval, echo=FALSE}
+```{r for-eval, echo=FALSE, layout = "l-page"}
 datatable(forevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forevalmm)),
@@ -312,23 +291,25 @@ datatable(forevalmm,
   formatStyle(colnames(forevalmm)[12], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-#write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "mmevalfor-co-3-b-2.csv",delim = ";")
 ```
 
 ## Results of the evaluation of the formative measurement model
 
-
 # Evaluation of the formative higher-order constructs
+
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
-forhocevalbase <- evalmm %>% filter(Mode == "higher-order") %>% rename(HOC = Construct, LOC = Indicator.or.LOC) %>% 
+forhocevalbase <- evalmm %>% filter(Mode == "HOCB") %>% rename(HOC = Construct, LOC = Indicator.or.LOC) %>% 
   mutate(Type = NULL, Mode = NULL)
 ```
 
 ## Convergent validity
+
 Convergent validity cannot be evaluated.
 
 ## Collinearity
+
 The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
+
 ```{r hoc-for-eval col, echo = FALSE, include = FALSE}
 hocvif <- data.frame(HOC = character(),
                     LOC = character(),
@@ -344,6 +325,7 @@ for (i in 1:length(unique(forhocevalbase$HOC))){
 ```
 
 ## Significance and relevance
+
 Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
 
 ```{r hoc-for-eval sar, echo=FALSE, include=FALSE}
@@ -405,7 +387,7 @@ colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r hoc-for-eval, echo=FALSE}
+```{r hoc-for-eval, echo=FALSE, layout = "l-page"}
 datatable(forhocevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forhocevalmm)),
@@ -426,7 +408,6 @@ datatable(forhocevalmm,
   formatStyle(colnames(forhocevalmm)[10], backgroundColor = styleInterval(cuts = c(1.649), values = c('#ff9999', '#00'))) %>%
   formatStyle('0 in CI (weight)', backgroundColor = styleEqual(c(1,0), c('#ffe5e5', '#00'), default = NULL)) %>%
   formatStyle('0 in CI (loading)', backgroundColor = styleEqual(c(1,0), c('#ff9999', '#00'), default = NULL))
-#write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "mmevalhoc-co-3-b-2.csv",delim = ";")
 ```
 
 ## Results of the formative higher-order constructs evaluation
@@ -434,9 +415,13 @@ datatable(forhocevalmm,
 # Results summary
 
 ```{r table-getter, echo = FALSE, include = FALSE}
-
-summo$descriptives
-bootmodel$
-
+# reflective mm
+write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "mmevalref-co-3-b-2.csv",delim = ";")
+#htmt details
+write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "htmt-co-3-b-2.csv",delim = ";")
+# formative mm
+write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "mmevalfor-co-3-b-2.csv",delim = ";")
+# formative hoc mm
+write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "mmevalhoc-co-3-b-2.csv",delim = ";")
 ```
 

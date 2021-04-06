@@ -322,23 +322,41 @@ RD2Crop <- RD2[,-c(1:5,7,10:18)]
 RD2CropC <- RD2Crop[RD2Crop$Duration..in.seconds. > median(RD2Crop$Duration..in.seconds.)/3,]
 
 # Merge data
-sdata <- s1dataqualcl %>% left_join(RD2CropC[,-c(1:3)])
+sdata <- s1dataqualcl %>% left_join(RD2CropC[!duplicated(RD2CropC$gid),-c(1:3)])
 
 # Check: Find implausible differences in age
-# As changes in gender identity in the meantime are plausible, only respondents with implausible changes in age are removed
-# However, in the results the gender reported in the first survey will be reported
-sdatacheck <- sdata[!is.na(sdata$COB1), c(1, 6:7, 143:144)] %>%
+# As changes in gender identity in the meantime are plausible, only S2 responses of respondents with implausible changes in age are removed
+# However, in the results the gender and age reported in the first survey will be reported
+sdatacheck <- sdata[!is.na(sdata$COB1), c(1:2, 6:7, 143:144)] %>%
   mutate(AgeDiff = (SD1 != Chif2 & SD1 != Chif2 - 1))
 `%notin%` <- Negate(`%in%`)
 # Save final data without identifying GID and potentially identifying free text fields
-sdataqualcl <-
-  sdata %>% filter(ResponseId %notin% (sdatacheck %>% filter(AgeDiff == TRUE))$ResponseId) %>%
-  select(!c(gid,
-            Anmerkungen))
+sdataqualcl <- sdata
+sdataqualcl[sdataqualcl$ResponseId %in% (sdatacheck %>% filter(AgeDiff == TRUE))$ResponseId,-(1:ncol(s1dataqualcl))] <- NA
+sdataqualcl <- sdataqualcl %>%
+    select(!c(gid,
+              Anmerkungen))
 write_csv2(sdataqualcl,
            here::here("Data", "open","data-qualcl.csv"))
 write_rds(sdataqualcl,
           here::here("Data", "open","data-qualcl.RDS"))
+
+# Include incidence data
+datachoicetext <- read_csv("Data/raw/S1-data-choicetext.csv") %>%
+  tibble() %>%
+  select(c("ResponseId", "SD8"))
+colnames(datachoicetext) <- c("ResponseId", "SD8.text")
+datafulllk <- sdataqualcl %>%
+  left_join(datachoicetext) %>%
+  mutate(SD8.text = SD8.text)
+kreisincidence <- readRDS("Additional Analysis/kreisincidence.RDS")
+datafullwin <- datafull %>%
+  left_join(datachoicetext) %>%
+  left_join(kreisincidence[,-c(1,3:4)], by = "SD8.text")
+# for some reason, this leads to duplicated ids
+datafullwin <- datafullwin[!duplicated(datafullwin$ResponseId),]
+saveRDS(datafullwin, "Data/open/data-qualcl-inc.RDS")
+
 
 # Data for market research institute - final responses without speeders from both surveys
 S1GIDws <- data.frame(RDComp$gid)

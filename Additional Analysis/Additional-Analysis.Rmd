@@ -86,13 +86,16 @@ datatable(
   formatRound(-c(1:3, 8:9),
               digits = 2)
 ```
+
 For variables where a Cronbach's alpha $\geq$ 0.7 could not be attained, we chose the item with the highest item-total correlation or, in case of Internal and External Control Conviction, one of the items based on content.
 
 # Correlation analysis of continous variables
+
 As becomes apparent from the descriptive statistics, response data is not normally distributed.
 Therefore, we use Spearman's rank correlation.
 
 ## Correlation of all model variables, different Knowledge measures and Behavior
+
 ```{r corm, echo=FALSE, layout="l-page"}
 cormv <- correlation_matrix_full(df = data[,1:37] %>%
                      select(!c(ends_with("General"), ends_with("Mask"), ends_with("App"), ends_with("Contact"))),
@@ -117,7 +120,7 @@ cormvn %>%
 ```
 
 
-This correlation contains all variables corresponding to constructs in the model, albeit differently specified (see Descriptive Statistics table).
+This correlation table contains all variables corresponding to constructs in the model, albeit differently specified (see Descriptive Statistics table).
 Further, Knowledge is specified differently: Instead of a pseudo-continuous scale with 1 corresponding to an incorrect answer, 2 to a 'don't know' and 3 to an correct answer, there are counts of how often a respondent answered correctly, incorrectly, or 'don't know'.
 There is also a Subjective Knowledge variable which measures the amount of COVID-19 related knowledge a respondent perceives to possess.
 

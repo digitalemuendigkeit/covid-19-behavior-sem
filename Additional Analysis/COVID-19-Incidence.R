@@ -1,6 +1,6 @@
 library(tidyverse)
-datafull <- read_rds("Data/data-qualcl.RDS")
-datachoicetext <- read_csv("Data/S1-data-choicetext.csv") %>%
+datafull <- read_rds("Data/open/data-qualcl.RDS")
+datachoicetext <- read_csv("Data/raw/S1-data-choicetext.csv") %>%
   tibble() %>%
   select(c("ResponseId", "SD8"))
 colnames(datachoicetext) <- c("ResponseId", "SD8.text")
@@ -76,5 +76,5 @@ n_occursi <- data.frame(table(datafullwin$ResponseId))
 n_occursi[n_occursi$Freq > 1,]
 # Remove duplicate ids
 datafullwin <- datafullwin[!duplicated(datafullwin$ResponseId),]
-saveRDS(datafullwin, "Data/data-qualcl-inc.RDS")
+saveRDS(datafullwin, "Data/open/data-qualcl-inc.RDS")
 
