@@ -167,12 +167,27 @@ cormv2 <- correlation_matrix_2(df2 = select(data,
 
 ```
 ```{r corallvis, echo = FALSE}
+cormv2numbers <- cormv2 %>%
+                             unlist() %>%
+                             substring(1,6) %>%
+  as.numeric()
+cormv2colors <- c()
+for (i in 1:length(cormv2numbers)){
+  cormv2colors[i] <- ifelse(brks[closestpos(cormv2numbers[i],brks)] < cormv2numbers[i],
+                        clrs[closestpos(cormv2numbers[i],brks)],
+                        clrs[closestpos(cormv2numbers[i],brks)+1])
+}
+cormv2clcyph <- data.frame(Names = cormv2 %>% unlist(),
+                           Colors = cormv2colors)
 cormv2 %>%
   as.data.frame() %>%
   datatable(caption = 'Spearman\'s rank correlation , *p < 0.05, ** p < 0.01, *** p < 0.001',
             options = list(list(className = 'dt-right',
                                 targets = 0:6)),
-            filter = 'top')
+            filter = 'top') %>%
+  formatStyle(names(cormv2), 
+               backgroundColor = styleEqual(cormv2clcyph$Names, cormv2clcyph$Colors)
+  )
 ```
 
 Next, we focus in on the correlations between all continuous variables and Behavioral Intention as well as Behavior and the different types of Behavior.
