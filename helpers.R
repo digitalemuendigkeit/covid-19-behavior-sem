@@ -655,3 +655,22 @@ closest <- function(value, vector){
 closestpos <- function(value, vector){
   which(abs(vector-value)==min(abs(vector-value)))
 }
+
+
+kruskaldt <- function(data,
+                      var1,
+                      var2) {
+  k <- kruskal.test(data[, {{var1}}] ~ data[, {{var2}}])
+  data.frame(
+    'Chi-squared' = k[[1]],
+    'Degrees of freedom' = k[[2]],
+    p = k[[3]]
+  ) %>%
+    datatable(rownames = FALSE,
+              caption = paste0("Kruskal-Wallis rank sum test for differences in ", {{ var1 }}, " between ", {{ var2 }}, " groups"),
+              autoHideNavigation = TRUE,
+              options = list(pageLength = 1,
+                             ordering = FALSE)) %>%
+    formatRound(c(1,3),
+                digits = 3)
+}

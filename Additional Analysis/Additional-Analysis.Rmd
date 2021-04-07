@@ -204,6 +204,7 @@ As the data for Behavior is non-parametric, we use the Kruskal Wallis test, the 
 ```{r gender, echo = FALSE}
 ggplot(data, aes(Gender, Behavior)) +
   geom_boxplot()
+kruskaldt(data, 'Behavior', 'Gender')
 ```
 There seems no notable difference for gender.
 
@@ -212,7 +213,7 @@ There seems no notable difference for gender.
 ggplot(data, aes(Education, Behavior)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90))
-kruskal.test(data$Behavior ~ data$Education)
+kruskaldt(data, 'Behavior', 'Education')
 ```
 ## Occupation
 ```{r occupation, echo = FALSE}
@@ -227,8 +228,8 @@ Neither is there a significant difference for education or occupation.
 ```{r income, echo = FALSE}
 ggplot(data, aes(Income, Behavior)) +
   geom_boxplot() +
-  theme(axis.text.x = element_text(angle = 90)) 
-kruskal.test(data$Behavior ~ data$Income)
+  theme(axis.text.x = element_text(angle = 90))
+kruskaldt(data, 'Behavior', 'Income')
 ```
 ```{r income2, echo = FALSE, layout="l-page"}
 wti <- pairwise.wilcox.test(data$Behavior,data$Income, p.adjust="bonferroni")
@@ -246,7 +247,7 @@ The difference between the second to lowest income group and the 'not specified'
 ```{r ownrisk, echo = FALSE}
 ggplot(data, aes(`Own Risk COVID-19`, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$`Own Risk COVID-19`)
+kruskaldt(data, 'Behavior', 'Own Risk COVID-19')
 wtor <- pairwise.wilcox.test(data$Behavior,data$`Own Risk COVID-19`, p.adjust="bonferroni")
 wtor$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -276,7 +277,7 @@ There is a barely significant different in Behavior between people who know they
 ```{r owninf, echo = FALSE}
 ggplot(data, aes(`Own Infection COVID-19`, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$`Own Infection COVID-19`)
+kruskaldt(data, 'Behavior', 'Own Infection COVID-19')
 ```
 There is no significant differences in Behavior for people who have already been infected with COVID-19, those who have not or those who do not know.
 
@@ -294,7 +295,7 @@ This is likely due to the low number of respondents who answered this question (
 ```{r cohabrisk, echo = FALSE}
 ggplot(data, aes(`Cohabitate Risk COVID-19`, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$`Cohabitate Risk COVID-19`)
+kruskaldt(data, 'Behavior', 'Cohabitate Risk COVID-19')
 wtco <- pairwise.wilcox.test(data$Behavior,data$`Cohabitate Risk COVID-19`, p.adjust="bonferroni")
 wtco$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -336,7 +337,7 @@ Respondents who know that they live with a high-risk person and those who are no
 ```{r wfh, echo = FALSE}
 ggplot(data, aes(`Work From Home COVID-19`, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$`Work From Home COVID-19`)
+kruskaldt(data, 'Behavior', 'Work From Home COVID-19')
 ```
 There is no significant difference in Behavior between respondents who have to work or go to school outside and those who do not.
 
@@ -347,7 +348,7 @@ In this section, we examine the relationship between specific questions and Beha
 ```{r knowledge1, echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN1)), aes(COKN1, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN1)
+kruskaldt(data, 'Behavior', 'COKN1')
 wtbcokn1 <- pairwise.wilcox.test(data$Behavior,data$COKN1, p.adjust="bonferroni")
 wtbcokn1$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -358,7 +359,7 @@ wtbcokn1$p.value %>%
               digits = 3)
 ggplot(data %>% filter(!is.na(COKN1)), aes(COKN1, `Subjective Knowledge`)) +
   geom_boxplot()
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN1)
+kruskaldt(data, 'Subjective Knowledge', 'COKN1')
 wtscokn1 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN1, p.adjust="bonferroni")
 wtscokn1$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -375,7 +376,7 @@ They also report significantly lower Subjective Knowledge.
 ```{r knowledge2,  echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN2)), aes(COKN2, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN2)
+kruskaldt(data, 'Behavior', 'COKN2')
 wtbcokn2 <- pairwise.wilcox.test(data$Behavior,data$COKN2, p.adjust="bonferroni")
 wtbcokn2$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -386,7 +387,7 @@ wtbcokn2$p.value %>%
               digits = 3)
 ggplot(data %>% filter(!is.na(COKN2)), aes(COKN2, `Subjective Knowledge`)) +
   geom_boxplot()
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN2)
+kruskaldt(data, 'Subjective Knowledge', 'COKN2')
 wtscokn2 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN2, p.adjust="bonferroni")
 wtscokn2$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -404,7 +405,7 @@ Respondents who chose don't know also report lower Subjective Knowledge.
 ```{r knowledge2_1, echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN2_1)), aes(COKN2_1, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN2_1)
+kruskaldt(data, 'Behavior', 'COKN2_1')
 wtbcokn2_1 <- pairwise.wilcox.test(data$Behavior,data$COKN2_1, p.adjust="bonferroni")
 wtbcokn2_1$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -427,7 +428,7 @@ data.frame(p = wilcox.test(Behavior ~ `COKN2_1`, data %>% filter(!(`COKN2_1` == 
               digits = 3)
 ggplot(data %>% filter(!is.na(COKN2_1)), aes(COKN2_1, `Subjective Knowledge`)) +
   geom_boxplot()
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN2_1)
+kruskaldt(data, 'Subjective Knowledge', 'COKN2_1')
 wtscokn2_1 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN2_1, p.adjust="bonferroni")
 wtscokn2_1$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -468,7 +469,7 @@ Respondents who are unsure report significantly lower Subjective Knowledge than 
 ```{r knowledge3, echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN3)), aes(COKN3, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN3)
+kruskaldt(data, 'Behavior', 'COKN3')
 wtbcokn3 <- pairwise.wilcox.test(data$Behavior,data$COKN3, p.adjust="bonferroni")
 wtbcokn3$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -479,7 +480,7 @@ wtbcokn3$p.value %>%
               digits = 3)
 ggplot(data %>% filter(!is.na(COKN3)), aes(COKN3, `Subjective Knowledge`)) +
   geom_boxplot()
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN3)
+kruskaldt(data, 'Subjective Knowledge', 'COKN3')
 wtscokn3 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN3, p.adjust="bonferroni")
 wtscokn3$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -496,10 +497,10 @@ Those who do not know also report significantly lower Subjective Knowledge than 
 ```{r knowledge4, echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN4)), aes(COKN4, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN4)
+kruskaldt(data, 'Behavior', 'COKN4')
 ggplot(data %>% filter(!is.na(COKN4)), aes(COKN4, `Subjective Knowledge`)) +
   geom_boxplot()
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN4)
+kruskaldt(data, 'Subjective Knowledge', 'COKN4')
 wtscokn4 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN4, p.adjust="bonferroni")
 wtscokn4$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -516,7 +517,7 @@ The group that does not know the answer reports significantly lower Subjective K
 ```{r knowledge5, echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN5)), aes(COKN5, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN5)
+kruskaldt(data, 'Behavior', 'COKN5')
 ggplot(data %>% filter(!is.na(COKN5)), aes(COKN5, `Subjective Knowledge`)) +
   geom_boxplot()
 wtbcokn5 <- pairwise.wilcox.test(data$Behavior,data$COKN5, p.adjust="bonferroni")
@@ -527,7 +528,7 @@ wtbcokn5$p.value %>%
                            ordering = FALSE)) %>%
     formatRound(1:ncol(wtbcokn5$p.value),
               digits = 3)
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN5)
+kruskaldt(data, 'Subjective Knowledge', 'COKN5')
 wtscokn5 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN5, p.adjust="bonferroni")
 wtscokn5$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
@@ -539,14 +540,14 @@ wtscokn5$p.value %>%
 ```
 The group who does not know reports both significantly lower Behavior and significantly lower Subjective Knowledge than both other groups.
 
-### Antibiotics can treat the coronavirus disease.. Correct answer: False.
+### Antibiotics can treat the coronavirus disease. Correct answer: False.
 ```{r knowledge6, echo = FALSE}
 ggplot(data %>% filter(!is.na(COKN6)), aes(COKN6, Behavior)) +
   geom_boxplot()
-kruskal.test(data$Behavior ~ data$COKN6)
+kruskaldt(data, 'Behavior', 'COKN6')
 ggplot(data %>% filter(!is.na(COKN6)), aes(COKN6, `Subjective Knowledge`)) +
   geom_boxplot()
-kruskal.test(data$`Subjective Knowledge` ~ data$COKN6)
+kruskaldt(data, 'Subjective Knowledge', 'COKN6')
 wtscokn6 <- pairwise.wilcox.test(data$`Subjective Knowledge`,data$COKN6, p.adjust="bonferroni")
 wtscokn6$p.value %>%
   datatable(caption = 'p-values of Pairwise Wilcoxon Rank Sum Tests adjusted using Bonferroni correction',
