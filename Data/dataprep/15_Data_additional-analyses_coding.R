@@ -133,7 +133,7 @@ codecc <- ancc %>% filter(!(Item %in% paste0("CCRB", 7:9))) %>%
 # Make scales for CO data
 
 #COVID-19
-mmco <- (readRDS("SEM COVID-19/Models/model-co-1.RDS"))$measurement_model
+mmco <- (readRDS("sem-covid-19/Models/model-co-1.RDS"))$measurement_model
 anco <- data.frame(Variable = (unlist(mmco))[c(T, F, F)],
                    Item = (unlist(mmco))[c(F, T, F)]) %>%
   filter(!(Item %in% Variable)) %>%
@@ -255,7 +255,7 @@ decstatcovid <- descstatshort %>%
 write_excel_csv(decstatcovid, "data/open/descriptive-statistics.csv", delim = ";")
 
 # Make only covid descriptive stats
-covidpls <- readRDS("SEM COVID-19/Models/model-co-3-a-1.RDS")
+covidpls <- readRDS("sem-covid-19/Models/model-co-3-a-1.RDS")
 sumcopls <- summary(covidpls)
 covidpls$mmMatrix
 anco
