@@ -1,12 +1,11 @@
-name: "Our Covid Model"
-output_dir: ../docs
-
+name: "covid19"
+title: "Covid 19 Model"
+description: |
+  Covid 19 Model
+output_dir: "../docs"
 navbar:
-  title: "Covid Model"
-  #type: inverse
-  left:
+  right:
     - text: "Home"
-      icon: fa-home
       href: index.html
     - text: "The models"
       icon: fa-graduation-cap
@@ -16,8 +15,5 @@ navbar:
           href: co-1_mmeval.html
         - text: "---------"
     - text: "About"
-      icon: fa-info
       href: about.html
-  right:
-    - icon: fa-code-branch
-      href: https://github.com/
+output: distill::distill_article
