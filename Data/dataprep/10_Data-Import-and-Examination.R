@@ -22,9 +22,9 @@ file_survey_cleaned_anonymized_csv <- here::here("data", "open","data-qualcl.csv
 file_survey_cleaned_anonymized_rds <- here::here("data", "open","data-qualcl.RDS")
 
 # incidence annotation
-kreis_dictionary <- here::here("data", "dictionaries", "kreislist.RDS")
+file_incidence_20210112 <- here::here("external-data", "20210112-Fallzahlen.csv")
+file_incidence_20210201 <- here::here("external-data", "20210201-Fallzahlen.csv")
 file_survey1_choices <- here::here("data", "raw", "S1-data-choicetext.csv")
-file_kreis_incidence <- here::here("data", "open", "kreisincidence.RDS")
 file_survey_cleaned_incidence_anonymized_rds <- here::here("data", "open", "data-qualcl-inc.RDS")
 
 # Import data ----
@@ -365,103 +365,85 @@ write_csv2(sdataqualcl, file_survey_cleaned_anonymized_csv)
 write_rds(sdataqualcl, file_survey_cleaned_anonymized_rds)
 
 
-# calculate incidence data
+# Include incidence data ----
 
-
-#file_survey1_cleaned_anonymized_rds <- "data/open/data-qualcl.RDS"
-#file_survey1_choices <- "Data/raw/S1-data-choicetext.csv"
-#kreis_dictionary <- "data/dictionaries/kreislist.RDS"
-
-datafull <- read_rds(file_survey_cleaned_anonymized_rds)
+# Load survey data and merge with choice text
+datafull <- sdataqualcl
 datachoicetext <- read_csv(file_survey1_choices) %>%
   tibble() %>%
   select(c("ResponseId", "SD8"))
 
 colnames(datachoicetext) <- c("ResponseId", "SD8.text")
 
-datafulllk <- datafull %>%
-  left_join(datachoicetext) %>%
-  mutate(SD8.text = SD8.text)
+datafullk <- datafull %>%
+  left_join(datachoicetext)
 
-# As I accidentally used the wrong administrative district list, there is a disconnect between the RKI data and my data
-# let's harmonize it
-# for ease
+# As the RKI data is differently named to the survey, a dict has to be created
 `%notin%` <- Negate(`%in%`)
-# List I used
-kreislist <- readRDS(kreis_dictionary)
-# RKI data
-incidence <- read_csv2("external-data/20210112-Fallzahlen.csv",
+# Names in our survey
+surveynames <- data.frame(SN.full = unique(datafulllk$SD8.text) %>%
+                              sort(),
+                            SN.type = unique(datafulllk$SD8.text) %>%
+                              sort()%>%
+                              str_split(", ") %>%
+                              sapply("[[", 2),
+                            SN.name = unique(datafulllk$SD8.text) %>%
+                              sort() %>%
+                              str_split(", ") %>%
+                              sapply("[[", 1))
+# Load RKI data
+incidence <- read_csv2(file_incidence_20210112,
                        skip = 4,
                        col_names = c("Landkreis", "LKNR", "Count210112", "Incidence210112")
 ) %>%
   tibble() %>% left_join(
-    tibble(read_csv2("external-data/20210201-Fallzahlen.csv",
+    tibble(read_csv2(file_incidence_20210201,
                      skip = 4,
                      col_names = c("Landkreis", "LKNR", "Count210201", "Incidence210201"))
     ),
     by = c("Landkreis", "LKNR")
   )
-incidence$Landkreis
-rkikreise <- substring(incidence$Landkreis, 4)
-#Find the difference
-# Both
-myinrki <- kreislist$name[kreislist$name %in% rkikreise]
-rkiinmy <- incidence$Landkreis[rkikreise %in% kreislist$name]
-# difference of three
-# because of doubles?
-n_occur_rki <- data.frame(table(rkikreise))
-suspis <- n_occur_rki[n_occur_rki$Freq > 1,1]
-n_occur_my <- data.frame(table(kreislist$name))
-n_occur_my[n_occur_my$Freq >1,1]
-perps <- suspis[n_occur_rki[n_occur_rki$Freq > 1,1] %notin% n_occur_my[n_occur_my$Freq >1,1]]
-# clean them
-myinrkic <- myinrki[!myinrki %in% perps]
-rkiinmyc <- incidence$Landkreis[rkikreise %in% myinrkic]
-# Only in my list
-onlymy <- data.frame(MyName = kreislist$name[kreislist$name %notin% rkikreise | kreislist$name %in% perps],
-                     MyType = kreislist$type[kreislist$name %notin% rkikreise | kreislist$name %in% perps],
-                     MyIndex = which(kreislist$name %notin% rkikreise | kreislist$name %in% perps))
-# Only in the rki list
-onlyrki <- data.frame(RKIName = incidence$Landkreis[rkikreise %notin% kreislist$name | rkikreise %in% perps],
-                      RKIIndex = which(rkikreise %notin% kreislist$name | rkikreise %in% perps))
-tester <- onlyrki %>% cbind(onlymy %>% rbind(data.frame(MyName = rep(NA, 11), MyType = rep(NA,11), MyIndex = rep(NA,11))))
-harmonizer <- onlymy %>%
-  cbind(RKIIndex = c(6,NA,58,50,113,116,142,183,196,316,197,206,212,239,250,269,268,271,270,146,352,315,326,330,1))
-harmonized <- onlyrki %>% full_join(harmonizer)
-
-Cypher <- data.frame(MyName = myinrkic, RKIName = rkiinmyc) %>%
-  union(harmonized[,c(1,3)])
-
-kreisincidence <- kreislist %>%
-  transmute(MyName = name,
-            SD8.text = surveyname) %>%
-  left_join(Cypher %>% rename(Landkreis = RKIName)) %>%
+# names in the RKI data
+rkinames <- data.frame(RN.full = incidence$Landkreis,
+                       RN.type = incidence$Landkreis %>%
+                         str_split(" ") %>%
+                         sapply("[[", 1),
+                       RN.name = incidence$Landkreis %>%
+                         sub(pattern = "^.*? ", replacement = "")) %>%
+  mutate(RN.type.long = RN.type %>%
+           dplyr::recode(
+             LK = "Landkreis",
+             SK = "Kreisfreie Stadt"))
+# Make dict
+# Match entries with matching name and type by name and type
+kreisdict1 <- surveynames %>%
+  inner_join(rkinames,
+             by = c(
+               "SN.name" = "RN.name",
+               "SN.type" = "RN.type.long"),
+             keep = TRUE)
+# Rest: Match by name
+kreisdict2 <- surveynames[surveynames$SN.full %notin% kreisdict1$SN.full,] %>%
+  inner_join(rkinames[rkinames$RN.full %notin% kreisdict1$RN.full,],
+            by = c("SN.name" = "RN.name"),
+            keep = TRUE)
+# Rest: Match manually
+kreisdict3 <- surveynames[surveynames$SN.full %notin% kreisdict1$SN.full & surveynames$SN.full %notin% kreisdict2$SN.full,] %>%
+  cbind(rkinames[c(6,58,50,116,142,183,196,197,212,238,239,249,268,270,285,146,326,1),])
+# Merge dicts
+kreisdict <- kreisdict1 %>%
+  union(kreisdict2) %>%
+  union(kreisdict3)
+# Merge dict with incidence
+kreisincidence <- kreisdict %>%
+  transmute(Landkreis = RN.full,
+            ADSurvey = SN.full) %>%
   left_join(incidence)
-#sum up and take means for berlin
-kreisincidence[kreisincidence$MyName == "Berlin",5] <- sum(incidence[grepl("Berlin", incidence$Landkreis),3])
-kreisincidence[kreisincidence$MyName == "Berlin",6] <- colMeans(incidence[grepl("Berlin", incidence$Landkreis),4])
-kreisincidence[kreisincidence$MyName == "Berlin",7] <- sum(incidence[grepl("Berlin", incidence$Landkreis),5])
-kreisincidence[kreisincidence$MyName == "Berlin",8] <- colMeans(incidence[grepl("Berlin", incidence$Landkreis),6])
 
-#saveRDS(kreisincidence, file_kreis_incidence)
-
-
-
-
-# Include incidence data ----
-datachoicetext <- read_csv(file_survey1_choices) %>%
-  tibble() %>%
-  select(c("ResponseId", "SD8"))
-colnames(datachoicetext) <- c("ResponseId", "SD8.text")
-datafulllk <- sdataqualcl %>%
-  left_join(datachoicetext) %>%
-  mutate(SD8.text = SD8.text)
-#kreisincidence <- readRDS(file_kreis_incidence)
-datafullwin <- datafull %>%
-  left_join(datachoicetext) %>%
-  left_join(kreisincidence[,-c(1,3:4)], by = "SD8.text")
-# for some reason, this leads to duplicated ids
-datafullwin <- datafullwin[!duplicated(datafullwin$ResponseId),]
+# Merge with survey data
+datafullwin <- datafullk %>%
+  left_join(kreisincidence,
+            by = c("SD8.text" = "ADSurvey"))
 saveRDS(datafullwin, file_survey_cleaned_incidence_anonymized_rds)
 
 
