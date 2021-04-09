@@ -1,0 +1,23 @@
+name: "Our Covid Model"
+output_dir: ../docs
+
+navbar:
+  title: "Covid Model"
+  #type: inverse
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: index.html
+    - text: "The models"
+      icon: fa-graduation-cap
+      menu:
+        - text: "Model 1"
+        - text: "Model 1 Measurement evaluation"
+          href: co-1_mmeval.html
+        - text: "---------"
+    - text: "About"
+      icon: fa-info
+      href: about.html
+  right:
+    - icon: fa-code-branch
+      href: https://github.com/

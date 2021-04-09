@@ -20,7 +20,7 @@ seminr_theme_set(thm)
 Here, we compare different Covid-19 groups.
 
 
-```{r comparison original estimate table print, echo=FALSE}
+```{r c1, comparison original estimate table print, echo=FALSE}
 # 
 oet <- readRDS("co-2-mg-comp.RDS")
 datatable(oet,
@@ -42,7 +42,7 @@ datatable(oet,
 ```
 
 
-```{r comparison original estimate table print, echo=FALSE}
+```{r c2, comparison original estimate table print, echo=FALSE}
 # boot model
 bt <- readRDS("co-2-mg-boot-comp.RDS")
 datatable(bt,

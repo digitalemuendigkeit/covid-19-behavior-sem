@@ -1,0 +1,35 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# CC-CO-Behavior
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+This is repository for the data examination and model estimation for the January-February 2021 study on predictors for behavioral change in the contexts of the climate crisis and the COVID-19 pandemic.
+
+
+This repository contains all materials to reproduce our analysis for the paper XXX.
+
+## Folder strucutre
+
+- `additional analyses` contains descriptive analyses and inference statiscs (except structural model). Also generates some figures for our documents
+- `data` contains all data required for this project and code to handle data perparation, anonymization, and OSF up/downloads
+- `Figures` contains generated figures
+- `renv` contains information for libraries used
+- `SEM Climate Crisis` The climate crisis model
+- `SEM COVID-19` The Covid-19 model
+- `templates` contains template documents to conduct our analyses
+- `R` contains scripts with helper functions
+
+

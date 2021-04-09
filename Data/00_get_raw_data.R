@@ -13,15 +13,15 @@ osf_node %>%
                conflicts = "overwrite",
                progress = TRUE)
 
-source(here::here("Data", "password.R"))
+source(here::here("data", "password.R"))
 
-zip_file <- here::here("Data", "raw", "encrypted_data.zip")
-target_folder <- here::here("Data", "raw")
+zip_file <- here::here("data", "raw", "encrypted_data.zip")
+target_folder <- here::here("data", "raw")
 
 if(str_detect(sessionInfo()$platform, "darwin")) {
   # This works on the mac
   system(paste0(
-    "unzip -P ", password, " ", zip_file, " *.csv -d ", target_folder
+    "unzip -o -P ", password, " ", zip_file, " *.csv -d ", target_folder
   ))
 }
 
