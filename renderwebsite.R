@@ -1,4 +1,5 @@
 # Generates the website
 
 
-rmarkdown::render_site("SEM COVID-19")
+rmarkdown::render_site("sem-covid-19")
+
