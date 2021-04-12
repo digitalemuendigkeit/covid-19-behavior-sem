@@ -1,5 +1,5 @@
 ---
-title: "Paper Accompagnying Website"
+title: "Paper Accompanying Website"
 description: |
   This website contains supplementary material for the paper xyz.
   Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.
