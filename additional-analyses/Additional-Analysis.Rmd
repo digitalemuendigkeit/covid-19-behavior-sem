@@ -220,7 +220,7 @@ kruskaldt(data, 'Behavior', 'Education')
 ggplot(data, aes(Occupation, Behavior)) +
   geom_boxplot() +
   theme(axis.text.x = element_text(angle = 90))
-kruskal.test(data$Behavior ~ data$Occupation)
+kruskaldt(data, 'Behavior', 'Occupation')
 ```
 Neither is there a significant difference for education or occupation.
 

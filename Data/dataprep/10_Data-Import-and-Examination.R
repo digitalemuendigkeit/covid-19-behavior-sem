@@ -381,13 +381,13 @@ datafullk <- datafull %>%
 # As the RKI data is differently named to the survey, a dict has to be created
 `%notin%` <- Negate(`%in%`)
 # Names in our survey
-surveynames <- data.frame(SN.full = unique(datafulllk$SD8.text) %>%
+surveynames <- data.frame(SN.full = unique(datafullk$SD8.text) %>%
                               sort(),
-                            SN.type = unique(datafulllk$SD8.text) %>%
+                            SN.type = unique(datafullk$SD8.text) %>%
                               sort()%>%
                               str_split(", ") %>%
                               sapply("[[", 2),
-                            SN.name = unique(datafulllk$SD8.text) %>%
+                            SN.name = unique(datafullk$SD8.text) %>%
                               sort() %>%
                               str_split(", ") %>%
                               sapply("[[", 1))
