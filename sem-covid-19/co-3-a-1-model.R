@@ -2,15 +2,9 @@ library(tidyverse)
 library(seminr)
 
 # Data Loading ----
-# Load data and crop to relevant section -c(1:43,48:96,143:145)
-datafull <- read_rds(here::here("Data",
-                                "open",
-                                "S1-data-nm.RDS"))
-
-data <- datafull %>%
-  select(starts_with("CO")) %>%
-  select(-paste0("COS", 1:7)) %>%
-  filter(!is.na(COSKN)) %>% # other condition
+data <- read_rds(here::here("data",
+                            "open",
+                            "model-data.RDS")) %>%
   mutate(COKN = rowMeans(across(starts_with("COKN"))))
 
 
@@ -44,11 +38,11 @@ sm <- relationships(
 # Model Estimation ----
 
 model <- estimate_pls(data, mm, sm)
-saveRDS(model, "SEM COVID-19/Models/model-co-3-a-1.RDS")
+saveRDS(model, "sem-covid-19/models/model-co-3-a-1.RDS")
 bootmodel <- bootstrap_model(model, nboot = 5000)
-saveRDS(bootmodel, "SEM COVID-19/Models/model-boot-co-3-a-1.RDS")
+saveRDS(bootmodel, "sem-covid-19/models/model-boot-co-3-a-1.RDS")
 bootfsmodel <- bootstrap_model(model$first_stage_model, nboot = 5000)
-saveRDS(bootfsmodel, "SEM COVID-19/Models/model-fs-boot-co-3-a-1.RDS")
+saveRDS(bootfsmodel, "sem-covid-19/models/model-fs-boot-co-3-a-1.RDS")
 
 # Proxy Model ----
 
@@ -63,7 +57,7 @@ proxymm <- constructs(
 )
 
 proxymodel <- estimate_pls(as.data.frame(data), proxymm, sm)
-saveRDS(proxymodel, "SEM COVID-19/Models/model-proxy-co-3-a-1.RDS")
+saveRDS(proxymodel, "sem-covid-19/models/model-proxy-co-3-a-1.RDS")
 
 # Convergent Validity ----
 
@@ -77,7 +71,7 @@ smpre <- relationships(
   paths(from = "Perceived Response Efficacy Formative", to = "Perceived Response Efficacy Reflective")
 )
 rapre <- estimate_pls(data, mmpre, smpre)
-saveRDS(rapre, "SEM COVID-19/Models/rapre-co-3-a-1.RDS")
+saveRDS(rapre, "sem-covid-19/models/rapre-co-3-a-1.RDS")
 
 # Perceived Response Costs
 mmprc <- constructs(
@@ -88,7 +82,7 @@ smprc <- relationships(
   paths(from = "Perceived Response Costs Formative", to = "Perceived Response Costs Reflective")
 )
 raprc <- estimate_pls(data, mmprc, smprc)
-saveRDS(raprc, "SEM COVID-19/Models/raprc-co-3-a-1.RDS")
+saveRDS(raprc, "sem-covid-19/models/raprc-co-3-a-1.RDS")
 
 # Descriptive Norm
 mmdn <- constructs(
@@ -99,7 +93,7 @@ smdn <- relationships(
   paths(from = "Descriptive Norm Formative", to = "Descriptive Norm Reflective")
 )
 radn <- estimate_pls(data, mmdn, smdn)
-saveRDS(radn, "SEM COVID-19/Models/radn-co-3-a-1.RDS")
+saveRDS(radn, "sem-covid-19/models/radn-co-3-a-1.RDS")
 
 # Behavioral Intention
 mmbi <- constructs(
@@ -110,4 +104,4 @@ smbi <- relationships(
   paths(from = "Behavioral Intention Formative", to = "Behavioral Intention Reflective")
 )
 rabi <- estimate_pls(data, mmbi, smbi)
-saveRDS(rabi, "SEM COVID-19/Models/rabi-co-3-a-1.RDS")
+saveRDS(rabi, "sem-covid-19/models/rabi-co-3-a-1.RDS")

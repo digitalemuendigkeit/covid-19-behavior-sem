@@ -16,12 +16,17 @@ library(lmtest)
 library(nortest)
 library(car)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-2.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-2.RDS"))
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
-proxymodel <- readRDS("Models/model-proxy-co-2.RDS")
+proxymodel <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-proxy-co-2.RDS"))
 summo <- summary(model)
 sumprmo <- summary(proxymodel)
 # Function for Gaussian Capula Approach

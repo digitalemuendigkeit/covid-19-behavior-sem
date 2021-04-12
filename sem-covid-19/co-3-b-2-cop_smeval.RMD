@@ -1,7 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 3-b-2 with copula Structural Model Evaluation"
 output: 
-  distill::distill_article
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
 ---
 
 ```{r setup, echo =FALSE, include=FALSE}
@@ -11,14 +13,23 @@ library(tidyverse)
 library(seminr)
 library(DT)
 library(htmltools)
+library(distill)
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-3-b-2-cop.RDS")
-bootmodel <- readRDS("Models/model-boot-co-3-b-2-cop.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-3-b-2-cop.RDS"))
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-3-b-2-cop.RDS"))
 # Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-3-b-2-cop.RDS")
+bootfsmodel <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "model-fs-boot-co-3-b-2-cop.RDS"))
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
-proxymodel <- readRDS("Models/model-proxy-co-3-b-2-cop.RDS")
+proxymodel <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-proxy-co-3-b-2-cop.RDS"))
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
@@ -28,10 +39,9 @@ thm <-
   seminr_theme_create(
     construct.compositeA.arrow = "backward",
     construct.compositeA.use_weights = FALSE,
-    plot.adj = FALSE,
-    construct.compositeA.shape = "ellipse",
-    construct.compositeB.shape = "ellipse",
-      
+    construct.compositeA.shape = "oval",
+    construct.compositeB.shape = "oval",
+    plot.adj = FALSE
   )
 seminr_theme_set(thm)
 # My favorite operator
@@ -39,14 +49,19 @@ seminr_theme_set(thm)
 ```
 
 # Model plots
+
 ## Structural Model Only
+
 This is a path model showing only the structural model components.
+
 ```{r plot mm model, echo=FALSE}
-plot(bootmodel)
+plot(bootmodel, structure_only = TRUE)
 ```
 
 # Collinearity
+
 Collinearity is assessed using the variance inflation factor (VIF). VIF should be < 5, ideally $\leq$ 3.
+
 ```{r collinearity vif, echo = FALSE}
 vif <- data.frame('Exogenous Construct' = character(),
                   'Endogenous Construct' = character(),
@@ -85,12 +100,15 @@ datatable(vif,
               digits = 3) %>%
   formatStyle('VIF', backgroundColor = styleInterval(cuts = c(3,5), values = c('#00', '#ffe5e5','#ff9999')))
 ```
+
 VIF is above 3 for some constructs, specifically lower-order constructs.
 But it is not above 5 for any constructs.
 There is no VIF information for the relationship Distrusting Beliefs - Perceived Response Costs.
 
 # In-sample predictive power
+
 In-sample predictive power is assessed using variance explained R². R² $\geq$ 0.75 indicates substantial in-sample predictive power, R² $\geq$ 0.5 moderate and R² $\geq$ 0.25 weak in-sample predictive power. R² $\leq$ 0.10 indicates a lack of model predictiveness.
+
 ```{r in-sample pp r^2, echo=FALSE}
 r2hoc <- data.frame(Construct = colnames(summo$paths),
                     "R^2" = summo$paths[1,],
@@ -111,10 +129,12 @@ datatable(r2,
               digits = 3) %>%
   formatStyle('R²', backgroundColor = styleInterval(cuts = c(0.1,0.249,0.9), values = c('#ff9999', '#ffe5e5', '#00','#ff9999')))
 ```
+
 All R² values are above 0.25, indicating weak in-sample predictive power at a minimum.
 For Behavioral Intention, R² is above 0.5, indicating moderate in-sample predictive power.
 
 # Effect size
+
 Effect size f2² measures the impact of a predictor construct on an endogenous construct. f² $\geq$ 0.35 indicates a large effect, f² $\geq$ 0.15 a medium and f² $\geq$ 0.02 a small effect.
 
 ```{r effect size f^2, echo=FALSE}
@@ -151,6 +171,7 @@ datatable(f2,
               digits = 3) %>%
   formatStyle('f²', backgroundColor = styleInterval(cuts = c(0.019), values = c('#ff9999', '#00')))
 ```
+
 Benevolence has only an effect on Perceived Response Costs.
 Integrity has only an effect on Perceived Response Efficacy.
 Other than that, all effects are small at a minimum.
@@ -158,9 +179,12 @@ The effect of Perceived Response Efficacy on Behavioral Intention is medium.
 The effect of Distrusting Beliefs on Perceived Response Efficacy and Perceived REsponse Costs is large.
 
 # Out-of-sample predictive power
-Out of sample predictive power has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC
-If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive power.
-```{r plspredict, echo = FALSE}
+
+Out-of-sample predictive performance has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC.
+If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive performance.
+However, a lack of predictive performance does not imply a lack of explanatory power.
+
+```{r plspredict, echo = FALSE, layout = "l-page"}
 plspre <- predict_pls(proxymodel, noFolds = 50, technique = predict_DA)
 sumplspre <- summary(plspre)
 oospp <- (as.data.frame(sumplspre$PLS_out_of_sample) %>%
@@ -176,12 +200,15 @@ datatable(oospp,
               digits = 3) %>%
   formatStyle(names(oospp), backgroundColor = styleInterval(cuts = c(0), values = c('#ff9999', '#00')))
 ```
+
 No indicator is predicted better by the model than the LM in terms of both RMSE and MAD.
 This points to a lack of out-of-sample predictive power.
 
 # Significance and relevance of path coefficients
+
 Significance is denoted by t-test and p values. A t of $\geq$ 1.65 signifies significance at the 10 % level, t $\geq$ 1.96 at the 5 % level and t $\geq$ 2.57 at the 1 % level.
-```{r path-coeff, echo = FALSE}
+
+```{r path-coeff, echo = FALSE, layout="l-page"}
 pcbase <- rownames_to_column(as.data.frame(sumbomo$bootstrapped_paths)) %>% rename (
   Construct.Rel. = rowname)
 pcbasesplit <- base::strsplit(pcbase$Construct.Rel., "  ->  ")
@@ -237,7 +264,8 @@ The only insignificant paths are those from Integrity to Perceived Response Cost
 All other paths are significant.
 
 # Summary table
-```{r summary table-df, echo = FALSE, include = FALSE, layout = "l-page"}
+
+```{r summary table-df, echo = FALSE, include = FALSE}
 sumsm <- pcdf[,-c(5:7)] %>% 
   left_join(hocf2)  %>%
   left_join(vif %>% rename('Exogenous Construct' = 'Exogenous.Construct',
@@ -248,7 +276,7 @@ sumsm <- pcdf[,-c(5:7)] %>%
          'Path Coefficient p' = 'p')
 colnames(sumsm)[6] <- paste0("Path Coefficient t(", nrow(model$data), ")")
 ```
-```{r summary table-df print, echo = FALSE}
+```{r summary table-df print, echo = FALSE, layout = "l-page"}
 datatable(sumsm,
           filter = 'top',
           options = list(pageLength = nrow(sumsm)),
@@ -264,6 +292,7 @@ datatable(sumsm,
 ```
 
 # Results summary
+
 All construct and higher-order construct paths are significant and the effect sizes are sufficiently large.
 This model can be compared with others.
 
@@ -271,7 +300,5 @@ This model can be compared with others.
 write_excel_csv(sumsm %>% 
                   mutate(across(c(3:4, 6, 8:9),  round, 2)) %>% 
                   mutate(across(c(7),  round, 3)), 
-                "smeval-co-3-b-2-cop.csv", delim = ";")
-plot(bootmodel)
-save_plot("finalcovmodel.pdf")
+                "paper/smeval-co-3-b-2-cop.csv", delim = ";")
 ```

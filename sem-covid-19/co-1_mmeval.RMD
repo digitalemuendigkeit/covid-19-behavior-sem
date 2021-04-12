@@ -1,6 +1,6 @@
 ---
 title: "COVID-19 Model Iteration 1 Measurement Model Evaluation"
-output: 
+site: 
   distill::distill_article:
     toc: true
     toc_depth: 2
@@ -14,30 +14,51 @@ library(seminr)
 library(DT)
 library(htmltools)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-1.RDS")
-bootmodel <- readRDS("Models/model-boot-co-1.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-1.RDS"))
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-1.RDS"))
 # Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-1.RDS")
+bootfsmodel <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "model-fs-boot-co-1.RDS"))
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Load redundancy analysis models
-rapse <- readRDS("Models/rapse-co-1.RDS")
-rapre <- readRDS("Models/rapre-co-1.RDS")
-raprc <- readRDS("Models/raprc-co-1.RDS")
-radn <- readRDS("Models/radn-co-1.RDS")
-rain <- readRDS("Models/rain-co-1.RDS")
-rabi <- readRDS("Models/rabi-co-1.RDS")
+rapse <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rapse-co-1.RDS"))
+rapre <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rapre-co-1.RDS"))
+raprc <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "raprc-co-1.RDS"))
+radn <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "radn-co-1.RDS"))
+rain <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rain-co-1.RDS"))
+rabi <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rabi-co-1.RDS"))
 # Set seminr plot theme
 thm <-
   seminr_theme_create(
     construct.compositeA.arrow = "backward",
     construct.compositeA.use_weights = FALSE,
+    construct.compositeA.shape = "oval",
+    construct.compositeB.shape = "oval",
     plot.adj = FALSE
   )
 seminr_theme_set(thm)

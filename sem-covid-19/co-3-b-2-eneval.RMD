@@ -16,17 +16,19 @@ library(lmtest)
 library(nortest)
 library(car)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-3-b-2.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-3-b-2.RDS"))
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
-proxymodel <- readRDS("Models/model-proxy-co-3-b-2.RDS")
+proxymodel <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-proxy-co-3-b-2.RDS"))
 summo <- summary(model)
 sumprmo <- summary(proxymodel)
-# # Bootstrap proxy model (500 samples) for comparability
-# bootprmodel <- bootstrap_model(proxymodel)
-# sumboprmo <- summary(bootprmodel)
 # Function for Gaussian Capula Approach
 createCopula <- function(P){
 	H.p <- stats::ecdf(P)
@@ -603,7 +605,7 @@ The copula will be integrated in the final model to improve the model.
 
 ```{r save copula, echo = FALSE, include = FALSE}
 saveRDS(PRE_star,
-        here::here("SEM COVID-19",
-                   "Models",
+        here::here("sem-covid-19",
+                   "models",
                    "copula-pre-model-co-3-b-2.RDS"))
 ```

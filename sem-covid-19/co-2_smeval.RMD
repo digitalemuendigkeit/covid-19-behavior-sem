@@ -16,18 +16,33 @@ library(htmltools)
 library(distill)
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-2.RDS")
-bootmodel <- readRDS("Models/model-boot-co-2.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-2.RDS"))
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-2.RDS"))
 # Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-2.RDS")
+bootfsmodel <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "model-fs-boot-co-2.RDS"))
 # Load approximation PLS model (no HOCs, data formatted as data.frame)
-proxymodel <- readRDS("Models/model-proxy-co-2.RDS")
+proxymodel <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-proxy-co-2.RDS"))
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Set seminr plot theme
-thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
+thm <-
+  seminr_theme_create(
+    construct.compositeA.arrow = "backward",
+    construct.compositeA.use_weights = FALSE,
+    construct.compositeA.shape = "oval",
+    construct.compositeB.shape = "oval",
+    plot.adj = FALSE
+  )
 seminr_theme_set(thm)
 # My favorite operator
 `%notin%` <- Negate(`%in%`)

@@ -14,29 +14,48 @@ library(seminr)
 library(DT)
 library(htmltools)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-2.RDS")
-bootmodel <- readRDS("Models/model-boot-co-2.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-2.RDS"))
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-2.RDS"))
 # Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-2.RDS")
+bootfsmodel <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "model-fs-boot-co-2.RDS"))
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Load redundancy analysis models
-rapre <- readRDS("Models/rapre-co-2.RDS")
-raprc <- readRDS("Models/raprc-co-2.RDS")
-radn <- readRDS("Models/radn-co-2.RDS")
-rain <- readRDS("Models/rain-co-2.RDS")
-rabi <- readRDS("Models/rabi-co-2.RDS")
+rapre <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rapre-co-2.RDS"))
+raprc <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "raprc-co-2.RDS"))
+radn <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "radn-co-2.RDS"))
+rain <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rain-co-2.RDS"))
+rabi <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rabi-co-2.RDS"))
 # Set seminr plot theme
 thm <-
   seminr_theme_create(
     construct.compositeA.arrow = "backward",
     construct.compositeA.use_weights = FALSE,
+    construct.compositeA.shape = "oval",
+    construct.compositeB.shape = "oval",
     plot.adj = FALSE
   )
 seminr_theme_set(thm)
@@ -192,10 +211,6 @@ plot(all_reduds$model[[3]], title = all_reduds$title[[3]])
 plot(all_reduds$model[[4]], title = all_reduds$title[[4]])
 ```
 
-```{r ra5, echo =FALSE}1
-plot(all_reduds$model[[5]],  title = all_reduds$title[[5]])
-```
-
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
 ## Collinearity
@@ -216,7 +231,7 @@ for (i in 1:length(unique(forevalbase$Construct))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50.
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50.
 Any positive indicator weight implies relevance.
 
 ```{r for-eval sar, echo=FALSE, include=FALSE}

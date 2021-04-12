@@ -14,28 +14,27 @@ library(DT)
 library(htmltools)
 library(lmtest)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-2.RDS")
-bootmodel <- readRDS("Models/model-boot-co-2.RDS")
-# Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-2.RDS")
-# Load approximation PLS model (no HOCs, data formatted as data.frame)
-proxymodel <- readRDS("Models/model-proxy-co-2.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-2.RDS"))
 summo <- summary(model)
-sumfs <- summary(model$first_stage_model)
+# Load bootstrap model
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-2.RDS"))
 sumbomo <- summary(bootmodel)
-sumbofsmo <- summary(bootfsmodel)
+# Load approximation PLS model (no HOCs, data formatted as data.frame)
+proxymodel <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-proxy-co-2.RDS"))
 sumprmo <- summary(proxymodel)
 # Bootstrap proxy model (500 samples) for comparability
 bootprmodel <- bootstrap_model(proxymodel)
 sumboprmo <- summary(bootprmodel)
-# Set seminr plot theme
-thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
-seminr_theme_set(thm)
-# My favorite operator
-`%notin%` <- Negate(`%in%`)
 ```
 
 # Test for possible nonlinearity

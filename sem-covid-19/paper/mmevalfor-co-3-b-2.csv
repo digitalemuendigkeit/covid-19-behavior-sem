@@ -1,4 +1,4 @@
-﻿Construct;Indicator;C.V.R^2;C.V.PC;VIF;Original.Est.Wt.;Bootstrap.Mean.Wt.;t(437) (weight);0.in.Wt.CI;Original.Est.Ld.;Bootstrap.Mean.Ld.;t(437) (loading);0.in.Ld.CI
+﻿Construct;Indicator;C.V.R.2;C.V.PC;VIF;Original.Est.Wt.;Bootstrap.Mean.Wt.;t(437) (weight);0.in.Wt.CI;Original.Est.Ld.;Bootstrap.Mean.Ld.;t(437) (loading);0.in.Ld.CI
 Perceived Response Efficacy;CORB4;0.59;0.76;2.19;0.48;0.48;7.17;FALSE;0.91;0.91;38.58;FALSE
 Perceived Response Efficacy;CORB5;0.59;0.76;1.44;0.23;0.23;4.46;FALSE;0.7;0.7;19.5;FALSE
 Perceived Response Efficacy;CORB6;0.59;0.76;2.24;0.44;0.44;6.86;FALSE;0.91;0.9;37.95;FALSE

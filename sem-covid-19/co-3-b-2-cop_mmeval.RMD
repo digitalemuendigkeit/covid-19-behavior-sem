@@ -1,6 +1,9 @@
 ---
 title: "COVID-19 Model Iteration 3-b-2 with copula Measurement Model Evaluation"
-output: html_document
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 2
 ---
 
 ```{r setup, echo=FALSE, include=FALSE}
@@ -11,25 +14,39 @@ library(seminr)
 library(DT)
 library(htmltools)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-3-b-2-cop.RDS")
-# Load bootstrapped PLS Model
-bootmodel <- readRDS("Models/model-boot-co-3-b-2-cop.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-3-b-2-cop.RDS"))
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-3-b-2-cop.RDS"))
 # Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-3-b-2-cop.RDS")
-# Make summaries?
+bootfsmodel <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "model-fs-boot-co-3-b-2-cop.RDS"))
 summo <- summary(model)
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Load redundancy analysis models
-rapre <- readRDS("Models/rapre-co-3-b-2.RDS")
-raprc <- readRDS("Models/raprc-co-3-b-2.RDS")
-radn <- readRDS("Models/radn-co-3-b-2.RDS")
-rabi <- readRDS("Models/rabi-co-3-b-2.RDS")
+rapre <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rapre-co-3-b-2-cop.RDS"))
+raprc <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "raprc-co-3-b-2-cop.RDS"))
+radn <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "radn-co-3-b-2-cop.RDS"))
+
+rabi <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rabi-co-3-b-2-cop.RDS"))
 # Set seminr plot theme
 thm <-
   seminr_theme_create(
@@ -43,20 +60,27 @@ seminr_theme_set(thm)
 ```
 
 # Model plots
+
 ## Original Estimate Path Model
+
 This is the original estimate path model.
+
 ```{r plot model, echo=FALSE}
 plot(model, title = "Original Estimate Model")
 ```
 
 ## Bootstrapped Path Model
+
 This is the bootstrapped path model.
+
 ```{r plot bootmodel, echo=FALSE}
 plot(bootmodel, title = "Bootstrapped Model")
 ```
 
 ## Measurement Model Only
+
 This is a path model showing only the measurement model components.
+
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, measurement_only = TRUE)
 ```
@@ -66,6 +90,7 @@ evalmm <- get_mm_details(model)
 ```
 
 # Evaluation of the reflective measurement model
+
 ```{r ref-eval prep, echo = FALSE, include=FALSE}
 # get measurement evaluation
 refevalmmbase <- measurement_evaluation_composite_A(model)
@@ -80,15 +105,18 @@ refevalmm <- refevalmmbase %>%
 ```
 
 ## Convergent validity
+
 Ideally, outer loadings (<font face="Symbol">l</font>) should be $\geq$ 0.70. Loadings below 0.40 are unacceptable. AVE should be > 0.50. 
 
 ## Internal consistency reliability
+
 Both Cronbach's <font face="Symbol">a</font> and composite reliability <font face="Symbol">r</font><sub>c</sub> should be $\geq$ 0.60 and $\leq$ 0.90. The upper threshold of acceptability is 0.95.
 
 ## Discriminant validity
+
 Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
 
-```{r ref-eval, echo=FALSE}
+```{r ref-eval, echo=FALSE, layout="l-page"}
 print_composite_A_evaluation_DT(refevalmm)
 ```
 
@@ -111,14 +139,22 @@ datatable(boothtmt,
 
 ## Results of the evaluation of the reflective measurement model
 
+All indicators and constructs show sufficient convergent validity and discriminant validity.
+All constructs show internal consistency reliability.
+Composite reliability for Personal Moral Norm is still above 0.95, but Cronbach's alpha and construct reliability is sufficient.
+The HTMT bootstrap CIs include 1 for all the Distrusting Beliefs lower-order constructs.
+As they are associated with the same higher-order construct, this is permissible.
+
 # Evaluation of the formative measurement model
+
 ```{r for-eval prep, echo = FALSE, include=FALSE}
 forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Indicator.or.LOC) %>% 
   mutate(Type = NULL, Mode = NULL)
 ```
-## Convergent validity
-To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
+## Convergent validity
+
+To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
 ```{r for-eval rapre, echo=FALSE}
 # Unfortunately, this has to be done partially manually
@@ -168,6 +204,7 @@ forevalbase <- evalmm %>%
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
 ## Collinearity
+
 The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
 
 ```{r for-eval col, echo = FALSE, include = FALSE}
@@ -185,7 +222,8 @@ for (i in 1:length(unique(forevalbase$Construct))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -247,7 +285,7 @@ colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r for-eval, echo=FALSE}
+```{r for-eval, echo=FALSE, layout="l-page"}
 datatable(forevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forevalmm)),
@@ -276,8 +314,12 @@ datatable(forevalmm,
 
 ## Results of the evaluation of the formative measurement model
 
+Convergent validity is established for all constructs.
+There are no issues with collinearity as indicated by the VIF. 
+All weights are significant and relevant.
 
 # Evaluation of the formative higher-order constructs
+
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
 forhocevalbase <- evalmm %>%
   filter(Mode == "HOCB") %>% 
@@ -287,10 +329,13 @@ forhocevalbase <- evalmm %>%
 ```
 
 ## Convergent validity
+
 Convergent validity cannot be evaluated.
 
 ## Collinearity
+
 The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
+
 ```{r hoc-for-eval col, echo = FALSE, include = FALSE}
 hocvif <- data.frame(HOC = character(),
                     LOC = character(),
@@ -306,7 +351,8 @@ for (i in 1:length(unique(forhocevalbase$HOC))){
 ```
 
 ## Significance and relevance
-Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r hoc-for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -367,7 +413,7 @@ colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r hoc-for-eval, echo=FALSE}
+```{r hoc-for-eval, echo=FALSE,  layout="l-page"}
 datatable(forhocevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forhocevalmm)),
@@ -392,12 +438,18 @@ datatable(forhocevalmm,
 
 ## Results of the formative higher-order constructs evaluation
 
+For the formative higher-order constructs, there are no issues with collinearity (VIF above 3, but below 5) and all weights are significant and relevant.
+The weight for Integrity is not significant, but the loading is sufficiently large and significant.
+The formative higher-order constructs can be retained as hypothesized.
+
 # Results summary
 
+The measurement model meets all quality criteria.
+
 ```{r table-getter, echo = FALSE, include = FALSE}
-write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "mmevalref-co-3-b-2-cop.csv",delim = ";")
-write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "htmt-co-3-b-2-cop.csv",delim = ";")
-write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "mmevalfor-co-3-b-2-cop.csv",delim = ";")
-write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "mmevalhoc-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "paper/mmevalref-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "paper/htmt-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "paper/mmevalfor-co-3-b-2-cop.csv",delim = ";")
+write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "paper/mmevalhoc-co-3-b-2-cop.csv",delim = ";")
 ```
 

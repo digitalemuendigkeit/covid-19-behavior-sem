@@ -6,7 +6,7 @@ output:
     toc_depth: 2
 ---
 
-```{r setup, echo =FALSE, include=FALSE}
+```{r setup, echo=FALSE, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 # Include libraries
 library(tidyverse)
@@ -14,27 +14,48 @@ library(seminr)
 library(DT)
 library(htmltools)
 library(distill)
-source(here::here("helpers.R"))
+source(here::here("R", 
+                  "helpers.R"))
 
 # Load models and create summaries
 # Load PLS Model
-model <- readRDS("Models/model-co-3-b-2.RDS")
-# Load bootstrapped PLS Model
-bootmodel <- readRDS("Models/model-boot-co-3-b-2.RDS")
+model <- readRDS(here::here("sem-covid-19",
+                            "models",
+                            "model-co-3-b-2.RDS"))
+bootmodel <- readRDS(here::here("sem-covid-19",
+                                "models",
+                                "model-boot-co-3-b-2.RDS"))
 # Load bootstrapped first stage PLS model
-bootfsmodel <- readRDS("Models/model-fs-boot-co-3-b-2.RDS")
+bootfsmodel <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "model-fs-boot-co-3-b-2.RDS"))
 summo <- summary(model)
-summo$fSquare
 sumfs <- summary(model$first_stage_model)
 sumbomo <- summary(bootmodel)
 sumbofsmo <- summary(bootfsmodel)
 # Load redundancy analysis models
-rapre <- readRDS("Models/rapre-co-3-b-2.RDS")
-raprc <- readRDS("Models/raprc-co-3-b-2.RDS")
-radn <- readRDS("Models/radn-co-3-b-2.RDS")
-rabi <- readRDS("Models/rabi-co-3-b-2.RDS")
+rapre <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rapre-co-3-b-2.RDS"))
+raprc <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "raprc-co-3-b-2.RDS"))
+radn <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "radn-co-3-b-2.RDS"))
+
+rabi <- readRDS(here::here("sem-covid-19",
+                                  "models",
+                                  "rabi-co-3-b-2.RDS"))
 # Set seminr plot theme
-thm <- seminr_theme_create(construct.compositeA.arrow = "backward", construct.compositeA.use_weights = FALSE, plot.adj = FALSE)
+thm <-
+  seminr_theme_create(
+    construct.compositeA.arrow = "backward",
+    construct.compositeA.use_weights = FALSE,
+    plot.adj = FALSE,
+    construct.compositeA.shape = "ellipse",
+    construct.compositeB.shape = "ellipse"
+  )
 seminr_theme_set(thm)
 ```
 
@@ -63,7 +84,6 @@ This is a path model showing only the measurement model components.
 ```{r plot mm model, echo=FALSE}
 plot(bootmodel, measurement_only = TRUE)
 ```
-
 ```{r eval-df, echo = FALSE, include=FALSE}
 # Base DF
 evalmm <- get_mm_details(model)
@@ -96,90 +116,89 @@ Both Cronbach's <font face="Symbol">a</font> and composite reliability <font fac
 
 Discriminant validity is evaluated using the heterotrait-monotrait ratio (HTMT). The HTMT bootstrap confidence interval should not contain 1.
 
-```{r ref-eval, echo=FALSE}
+```{r ref-eval, echo=FALSE, layout="l-page"}
 print_composite_A_evaluation_DT(refevalmm)
 ```
 
-```{r ref-eval-HTMT,echo=FALSE, layout = "l-page"}
+```{r ref-eval-HTMT,echo=FALSE}
 #If there are problems with the HTMT, here is a detailed table
-datatable(
-  boothtmt,
-  filter = 'top',
-  options = list(pageLength = nrow(boothtmt)),
-  rownames = FALSE,
-  colnames = c(
-    "Construct 1" = 1,
-    "Construct 2" = 2,
-    "Lower CI HTMT" = 3,
-    "Upper CI HTMT" = 4
-  ),
-  caption = 'Details of the bootstrapped HTMT ratios'
-) %>%
+datatable(boothtmt,
+          filter = 'top',
+          options = list(pageLength = nrow(boothtmt)),
+          rownames = FALSE,
+          colnames = c("Construct 1" = 1,
+                        "Construct 2" = 2, 
+                       "Lower CI HTMT" = 3, 
+                       "Upper CI HTMT" = 4),
+          caption = 'Details of the bootstrapped HTMT ratios') %>%
   formatRound(3:4,
               digits = 3) %>%
-  formatStyle('Lower CI HTMT', backgroundColor = styleInterval(
-    cuts = c(0.9, 1),
-    values = c('#00', '#ffe5e5', '#ff9999')
-  )) %>%
-  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(
-    cuts = c(0.9, 1),
-    values = c('#00', '#ffe5e5', '#ff9999')
-  ))
+    formatStyle('Lower CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999'))) %>%
+  formatStyle('Upper CI HTMT', backgroundColor = styleInterval(cuts = c(0.9,1), values = c('#00', '#ffe5e5', '#ff9999')))
 ```
 
 ## Results of the evaluation of the reflective measurement model
 
+All indicators and constructs show sufficient convergent validity and discriminant validity.
+All constructs show internal consistency reliability.
+Composite reliability for Personal Moral Norm is still above 0.95, but Cronbach's alpha and construct reliability is sufficient.
+The HTMT bootstrap CIs include 1 for all the Distrusting Beliefs lower-order constructs.
+As they are associated with the same higher-order construct, this is permissible.
+
 # Evaluation of the formative measurement model
+
 ```{r for-eval prep, echo = FALSE, include=FALSE}
-forevalbase <- evalmm %>% 
-  filter(Mode == "B") %>% 
-  rename(Indicator = Indicator.or.LOC) %>% 
+forevalbase <- evalmm %>% filter(Mode == "formative") %>% rename(Indicator = Indicator.or.LOC) %>% 
   mutate(Type = NULL, Mode = NULL)
 ```
 
 ## Convergent validity
 
-```{r for-eval redundancy analysis,, echo = FALSE, include=FALSE}
-all_reduds <- list(model = list(rapre, raprc, radn, rabi), 
-                   title = list("Perceived Response Efficacy",
-                                "Perceived Response Costs",
-                                "Descriptive Norm",
-                                "Behavioral Intention"
-                                ))
-# Unfortunately, this does not knit 
-# forevalci <- purrr::map2_df(all_reduds$model, all_reduds$title, redundancy_analysis)
-# distill does not seem to plot multiple html widgets in one block
-# for (i in 1:length(all_reduds$title)) {
-#    print(plot(all_reduds$model[[i]], title = all_reduds$title[[i]]))
-#   }
-# Alternate approach
-forevalci <- data.frame(
-    'Construct' = character(),
-    'C.V.R^2' = double(),
-    'C.V.PC' = double())
-for (i in 1:length(all_reduds$title)) {
-  forevalci <- forevalci %>% rbind(
-    redundancy_analysis_df(all_reduds$model[[i]], all_reduds$title[[i]]),
-    deparse.level = 0)
-}
-```
-
 To evaluate convergent validity, a redundancy analysis is conducted. The path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
 
-```{r ra1, echo =FALSE}
-plot(all_reduds$model[[1]], title = all_reduds$title[[1]])
+```{r for-eval rapre, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(rapre, title = "Redundancy Analysis Perceived Response Efficacy")
+sumrapre <- summary(rapre)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvpre <- data.frame(Construct = "Perceived Response Efficacy", 'C.V.R^2' = sumrapre$paths[1], 'C.V.PC' = sumrapre$paths[3])
 ```
 
-```{r ra2, echo =FALSE}
-plot(all_reduds$model[[2]], title = all_reduds$title[[2]])
+```{r for-eval raprc, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(raprc, title = "Redundancy Analysis Perceived Response Costs")
+sumraprc <- summary(raprc)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvprc <- data.frame(Construct = "Perceived Response Costs", 'C.V.R^2' = sumraprc$paths[1], 'C.V.PC' = sumraprc$paths[3])
 ```
 
-```{r ra3, echo =FALSE}
-plot(all_reduds$model[[3]], title = all_reduds$title[[3]])
+```{r for-eval radn, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(radn, title = "Redundancy Analysis Descriptive Norm")
+sumradn <- summary(radn)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvdn <- data.frame(Construct = "Descriptive Norm", 'C.V.R^2' = sumradn$paths[1], 'C.V.PC' = sumradn$paths[3])
 ```
 
-```{r ra4, echo=FALSE}
-plot(all_reduds$model[[4]], title = all_reduds$title[[4]])
+
+```{r for-eval rabi, echo=FALSE}
+# Unfortunately, this has to be done partially manually
+# Copy this snippet for as many formative constructs as you want to evaluate and alter it to your needs
+plot(rabi, title = "Redundancy Analysis Behavioral Intention")
+sumrabi <- summary(rabi)
+# For the final dataframe, you should set a custom name and put the the name of the construct
+cvbi <- data.frame(Construct = "Behavioral Intention", 'C.V.R^2' = sumrabi$paths[1], 'C.V.PC' = sumrabi$paths[3])
+```
+```{r for-eval cv,echo=FALSE, include=FALSE}
+# put together all dataframes, this has also to be done manually
+forevalci <- bind_rows(cvpre, cvprc, cvdn, cvbi)
+forevalbase <- evalmm %>%
+  filter(Mode == "B") %>%
+  rename(Indicator = Indicator.or.LOC) %>%
+  select(!c(Type, Mode))
 ```
 
 Reiterating: For sufficient convergent validity, the path coefficient should be $\geq$ 0.70 and R² should be $\geq$ 0.50.
@@ -204,7 +223,7 @@ for (i in 1:length(unique(forevalbase$Construct))){
 
 ## Significance and relevance
 
-Indicator weights should be significant (t $geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -266,7 +285,7 @@ colnames(forevalmm)[8] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forevalmm)[12] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r for-eval, echo=FALSE, layout = "l-page"}
+```{r for-eval, echo=FALSE, layout="l-page"}
 datatable(forevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forevalmm)),
@@ -295,11 +314,18 @@ datatable(forevalmm,
 
 ## Results of the evaluation of the formative measurement model
 
+Convergent validity is established for all constructs.
+There are no issues with collinearity as indicated by the VIF. 
+All weights are significant and relevant.
+
 # Evaluation of the formative higher-order constructs
 
 ```{r hoc-eval base, echo=FALSE, include=FALSE}
-forhocevalbase <- evalmm %>% filter(Mode == "HOCB") %>% rename(HOC = Construct, LOC = Indicator.or.LOC) %>% 
-  mutate(Type = NULL, Mode = NULL)
+forhocevalbase <- evalmm %>%
+  filter(Mode == "HOCB") %>% 
+  rename(HOC = Construct, 
+         LOC = Indicator.or.LOC) %>% 
+  select(!c(Type, Mode))
 ```
 
 ## Convergent validity
@@ -309,7 +335,6 @@ Convergent validity cannot be evaluated.
 ## Collinearity
 
 The variance inflation factor (VIF) should be < 5, ideally $\leq$ 3.
-
 ```{r hoc-for-eval col, echo = FALSE, include = FALSE}
 hocvif <- data.frame(HOC = character(),
                     LOC = character(),
@@ -326,7 +351,7 @@ for (i in 1:length(unique(forhocevalbase$HOC))){
 
 ## Significance and relevance
 
-Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50 and significant. Any positive indicator weight implies relevance.
+Indicator weights should be significant (t $\geq$ 1.65, bootstrapping CI does not include 0). Otherwise, the loading  <font face="Symbol">l</font> should be $\geq$ 0.50. Any positive indicator weight implies relevance.
 
 ```{r hoc-for-eval sar, echo=FALSE, include=FALSE}
 # Make weights df
@@ -387,7 +412,7 @@ colnames(forhocevalmm)[6] <- paste0("t(", nrow(model$data), ") (weight)")
 colnames(forhocevalmm)[10] <- paste0("t(", nrow(model$data), ") (loading)")
 ```
 
-```{r hoc-for-eval, echo=FALSE, layout = "l-page"}
+```{r hoc-for-eval, echo=FALSE,  layout="l-page"}
 datatable(forhocevalmm,
           filter = 'top',
           options = list(pageLength = nrow(forhocevalmm)),
@@ -412,16 +437,17 @@ datatable(forhocevalmm,
 
 ## Results of the formative higher-order constructs evaluation
 
+For the formative higher-order constructs, there are no issues with collinearity (VIF above 3, but below 5) and all weights are significant and relevant.
+The weight for Integrity is not significant, but the loading is sufficiently large and significant.
+The formative higher-order constructs can be retained as hypothesized.
+
 # Results summary
 
-```{r table-getter, echo = FALSE, include = FALSE}
-# reflective mm
-write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "mmevalref-co-3-b-2.csv",delim = ";")
-#htmt details
-write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "htmt-co-3-b-2.csv",delim = ";")
-# formative mm
-write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "mmevalfor-co-3-b-2.csv",delim = ";")
-# formative hoc mm
-write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "mmevalhoc-co-3-b-2.csv",delim = ";")
-```
+The measurement model meets all quality criteria.
 
+```{r table-getter, echo = FALSE, include = FALSE}
+write_excel_csv(refevalmm %>% mutate(across(3:7,  round, 2)), "paper/mmevalref-co-3-b-2.csv",delim = ";")
+write_excel_csv(boothtmt %>% mutate(across(3:4,  round, 2)), "paper/htmt-co-3-b-2.csv",delim = ";")
+write_excel_csv(forevalmm %>% mutate(across(c(3:8, 10:12),  round, 2)), "paper/mmevalfor-co-3-b-2.csv",delim = ";")
+write_excel_csv(forhocevalmm %>% mutate(across(c(3:6, 8:10),  round, 2)), "paper/mmevalhoc-co-3-b-2.csv",delim = ";")
+```
