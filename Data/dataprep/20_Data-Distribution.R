@@ -4,7 +4,7 @@ library(psych)
 # Examine data for skewness and kurtosis
 # Survey 1
 data1 <- read_rds(here::here("data",
-                             "open",
+                             "anonymized",
                              "S1-data-qualcl.RDS"))
 
 # Psychological questions
@@ -60,16 +60,16 @@ data1normal <-
   data1 %>% select(!data1skvcritco$Item)
 write_csv2(data1normal,
            here::here("data",
-                      "open",
+                      "anonymized",
                       "S1-data-nd.csv"))
 write_rds(data1normal,
           here::here("data",
-                     "open",
+                     "anonymized",
                      "S1-data-nd.RDS"))
 
 # Survey 2
 datafull <- read_rds(here::here("data",
-                                "open",
+                                "anonymized",
                                 "data-qualcl.RDS"))
 # Additional questions
 data2 <-
@@ -91,9 +91,9 @@ data2skvcrit <-
 datafullnormal <- datafull %>% select(!data2skvcrit$Item)
 write_csv2(datafullnormal,
            here::here("data",
-                      "open",
+                      "anonymized",
                       "data-nd.csv"))
 write_rds(datafullnormal,
           here::here("data",
-                     "open",
+                     "anonymized",
                      "data-nd.RDS"))

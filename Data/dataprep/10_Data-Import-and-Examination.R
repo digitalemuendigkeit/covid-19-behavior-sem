@@ -14,18 +14,18 @@ file_temp_s1_completes_csv <- here::here("data", "temp", "S1GIDws.csv")
 file_temp_s2_completes_csv <- here::here("data", "temp", "S2GIDws.csv")
 
 # intermediate step survey 1
-file_survey1_cleaned_anonymized_csv <- here::here("data", "open","S1-data-qualcl.csv")
-file_survey1_cleaned_anonymized_rds <- here::here("data", "open","S1-data-qualcl.RDS")
+file_survey1_cleaned_anonymized_csv <- here::here("data", "anonymized","S1-data-qualcl.csv")
+file_survey1_cleaned_anonymized_rds <- here::here("data", "anonymized","S1-data-qualcl.RDS")
 
 # complete survey
-file_survey_cleaned_anonymized_csv <- here::here("data", "open","data-qualcl.csv")
-file_survey_cleaned_anonymized_rds <- here::here("data", "open","data-qualcl.RDS")
+file_survey_cleaned_anonymized_csv <- here::here("data", "anonymized","data-qualcl.csv")
+file_survey_cleaned_anonymized_rds <- here::here("data", "anonymized","data-qualcl.RDS")
 
 # incidence annotation
 file_incidence_20210112 <- here::here("external-data", "20210112-Fallzahlen.csv")
 file_incidence_20210201 <- here::here("external-data", "20210201-Fallzahlen.csv")
 file_survey1_choices <- here::here("data", "raw", "S1-data-choicetext.csv")
-file_survey_cleaned_incidence_anonymized_rds <- here::here("data", "open", "data-qualcl-inc.RDS")
+file_survey_cleaned_incidence_anonymized_rds <- here::here("data", "anonymized", "data-qualcl-inc.RDS")
 
 # Import data ----
 # First 2 rows are descriptors

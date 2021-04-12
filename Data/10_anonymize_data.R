@@ -4,7 +4,7 @@ library(tidyverse)
 
 
 raw_path <- here::here("data", "raw")
-open_path <- raw_path <- here::here("data", "open")
+anonymized_path <- here::here("data", "anonymized")
 
 # Anonymization and data prep ----
 # Import, cleaning, anonymization
@@ -18,27 +18,28 @@ source(here::here("data","dataprep", "30_Data-Missing.R"))
 
 
 # Upload final data to OSF ----
-osf_id_open <- "9xzdr"
+osf_id_anonymized <- "9xzdr" # Access to this component can be requested
 osf_id_protected <- "rvkx4" # This component will remain private
 
 # get osf nodes
-osf_open_node <- osf_retrieve_node(osf_id_open)
+osf_anonymized_node <- osf_retrieve_node(osf_id_anonymized)
 osf_protected_node <- osf_retrieve_node(osf_id_protected)
 
 
 # start upload to osf
 # change to RDS and CSV once ready
-files_to_upload <- dir(open_path, pattern = "*.csv", recursive = T)
+files_to_upload <- dir(anonymized_path, pattern = "*.csv", recursive = T)
 
-osf_open_node %>%
-  osf_upload(path = paste0("data/open/", files_to_upload),
+osf_anonymized_node %>%
+  osf_upload(path = paste0("data/anonymized/", files_to_upload),
              conflicts = "overwrite",
              recurse = T, progress = T)
 
 
-files_to_upload <- dir(open_path, pattern = "*.RDS", recursive = T)
+files_to_upload <- dir(anonymized_path, pattern = "*.RDS", recursive = T)
 
-osf_open_node %>%
-  osf_upload(path = paste0("data/open/", files_to_upload),
+osf_anonymized_node %>%
+  osf_upload(path = paste0("data/anonymized/", files_to_upload),
              conflicts = "overwrite",
              recurse = T, progress = T)
+

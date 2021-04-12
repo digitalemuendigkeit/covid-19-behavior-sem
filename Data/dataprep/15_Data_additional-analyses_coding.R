@@ -8,7 +8,7 @@ library(Hmisc)
 
 #Import Data
 # Data used is nonnormal, missing values are not treated
-datafull <- read_rds("data/open/data-qualcl-inc.RDS")
+datafull <- read_rds("data/anonymized/data-qualcl-inc.RDS")
 # Replace 7 for CCDN3, CCIN3, CODN3 and COIN3 with NA
 datafull$CCDN3[datafull$CCDN3 == 7] <- NA
 datafull$CCIN3[datafull$CCIN3 == 7] <- NA
@@ -252,7 +252,7 @@ decstatcovid <- descstatshort %>%
 #   filter(!grepl('Climate', Variable)) %>%
 #   mutate(Variable = gsub('COVID-19 ', '', Variable))
 
-write_excel_csv(decstatcovid, "data/open/descriptive-statistics.csv", delim = ";")
+write_excel_csv(decstatcovid, "data/anonymized/descriptive-statistics.csv", delim = ";")
 
 # Make only covid descriptive stats
 covidpls <- readRDS("sem-covid-19/Models/model-co-3-a-1.RDS")
@@ -284,7 +284,7 @@ descstatcovidlong <- data.frame(Variable = rownames(psych::describe(datacodedkn)
   select(c(Variable, Items, n, Cs.Alpha, mean, sd, median, min, max, skew, kurtosis))
 descstatcovidlong[grepl("Knowledge Sum", descstatcovidlong$Variable),] <- descstatcovidlong[grepl("Knowledge Sum", descstatcovidlong$Variable),] %>%
   mutate(Items = c("COKN1, COKN2, COKN2_1, COKN3, COKN4, COKN5, COKN6"))
-saveRDS(descstatcovidlong, "data/open/desc-stat-covid.RDS")
+saveRDS(descstatcovidlong, "data/anonymized/desc-stat-covid.RDS")
 
 
 # Append demographic and other vars
@@ -461,4 +461,4 @@ datarest <- datafull %>% dplyr::transmute(Gender = car::recode(SD2,
                                                                                          'do not know'))
                                       )
 datacodedfull <- datacodedkn %>% cbind(datarest)
-saveRDS(datacodedfull, "data/open/datacodedfull.RDS")
+saveRDS(datacodedfull, "data/anonymized/datacodedfull.RDS")

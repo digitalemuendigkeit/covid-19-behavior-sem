@@ -1,7 +1,7 @@
 library(tidyverse)
 
 data1 <- read_rds(here::here("data",
-                             "open",
+                             "anonymized",
                              "S1-data-nd.RDS"))
 
 # Data should be only missing (=7) for the colleagues questions, i.e., CCIN3, CCNDN3, COIN3, CODN3
@@ -44,9 +44,9 @@ dataimp[dataimp$ResponseId == missingr$ResponseId[2],"CCDN4"] <- imput2
 datanomissing <- dataimp %>% select(-c("CCIN3", "CCDN3", "COIN3", "CODN3"))
 write_csv2(datanomissing,
            here::here("data",
-                      "open",
+                      "anonymized",
                       "S1-Data-nm.csv"))
 write_rds(datanomissing,
           here::here("data",
-                     "open",
+                     "anonymized",
                      "S1-Data-nm.RDS"))
