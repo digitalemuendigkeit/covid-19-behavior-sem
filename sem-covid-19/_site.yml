@@ -7,12 +7,40 @@ navbar:
   right:
     - text: "Home"
       href: index.html
-    - text: "The models"
+    - text: "Model evaluation"
       icon: fa-graduation-cap
       menu:
         - text: "Model 1"
         - text: "Model 1 Measurement evaluation"
           href: co-1_mmeval.html
+        - text: "---------"
+        - text: "Model 2"
+        - text: "Model 2 Measurement evaluation"
+          href: co-2_mmeval.html
+        - text: "Model 2 Nonlinearity evaluation"
+          href: co-2_nleval.html
+        - text: "Model 2 Structural evaluation"
+          href: co-2_smeval.html
+        - text: "Model 2 Endogeneity evaluation"
+          href: co-2_eneval.html
+        - text: "---------"
+        - text: "Model 3-a-1"
+        - text: "Model 3-a-1 Structural evaluation"
+          href: co-3-a-1_smeval.html
+        - text: "Model 3-a-1 Endogeneity evaluation"
+          href: co-3-a-1_eneval.html
+        - text: "---------"
+        - text: "Model 3-b-1"
+        - text: "Model 3-b-1 Structural evaluation"
+          href: co-3-b-1_smeval.html
+        - text: "---------"
+        - text: "Model 3-b-2"
+        - text: "Model 3-b-2 Structural evaluation"
+          href: co-3-b-2_smeval.html
+        - text: "Model 3-b-2 Endogeneity evaluation"
+          href: co-3-b-2_eneval.html
+        - text: "Model 3-b-2 with copula Structural evaluation"
+          href: co-3-b-2-cop_smeval.html
         - text: "---------"
     - text: "About"
       href: about.html

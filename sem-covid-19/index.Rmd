@@ -1,7 +1,8 @@
 ---
-title: "Covid 19 Model"
+title: "Paper Accompagnying Website"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  This website contains supplementary material for the paper xyz.
+  Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.
 site: distill::distill_website
 ---
 
