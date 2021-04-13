@@ -57,78 +57,78 @@ anperalpha2[anperalpha2 < 0.7] <- NA
 # Make scales for CC data
 
 #Climate Change
-mmcc <- (readRDS("SEM Climate Crisis/Models/model-cc-1.RDS"))$measurement_model
-ancc <- data.frame(Variable = (unlist(mmcc))[c(T, F, F)],
-                   Item = (unlist(mmcc))[c(F, T, F)]) %>%
-  filter(!(Item %in% Variable)) %>%
-  filter(!(Item == "CCKN")) %>%
-  rbind(data.frame(Variable = c(rep("Descriptive Norm", 2),
-                                 rep("Injunctive Norm", 2),
-                                 paste0(c("Perceived Self-Efficacy",
-                                          "Perceived Response Efficacy",
-                                          "Perceived Response Costs",
-                                          "Behavioral Intention"),
-                                        c(rep(" Diet", 4),
-                                          rep(" Heating",4),
-                                          rep(" Driving",4),
-                                          rep(" General",4),
-                                          rep("",4))),
-                                 "Subjective Knowledge",
-                                paste0("Behavior", c(rep("",4),
-                                                     " Diet",
-                                                     " Heating",
-                                                     " Driving",
-                                                     " General"))
-  ),
-  Item = c(paste0("CC",
-                       c(paste0("DN", 3:4),
-                         paste0("IN", 3:4),
-                         paste0("RB", 1:3),
-                         "BI1",
-                         paste0("RB", 4:6),
-                         "BI2",
-                         paste0("RB", 7:9),
-                         "BI3",
-                         rep(c(paste0("RB",10:12),
-                               "BI4"),2),
-                         "SKN",
-                         rep(paste0("B", 1:4),2))))
-  ))
-ancc[ancc == "Benevolence"] <- "Distrusting Beliefs Benevolence"
-ancc[ancc == "Competence"] <- "Distrusting Beliefs Competence"
-ancc[ancc == "Integrity"] <- "Distrusting Beliefs Integrity"
-anccun <- data.frame(Variable = unique(ancc$Variable))
-anccunalpha <- c()
-# Analyze Cronbach's Alpha
-for (i in 1:nrow(anccun)){
-  x = anccun[i,1]
-  anccunalpha <- append(anccunalpha,
-                      ifelse(test = ncol(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])]) > 1,
-                         ((unlist(psych::alpha(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])], check.keys = FALSE)[1]))[2]), NA))
-   # print(ifelse(test = ncol(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])]) > 1,
-   #              psych::alpha(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])], check.keys = FALSE), NA))
-}
-anccun <- anccun %>% cbind(Cs.Alpha = anccunalpha)
-anccalpha <- ancc %>% left_join(anccun)
-# Cronbach's alpha is sufficient for
-# CC Perceived Self-Efficacy
-# CC Perceived Response Efficacy
-# CC Distrusting Beliefs Benevolence, Competence, Integrity
-# CC Perceived Susceptibility
-# CC Perceived Severity
-# CC Personal Moral Norm
-# CC Descriptive Norm
-# CC Injunctive Norm
-# CC Behavioral Intention
-# CC Behavior
-# Cronbach's alpha is insufficient for
-# CC Perceived Response Costs
-psych::alpha(datafull %>% select(c(paste0("CCRB", c(7:9,12)))))
-# Without CCRB9:
-psych::alpha(datafull %>% select(c(paste0("CCRB", c(7:8,12)))))
-# Use CCRB12
-codecc <- ancc %>% filter(!(Item %in% paste0("CCRB", 7:9))) %>%
-  mutate(Variable = paste0("Climate Crisis ", Variable))
+# mmcc <- (readRDS("SEM Climate Crisis/Models/model-cc-1.RDS"))$measurement_model
+# ancc <- data.frame(Variable = (unlist(mmcc))[c(T, F, F)],
+#                    Item = (unlist(mmcc))[c(F, T, F)]) %>%
+#   filter(!(Item %in% Variable)) %>%
+#   filter(!(Item == "CCKN")) %>%
+#   rbind(data.frame(Variable = c(rep("Descriptive Norm", 2),
+#                                  rep("Injunctive Norm", 2),
+#                                  paste0(c("Perceived Self-Efficacy",
+#                                           "Perceived Response Efficacy",
+#                                           "Perceived Response Costs",
+#                                           "Behavioral Intention"),
+#                                         c(rep(" Diet", 4),
+#                                           rep(" Heating",4),
+#                                           rep(" Driving",4),
+#                                           rep(" General",4),
+#                                           rep("",4))),
+#                                  "Subjective Knowledge",
+#                                 paste0("Behavior", c(rep("",4),
+#                                                      " Diet",
+#                                                      " Heating",
+#                                                      " Driving",
+#                                                      " General"))
+#   ),
+#   Item = c(paste0("CC",
+#                        c(paste0("DN", 3:4),
+#                          paste0("IN", 3:4),
+#                          paste0("RB", 1:3),
+#                          "BI1",
+#                          paste0("RB", 4:6),
+#                          "BI2",
+#                          paste0("RB", 7:9),
+#                          "BI3",
+#                          rep(c(paste0("RB",10:12),
+#                                "BI4"),2),
+#                          "SKN",
+#                          rep(paste0("B", 1:4),2))))
+#   ))
+# ancc[ancc == "Benevolence"] <- "Distrusting Beliefs Benevolence"
+# ancc[ancc == "Competence"] <- "Distrusting Beliefs Competence"
+# ancc[ancc == "Integrity"] <- "Distrusting Beliefs Integrity"
+# anccun <- data.frame(Variable = unique(ancc$Variable))
+# anccunalpha <- c()
+# # Analyze Cronbach's Alpha
+# for (i in 1:nrow(anccun)){
+#   x = anccun[i,1]
+#   anccunalpha <- append(anccunalpha,
+#                       ifelse(test = ncol(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])]) > 1,
+#                          ((unlist(psych::alpha(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])], check.keys = FALSE)[1]))[2]), NA))
+#    # print(ifelse(test = ncol(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])]) > 1,
+#    #              psych::alpha(datafull[unlist((filter(ancc, Variable == {{x}}))["Item"])], check.keys = FALSE), NA))
+# }
+# anccun <- anccun %>% cbind(Cs.Alpha = anccunalpha)
+# anccalpha <- ancc %>% left_join(anccun)
+# # Cronbach's alpha is sufficient for
+# # CC Perceived Self-Efficacy
+# # CC Perceived Response Efficacy
+# # CC Distrusting Beliefs Benevolence, Competence, Integrity
+# # CC Perceived Susceptibility
+# # CC Perceived Severity
+# # CC Personal Moral Norm
+# # CC Descriptive Norm
+# # CC Injunctive Norm
+# # CC Behavioral Intention
+# # CC Behavior
+# # Cronbach's alpha is insufficient for
+# # CC Perceived Response Costs
+# psych::alpha(datafull %>% select(c(paste0("CCRB", c(7:9,12)))))
+# # Without CCRB9:
+# psych::alpha(datafull %>% select(c(paste0("CCRB", c(7:8,12)))))
+# # Use CCRB12
+# codecc <- ancc %>% filter(!(Item %in% paste0("CCRB", 7:9))) %>%
+#   mutate(Variable = paste0("Climate Crisis ", Variable))
 
 # Make scales for CO data
 
@@ -191,7 +191,9 @@ ancoalpha <- anco %>% left_join(ancoun)
 # Cronbach's alpha is sufficient for all constructs
 codeco <- anco %>% mutate(Variable = paste0("COVID-19 ", Variable))
 
-codefull <- codeco %>% union(codecc) %>% union(codeper)
+codefull <- codeco %>%
+  # union(codecc) %>%
+  union(codeper)
 codefullun <- unique(codefull$Variable)
 
 datacoded <- data.frame(Dummy = character(length = nrow(datafull)))
@@ -206,7 +208,7 @@ colnames(datacoded) <- codefullun
 # Make descriptive statistics
 descstat <- data.frame(Variable = rownames(psych::describe(datacoded)), psych::describe(datacoded)) %>%
   left_join(rbind(anperalpha,
-                  (anccalpha%>% mutate(Variable = paste0("Climate Crisis ", Variable))),
+#                  (anccalpha %>% mutate(Variable = paste0("Climate Crisis ", Variable))),
                    (ancoalpha %>% mutate(Variable = paste0("COVID-19 ", Variable)))) %>%
               group_by(Variable) %>%
               mutate(Items = paste0(Item, collapse = ", "),

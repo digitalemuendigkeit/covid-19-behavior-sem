@@ -18,8 +18,8 @@ library(distill)
 source(here::here("R", "helpers.R"))
 knitr::opts_chunk$set(echo = TRUE)
 # Get data
-descstat <- read_rds(here::here("data", "open", "desc-stat-covid.RDS"))
-data <- readRDS(here::here("data", "open", "datacodedfull.RDS")) %>%
+descstat <- read_rds(here::here("data", "anonymized", "desc-stat-covid.RDS"))
+data <- readRDS(here::here("data", "anonymized", "datacodedfull.RDS")) %>%
   select(!c(starts_with("Climate"),
             "Diet",
             "Car Ownership",
