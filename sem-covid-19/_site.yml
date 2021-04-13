@@ -4,7 +4,7 @@ description: |
   Covid 19 Model
 output_dir: "../docs"
 include: [".html"]
-exclude: ["paper", "archive", ".gitignore"]
+exclude: ["paper", "archive", ".gitignore", ".RMD", "Models"]
 navbar:
   right:
     - text: "Home"

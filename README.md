@@ -22,7 +22,11 @@ paper XXX.
     handle data perparation, anonymization, and OSF up/downloads
 -   `Figures` contains generated figures
 -   `renv` contains information for libraries used
--   `SEM Climate Crisis` The climate crisis model
 -   `SEM COVID-19` The Covid-19 model
 -   `templates` contains template documents to conduct our analyses
 -   `R` contains scripts with helper functions
+
+## Instructions for reproducibility
+
+This project uses `renv` for reproducibility. You can install the
+libraries we used by calling `renv::restore()` from the R terminal.
