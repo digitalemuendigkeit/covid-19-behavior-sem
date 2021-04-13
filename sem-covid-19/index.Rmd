@@ -1,6 +1,6 @@
 ---
 title: "Predictors for COVID-19 protective behaviour - accompanying website"
-description: |
+description:
   This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany.
   Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.
 site: distill::distill_website
