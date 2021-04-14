@@ -86,29 +86,26 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>Covid 19 Model: Predictors for COVID-19 protective behaviour - accompanying website</title>
+  <title>Covid 19 Model: COVID-19 Model Iteration 2 Nonlinearity Evaluation</title>
   
-  <meta property="description" itemprop="description" content="This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."/>
   
   
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Covid 19 Model: Predictors for COVID-19 protective behaviour - accompanying website"/>
+  <meta property="og:title" content="Covid 19 Model: COVID-19 Model Iteration 2 Nonlinearity Evaluation"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Covid 19 Model"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Covid 19 Model: Predictors for COVID-19 protective behaviour - accompanying website"/>
-  <meta property="twitter:description" content="This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."/>
+  <meta property="twitter:title" content="Covid 19 Model: COVID-19 Model Iteration 2 Nonlinearity Evaluation"/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site"]}},"value":[{"type":"character","attributes":{},"value":["Predictors for COVID-19 protective behaviour - accompanying website"]},{"type":"character","attributes":{},"value":["This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","output"]}},"value":[{"type":"character","attributes":{},"value":["COVID-19 Model Iteration 2 Nonlinearity Evaluation"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[2]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2033,6 +2030,15 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
   
   <!--/radix_placeholder_distill-->
+  <script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+  <script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/datatables-binding-0.17/datatables.js"></script>
+  <link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+  <script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+  <link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2052,7 +2058,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Predictors for COVID-19 protective behaviour - accompanying website","description":"This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.","authors":[]}
+{"title":"COVID-19 Model Iteration 2 Nonlinearity Evaluation","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2105,14 +2111,85 @@ Model evaluation
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Predictors for COVID-19 protective behaviour - accompanying website</h1>
+<h1>COVID-19 Model Iteration 2 Nonlinearity Evaluation</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p>This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.</p>
+
 </div>
 
 
 <div class="d-article">
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#test-for-possible-nonlinearity">Test for possible nonlinearity</a></li>
+<li><a href="#test-alternate-models-with-quadratic-effects">Test alternate models with quadratic effects</a><ul>
+<li><a href="#effect-of-response-beliefs-on-behavioral-intention">Effect of Response Beliefs on Behavioral Intention</a></li>
+<li><a href="#effect-of-threat-beliefs-on-behavioral-intention">Effect of Threat Beliefs on Behavioral Intention</a></li>
+<li><a href="#effect-of-subjective-norm-on-behavioral-intention">Effect of Subjective Norm on Behavioral Intention</a></li>
+<li><a href="#effect-of-distrusting-beliefs-on-response-beliefs">Effect of Distrusting Beliefs on Response Beliefs</a></li>
+<li><a href="#effect-of-knowledge-on-response-beliefs">Effect of Knowledge on Response Beliefs</a></li>
+<li><a href="#effect-of-distrusting-beliefs-on-threat-beliefs">Effect of Distrusting Beliefs on Threat Beliefs</a></li>
+<li><a href="#effect-of-knowledge-on-threat-beliefs">Effect of Knowledge on Threat Beliefs</a></li>
+</ul></li>
+<li><a href="#summary">Summary</a></li>
+</ul>
+</nav>
+</div>
+<h1 id="test-for-possible-nonlinearity">Test for possible nonlinearity</h1>
+<p>First, we test for nonlinearity by applying Ramsey’s RESET test for functional form to each partial linear model of the SEM. As quadratic effects of higher-order constructs cannot (yet) be estimated using PLS-SEM, we also apply the test to the corresponding partial linear models of the proxy SEM without higher order constructs. If the test statistic is significant, the respective partial regression might be nonlinear.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-b42f22b5014614372a25" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-b42f22b5014614372a25">{"x":{"filter":"none","caption":"<caption>Results of Ramsey's RESET test for nonlinearity<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs proxy","Knowledge","Knowledge proxy","Distrusting Beliefs","Distrusting Beliefs proxy","Knowledge","Knowledge proxy","Response Beliefs","Response Beliefs proxy","Threat Beliefs","Threat Beliefs proxy","Personal Moral Norm","Personal Moral Norm proxy","Subjective Norm","Subjective Norm proxy"],["Response Beliefs","Response Beliefs proxy","Response Beliefs","Response Beliefs proxy","Threat Beliefs","Threat Beliefs proxy","Threat Beliefs","Threat Beliefs proxy","Behavioral Intention","Behavioral Intention proxy","Behavioral Intention","Behavioral Intention proxy","Behavioral Intention","Behavioral Intention proxy","Behavioral Intention","Behavioral Intention proxy"],[4.18937797221368,2.41903597963032,7.01159975946195,6.28067238614095,7.91669130086157,6.55705701127593,5.50177903703556,7.36401019488632,6.63679411083146,6.24205909157993,8.83678378680831,6.73936778596719,0.311533369862902,0.437100430007858,2.93125657151853,2.52266647109412],[0.0157745063771331,0.0902094210216694,0.00100732821412487,0.00204717279809755,0.000419946952397178,0.00156523105176636,0.004369814982465,0.000716207794933582,0.00144868197109323,0.00212545877339504,0.000173176004846884,0.00131147730535584,0.732487177269101,0.646191239061481,0.054389165107158,0.0814242168542326],[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2],[433,433,433,433,433,433,433,433,433,433,433,433,433,433,433,433]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Independent variable<\/th>\n      <th>Response variable<\/th>\n      <th>Test statistic<\/th>\n      <th>p<\/th>\n      <th>DF 1<\/th>\n      <th>DF 2<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[2,3,4,5]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>Using p = 0.05 as a threshold, there are potential nonlinear effects in the partial regression equations for the influence of Response Beliefs, Threat Beliefs, and Subjective Norm on Behavioral Intention. The same is potentially true for the effects of Distrusting Beliefs and Knowledge on Response Beliefs, and for the effects of Distrusting Beliefs and Knowledge on Threat Beliefs.</p>
+<h1 id="test-alternate-models-with-quadratic-effects">Test alternate models with quadratic effects</h1>
+<p>To test for nonlinearity, one can model an interaction term of the exogenous construct with itself.</p>
+<h2 id="effect-of-response-beliefs-on-behavioral-intention">Effect of Response Beliefs on Behavioral Intention</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-1fabf56742183c44adde" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1fabf56742183c44adde">{"x":{"filter":"none","caption":"<caption>Comparative effects of Response Beliefs on Behavioral Intention<\/caption>","data":[["Response Beliefs","Response Beliefs","Response Beliefs"],["Behavioral Intention","Behavioral Intention","Behavioral Intention"],["Original","Proxy","Quadratic"],[0.201586340931497,0.206267403649248,0.0635589123431587],[7.60702541412164,7.76781985460313,-2.58937923339361]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>For the alternate model with Response Beliefs as a quadratic influence, the effect size is smaller, as well as the t-value. This points to a linear effect of Response Beliefs on Behavioral Intention.</p>
+<h2 id="effect-of-threat-beliefs-on-behavioral-intention">Effect of Threat Beliefs on Behavioral Intention</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-fc6b6e32cc8b426bd540" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-fc6b6e32cc8b426bd540">{"x":{"filter":"none","caption":"<caption>Comparative effects of Threat Beliefs on Behavioral Intention<\/caption>","data":[["Threat Beliefs","Threat Beliefs","Threat Beliefs"],["Behavioral Intention","Behavioral Intention","Behavioral Intention"],["Original","Proxy","Quadratic"],[0.00965039593158975,0.0228821328125599,0.0237806779074429],[1.64336207274858,2.77657900784327,-0.5503279427189]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>For the alternate model with Threat Beliefs as a quadratic influence, the effect size is smaller, as is the t-value. This points to a linear effect of Threat Beliefs on Behavioral Intention.</p>
+<h2 id="effect-of-subjective-norm-on-behavioral-intention">Effect of Subjective Norm on Behavioral Intention</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-c126a711ffa0ddf854aa" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c126a711ffa0ddf854aa">{"x":{"filter":"none","caption":"<caption>Comparative effects of Subjective Norm on Behavioral Intention<\/caption>","data":[["Subjective Norm","Subjective Norm","Subjective Norm","Subjective Norm"],["Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],["Original","Proxy","Quadratic Orthogonal","Quadratic Product-Indicator"],[0.0272975653433557,0.0204877039043316,0.000122941975297892,0.00646778552140467],[2.50193656770139,2.14592198435007,-0.119366392252534,-0.918072849650024]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>The Subjective Norm alternative model can only be assessed using the orthogonal and product-indicator approach, although the two-stage approach would be methodically correct. Neither of those alternate approaches shows a significant effect of a Subjective Norm quadratic term. This points to a linear effect of Subjective Norm on Behavioral Intention.</p>
+<h2 id="effect-of-distrusting-beliefs-on-response-beliefs">Effect of Distrusting Beliefs on Response Beliefs</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-59fa87e3aa5869cf316b" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-59fa87e3aa5869cf316b">{"x":{"filter":"none","caption":"<caption>Comparative effects of Distrusting Beliefs on Response Beliefs<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs","Distrusting Beliefs","Distrusting Beliefs"],["Response Beliefs","Response Beliefs","Response Beliefs","Response Beliefs"],["Original","Proxy","Quadratic Orthogonal","Quadratic Product-Indicator"],[0.9950687740623,1.04681149778605,0.00575651370392014,0.204405381809006],[-23.2970045797221,-21.9578283519564,-1.07932164223975,-7.59164465429603]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>The Distrusting Beliefs - Response Beliefs alternative model can only be assessed using the orthogonal and product-indicator approach, although the two-stage approach would be methodically correct. The product-indicator approach produces a significant effect for the quadratic term, however, it is smaller and less significant than the effects of the linear term in both the original and the proxy SEM. This points to a linear effect of Distrusting Beliefs on Response Beliefs.</p>
+<h2 id="effect-of-knowledge-on-response-beliefs">Effect of Knowledge on Response Beliefs</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-9d0e5eae0a445845efbf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9d0e5eae0a445845efbf">{"x":{"filter":"none","caption":"<caption>Comparative effects of Knowledge on Response Beliefs<\/caption>","data":[["Knowledge","Knowledge","Knowledge"],["Response Beliefs","Response Beliefs","Response Beliefs"],["Original","Proxy","Quadratic"],[0.0151247009098147,0.0178321390984881,0.00521079653567498],[2.90528804982708,2.95925020477876,-1.65532067461305]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>For the alternate model with Knowledge as a quadratic influence, the effect size is smaller, as well as the t-value. This points to a linear effect of Knowledge on Response Beliefs.</p>
+<h2 id="effect-of-distrusting-beliefs-on-threat-beliefs">Effect of Distrusting Beliefs on Threat Beliefs</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-10bcadab05ea12fca741" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-10bcadab05ea12fca741">{"x":{"filter":"none","caption":"<caption>Comparative effects of Distrusting Beliefs on Threat Beliefs<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs","Distrusting Beliefs","Distrusting Beliefs"],["Threat Beliefs","Threat Beliefs","Threat Beliefs","Threat Beliefs"],["Original","Proxy","Quadratic Orthogonal","Quadratic Product-Indicator"],[0.605364849122584,0.831882156646537,0.00945690618205825,0.197884962045549],[-15.8931187748625,-18.4370960954162,-2.55564143517801,-7.81352594523496]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>The Distrusting Beliefs - Threat Beliefs alternative model can only be assessed using the orthogonal and product-indicator approach, although the two-stage approach would be methodically correct. Both approaches produce a significant effect for the quadratic term, however, the effect sizes are significantly smaller and less significant than the effects of the linear term in both the original and the proxy SEM. This points to a linear effect of Distrusting Beliefs on Response Beliefs.</p>
+<h2 id="effect-of-knowledge-on-threat-beliefs">Effect of Knowledge on Threat Beliefs</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-83042046316eee0f9cbd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-83042046316eee0f9cbd">{"x":{"filter":"none","caption":"<caption>Comparative effects of Knowledge on Threat Beliefs<\/caption>","data":[["Knowledge","Knowledge","Knowledge"],["Threat Beliefs","Threat Beliefs","Threat Beliefs"],["Original","Proxy","Quadratic"],[0.0343513791338131,0.0248103950445447,0.000806945507340171],[4.05200262494765,3.41842406119481,-0.711875850276831]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous variable<\/th>\n      <th>Endogenous variable<\/th>\n      <th>Model<\/th>\n      <th>f^2<\/th>\n      <th>t (437)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[3,4]}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render"],"jsHooks":[]}</script>
+</div>
+<p>The effect of the quadratic term is miniscule and not significant. This points to a linear effect of Knowledge on Threat Beliefs.</p>
+<h1 id="summary">Summary</h1>
+<p>Using the available tests, we did not find evidence for a quadratic influence of any of the exogenous variables.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
@@ -2129,7 +2206,7 @@ Model evaluation
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
-<p>© Copyright 2021 Lilian Kojan, Laura Burbach, André Calero Valdez and Martina Ziefle <a href="https://www.comm.rwth-aachen.de/cms/~plea/COMM/?lidx=1">Chair of Communication Science, RWTH Aachen University</a></p>
+<p>© Copyright 2021 Lilian Kojan, Laura Burbach, André Calero Valdez and Martina Ziefle | <a href="https://www.comm.rwth-aachen.de/cms/~plea/COMM/?lidx=1">Chair of Communication Science, RWTH Aachen University</a></p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 

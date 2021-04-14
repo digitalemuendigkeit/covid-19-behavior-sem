@@ -20,19 +20,19 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -52,7 +52,7 @@ pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-le
 div.sourceCode
   {   }
 @media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ad0000; } /* Alert */
 code span.an { color: #5e5e5e; } /* Annotation */
@@ -87,36 +87,36 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   <!--radix_placeholder_meta_tags-->
   <title>Covid 19 Model: COVID-19 Model Iteration 2 Structural Model Evaluation</title>
-
-
-
-
+  
+  
+  
+  
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Covid 19 Model: COVID-19 Model Iteration 2 Structural Model Evaluation"/>
   <meta property="og:type" content="article"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Covid 19 Model"/>
-
+  
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="Covid 19 Model: COVID-19 Model Iteration 2 Structural Model Evaluation"/>
-
+  
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
-
+  
   <script type="text/json" id="radix-rmarkdown-metadata">
   {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","output"]}},"value":[{"type":"character","attributes":{},"value":["COVID-19 Model Iteration 2 Structural Model Evaluation"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[1]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
   <meta name="distill:offset" content=""/>
-
+  
   <script type="application/javascript">
-
+  
     window.headroom_prevent_pin = false;
-
+  
     window.document.addEventListener("DOMContentLoaded", function (event) {
-
+  
       // initialize headroom for banner
       var header = $('header').get(0);
       var headerHeight = header.offsetHeight;
@@ -133,13 +133,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       if(window.location.hash)
         headroom.unpin();
       $(header).addClass('headroom--transition');
-
+  
       // offset scroll location for banner on hash change
       // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
       window.addEventListener("hashchange", function(event) {
         window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
       });
-
+  
       // responsive menu
       $('.distill-site-header').each(function(i, val) {
         var topnav = $(this);
@@ -148,7 +148,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           topnav.toggleClass('responsive');
         });
       });
-
+  
       // nav dropdowns
       $('.nav-dropbtn').click(function(e) {
         $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
@@ -163,99 +163,99 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       });
     });
   </script>
-
+  
   <style type="text/css">
-
+  
   /* Theme (user-documented overrideables for nav appearance) */
-
+  
   .distill-site-nav {
     color: rgba(255, 255, 255, 0.8);
     background-color: #0F2E3D;
     font-size: 15px;
     font-weight: 300;
   }
-
+  
   .distill-site-nav a {
     color: inherit;
     text-decoration: none;
   }
-
+  
   .distill-site-nav a:hover {
     color: white;
   }
-
+  
   @media print {
     .distill-site-nav {
       display: none;
     }
   }
-
+  
   .distill-site-header {
-
+  
   }
-
+  
   .distill-site-footer {
-
+  
   }
-
-
+  
+  
   /* Site Header */
-
+  
   .distill-site-header {
     width: 100%;
     box-sizing: border-box;
     z-index: 3;
   }
-
+  
   .distill-site-header .nav-left {
     display: inline-block;
     margin-left: 8px;
   }
-
+  
   @media screen and (max-width: 768px) {
     .distill-site-header .nav-left {
       margin-left: 0;
     }
   }
-
-
+  
+  
   .distill-site-header .nav-right {
     float: right;
     margin-right: 8px;
   }
-
+  
   .distill-site-header a,
   .distill-site-header .title {
     display: inline-block;
     text-align: center;
     padding: 14px 10px 14px 10px;
   }
-
+  
   .distill-site-header .title {
     font-size: 18px;
     min-width: 150px;
   }
-
+  
   .distill-site-header .logo {
     padding: 0;
   }
-
+  
   .distill-site-header .logo img {
     display: none;
     max-height: 20px;
     width: auto;
     margin-bottom: -4px;
   }
-
+  
   .distill-site-header .nav-image img {
     max-height: 18px;
     width: auto;
     display: inline-block;
     margin-bottom: -3px;
   }
-
-
-
+  
+  
+  
   @media screen and (min-width: 1000px) {
     .distill-site-header .logo img {
       display: inline-block;
@@ -270,17 +270,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       padding-left: 12px;
     }
   }
-
-
+  
+  
   .distill-site-header .nav-toggle {
     display: none;
   }
-
+  
   .nav-dropdown {
     display: inline-block;
     position: relative;
   }
-
+  
   .nav-dropdown .nav-dropbtn {
     border: none;
     outline: none;
@@ -294,7 +294,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     margin-top: 1px;
     z-index: 2;
   }
-
+  
   .nav-dropdown-content {
     display: none;
     position: absolute;
@@ -309,18 +309,18 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-top: 4px;
     padding-bottom: 4px;
   }
-
+  
   .nav-dropdown-content hr {
     margin-top: 4px;
     margin-bottom: 4px;
     border: none;
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-
+  
   .nav-dropdown-active {
     display: block;
   }
-
+  
   .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
     color: black;
     padding: 6px 24px;
@@ -328,7 +328,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: block;
     text-align: left;
   }
-
+  
   .nav-dropdown-content .nav-dropdown-header {
     display: block;
     padding: 5px 24px;
@@ -338,21 +338,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     color: #999999;
     white-space: nowrap;
   }
-
+  
   .nav-dropdown:hover .nav-dropbtn {
     color: white;
   }
-
+  
   .nav-dropdown-content a:hover {
     background-color: #ddd;
     color: black;
   }
-
+  
   .nav-right .nav-dropdown-content {
     margin-left: -45%;
     right: 0;
   }
-
+  
   @media screen and (max-width: 768px) {
     .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
     .distill-site-header a.nav-toggle {
@@ -372,8 +372,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       margin-left: 0;
     }
   }
-
-
+  
+  
   @media screen and (max-width: 768px) {
     .distill-site-header.responsive {position: relative; min-height: 500px; }
     .distill-site-header.responsive a.nav-toggle {
@@ -398,9 +398,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       text-align: left;
     }
   }
-
+  
   /* Site Footer */
-
+  
   .distill-site-footer {
     width: 100%;
     overflow: hidden;
@@ -411,19 +411,19 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-bottom: 30px;
     text-align: center;
   }
-
+  
   /* Headroom */
-
+  
   d-title {
     padding-top: 6rem;
   }
-
+  
   @media print {
     d-title {
       padding-top: 4rem;
     }
   }
-
+  
   .headroom {
     z-index: 1000;
     position: fixed;
@@ -431,36 +431,36 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     left: 0;
     right: 0;
   }
-
+  
   .headroom--transition {
     transition: all .4s ease-in-out;
   }
-
+  
   .headroom--unpinned {
     top: -100px;
   }
-
+  
   .headroom--pinned {
     top: 0;
   }
-
+  
   /* adjust viewport for navbar height */
   /* helps vertically center bootstrap (non-distill) content */
   .min-vh-100 {
     min-height: calc(100vh - 100px) !important;
   }
-
+  
   </style>
-
+  
   <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
   <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
   <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
-
+  
   <script type="application/javascript">
-
+  
   function getMeta(metaName) {
     var metas = document.getElementsByTagName('meta');
     for (let i = 0; i < metas.length; i++) {
@@ -470,14 +470,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     }
     return '';
   }
-
+  
   function offsetURL(url) {
     var offset = getMeta('distill:offset');
     return offset ? offset + '/' + url : url;
   }
-
+  
   function createFuseIndex() {
-
+  
     // create fuse index
     var options = {
       keys: [
@@ -490,7 +490,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       threshold: 0
     };
     var fuse = new window.Fuse([], options);
-
+  
     // fetch the main search.json
     return fetch(offsetURL('search.json'))
       .then(function(response) {
@@ -520,7 +520,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
               return fuse;
             });
           });
-
+  
         } else {
           return Promise.reject(
             new Error('Unexpected status from search index request: ' +
@@ -529,20 +529,20 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
         }
       });
   }
-
+  
   window.document.addEventListener("DOMContentLoaded", function (event) {
-
+  
     // get search element (bail if we don't have one)
     var searchEl = window.document.getElementById('distill-search');
     if (!searchEl)
       return;
-
+  
     createFuseIndex()
       .then(function(fuse) {
-
+  
         // make search box visible
         searchEl.classList.remove('hidden');
-
+  
         // initialize autocomplete
         var options = {
           autoselect: true,
@@ -591,19 +591,19 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       .catch(function(error) {
         console.log(error);
       });
-
+  
   });
-
+  
   </script>
-
+  
   <style type="text/css">
-
+  
   .nav-search {
     font-size: x-small;
   }
-
+  
   /* Algolioa Autocomplete */
-
+  
   .algolia-autocomplete {
     display: inline-block;
     margin-left: 10px;
@@ -617,8 +617,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     border: 1px #0F2E3D solid;
     width: 180px;
   }
-
-
+  
+  
   @media screen and (max-width: 768px) {
     .distill-site-nav .algolia-autocomplete {
       display: none;
@@ -634,13 +634,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       max-height: 400px;
     }
   }
-
+  
   .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
     width: 90%;
     outline: none;
     border: none;
   }
-
+  
   .algolia-autocomplete .aa-hint {
     color: #999;
   }
@@ -657,30 +657,30 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     border: 1px solid #999;
     border-top: none;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
     cursor: pointer;
     padding: 5px 4px;
     border-bottom: 1px solid #eee;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
     border-bottom: none;
     margin-bottom: 2px;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
     overflow: hidden;
     font-size: 0.8em;
     line-height: 1.4em;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
     font-size: 1rem;
     margin-block-start: 0;
     margin-block-end: 5px;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
     display: inline-block;
     overflow: hidden;
@@ -688,22 +688,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     width: 80%;
     margin-right: 4%;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
     display: inline-block;
     width: 15%;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
     height: 3em;
     width: auto;
     display: none;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
     display: initial;
   }
-
+  
   .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
     background-color: #eee;
   }
@@ -711,47 +711,47 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     font-weight: bold;
     font-style: normal;
   }
-
+  
   </style>
-
-
+  
+  
   <!--/radix_placeholder_navigation_in_header-->
   <!--radix_placeholder_distill-->
-
+  
   <style type="text/css">
-
+  
   body {
     background-color: white;
   }
-
+  
   .pandoc-table {
     width: 100%;
   }
-
+  
   .pandoc-table>caption {
     margin-bottom: 10px;
   }
-
+  
   .pandoc-table th:not([align]) {
     text-align: left;
   }
-
+  
   .pagedtable-footer {
     font-size: 15px;
   }
-
+  
   d-byline .byline {
     grid-template-columns: 2fr 2fr;
   }
-
+  
   d-byline .byline h3 {
     margin-block-start: 1.5em;
   }
-
+  
   d-byline .byline .authors-affiliations h3 {
     margin-block-start: 0.5em;
   }
-
+  
   .authors-affiliations .orcid-id {
     width: 16px;
     height:16px;
@@ -760,12 +760,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     vertical-align: middle;
     padding-bottom: 2px;
   }
-
+  
   d-title .dt-tags {
     margin-top: 1em;
     grid-column: text;
   }
-
+  
   .dt-tags .dt-tag {
     text-decoration: none;
     display: inline-block;
@@ -779,24 +779,24 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-transform: uppercase;
     font-weight: 500;
   }
-
+  
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
   }
-
+  
   .html-widget {
     margin-bottom: 2.0em;
   }
-
+  
   .l-screen-inset {
     padding-right: 16px;
   }
-
+  
   .l-screen .caption {
     margin-left: 10px;
   }
-
+  
   .shaded {
     background: rgb(247, 247, 247);
     padding-top: 20px;
@@ -804,75 +804,75 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     border-top: 1px solid rgba(0, 0, 0, 0.1);
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   }
-
+  
   .shaded .html-widget {
     margin-bottom: 0;
     border: 1px solid rgba(0, 0, 0, 0.1);
   }
-
+  
   .shaded .shaded-content {
     background: white;
   }
-
+  
   .text-output {
     margin-top: 0;
     line-height: 1.5em;
   }
-
+  
   .hidden {
     display: none !important;
   }
-
+  
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
   }
-
+  
   d-appendix {
     padding-top: 30px;
   }
-
+  
   d-article>p>img {
     width: 100%;
   }
-
+  
   d-article h2 {
     margin: 1rem 0 1.5rem 0;
   }
-
+  
   d-article h3 {
     margin-top: 1.5rem;
   }
-
+  
   d-article iframe {
     border: 1px solid rgba(0, 0, 0, 0.1);
     margin-bottom: 2.0em;
     width: 100%;
   }
-
+  
   /* Tweak code blocks */
-
+  
   d-article div.sourceCode code,
   d-article pre code {
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   }
-
+  
   d-article pre,
   d-article div.sourceCode,
   d-article div.sourceCode pre {
     overflow: auto;
   }
-
+  
   d-article div.sourceCode {
     background-color: white;
   }
-
+  
   d-article div.sourceCode pre {
     padding-left: 10px;
     font-size: 12px;
     border-left: 2px solid rgba(0,0,0,0.1);
   }
-
+  
   d-article pre {
     font-size: 12px;
     color: black;
@@ -884,50 +884,50 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     word-break: normal;
     word-wrap: normal;
     line-height: 1.5;
-
+  
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
-
+  
     -webkit-hyphens: none;
     -moz-hyphens: none;
     -ms-hyphens: none;
     hyphens: none;
   }
-
+  
   d-article pre a {
     border-bottom: none;
   }
-
+  
   d-article pre a:hover {
     border-bottom: none;
     text-decoration: underline;
   }
-
+  
   d-article details {
     grid-column: text;
     margin-bottom: 0.8em;
   }
-
+  
   @media(min-width: 768px) {
-
+  
   d-article pre,
   d-article div.sourceCode,
   d-article div.sourceCode pre {
     overflow: visible !important;
   }
-
+  
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
   }
-
+  
   d-article pre {
     font-size: 14px;
   }
-
+  
   }
-
+  
   figure img.external {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -935,9 +935,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding: 18px;
     box-sizing: border-box;
   }
-
+  
   /* CSS for d-contents */
-
+  
   .d-contents {
     grid-column: text;
     color: rgba(0,0,0,0.8);
@@ -949,7 +949,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-left: 0.25em;
     justify-self: start;
   }
-
+  
   @media(min-width: 1000px) {
     .d-contents.d-contents-float {
       height: 0;
@@ -960,82 +960,82 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       padding-left: 2em;
     }
   }
-
+  
   .d-contents nav h3 {
     font-size: 18px;
     margin-top: 0;
     margin-bottom: 1em;
   }
-
+  
   .d-contents li {
     list-style-type: none
   }
-
+  
   .d-contents nav > ul {
     padding-left: 0;
   }
-
+  
   .d-contents ul {
     padding-left: 1em
   }
-
+  
   .d-contents nav ul li {
     margin-top: 0.6em;
     margin-bottom: 0.2em;
   }
-
+  
   .d-contents nav a {
     font-size: 13px;
     border-bottom: none;
     text-decoration: none
     color: rgba(0, 0, 0, 0.8);
   }
-
+  
   .d-contents nav a:hover {
     text-decoration: underline solid rgba(0, 0, 0, 0.6)
   }
-
+  
   .d-contents nav > ul > li > a {
     font-weight: 600;
   }
-
+  
   .d-contents nav > ul > li > ul {
     font-weight: inherit;
   }
-
+  
   .d-contents nav > ul > li > ul > li {
     margin-top: 0.2em;
   }
-
-
+  
+  
   .d-contents nav ul {
     margin-top: 0;
     margin-bottom: 0.25em;
   }
-
+  
   .d-article-with-toc h2:nth-child(2) {
     margin-top: 0;
   }
-
-
+  
+  
   /* Figure */
-
+  
   .figure {
     position: relative;
     margin-bottom: 2.5em;
     margin-top: 1.5em;
   }
-
+  
   .figure img {
     width: 100%;
   }
-
+  
   .figure .caption {
     color: rgba(0, 0, 0, 0.6);
     font-size: 12px;
     line-height: 1.5em;
   }
-
+  
   .figure img.external {
     background: white;
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -1043,42 +1043,42 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding: 18px;
     box-sizing: border-box;
   }
-
+  
   .figure .caption a {
     color: rgba(0, 0, 0, 0.6);
   }
-
+  
   .figure .caption b,
   .figure .caption strong, {
     font-weight: 600;
     color: rgba(0, 0, 0, 1.0);
   }
-
+  
   /* Citations */
-
+  
   d-article .citation {
     color: inherit;
     cursor: inherit;
   }
-
+  
   div.hanging-indent{
     margin-left: 1em; text-indent: -1em;
   }
-
+  
   /* Citation hover box */
-
+  
   .tippy-box[data-theme~=light-border] {
     background-color: rgba(250, 250, 250, 0.95);
   }
-
+  
   .tippy-content > p {
     margin-bottom: 0;
     padding: 2px;
   }
-
-
+  
+  
   /* Tweak 1000px media break to show more text */
-
+  
   @media(min-width: 1000px) {
     .base-grid,
     distill-header,
@@ -1094,11 +1094,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       grid-template-columns: [screen-start] 1fr [page-start kicker-start] 80px [middle-start] 50px [text-start kicker-end] 65px 65px 65px 65px 65px 65px 65px 65px [text-end gutter-start] 65px [middle-end] 65px [page-end gutter-end] 1fr [screen-end];
       grid-column-gap: 16px;
     }
-
+  
     .grid {
       grid-column-gap: 16px;
     }
-
+  
     d-article {
       font-size: 1.06rem;
       line-height: 1.7em;
@@ -1107,7 +1107,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       font-size: 13px;
     }
   }
-
+  
   @media(min-width: 1180px) {
     .base-grid,
     distill-header,
@@ -1123,16 +1123,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       grid-template-columns: [screen-start] 1fr [page-start kicker-start] 60px [middle-start] 60px [text-start kicker-end] 60px 60px 60px 60px 60px 60px 60px 60px [text-end gutter-start] 60px [middle-end] 60px [page-end gutter-end] 1fr [screen-end];
       grid-column-gap: 32px;
     }
-
+  
     .grid {
       grid-column-gap: 32px;
     }
   }
-
-
+  
+  
   /* Get the citation styles for the appendix (not auto-injected on render since
      we do our own rendering of the citation appendix) */
-
+  
   d-appendix .citation-appendix,
   .d-appendix .citation-appendix {
     font-size: 11px;
@@ -1149,9 +1149,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     white-space: pre-wrap;
     word-wrap: break-word;
   }
-
+  
   /* Include appendix styles here so they can be overridden */
-
+  
   d-appendix {
     contain: layout style;
     font-size: 0.8em;
@@ -1163,7 +1163,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-top: 60px;
     padding-bottom: 48px;
   }
-
+  
   d-appendix h3 {
     grid-column: page-start / text-start;
     font-size: 15px;
@@ -1172,59 +1172,59 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     margin-bottom: 0;
     color: rgba(0,0,0,0.65);
   }
-
+  
   d-appendix h3 + * {
     margin-top: 1em;
   }
-
+  
   d-appendix ol {
     padding: 0 0 0 15px;
   }
-
+  
   @media (min-width: 768px) {
     d-appendix ol {
       padding: 0 0 0 30px;
       margin-left: -30px;
     }
   }
-
+  
   d-appendix li {
     margin-bottom: 1em;
   }
-
+  
   d-appendix a {
     color: rgba(0, 0, 0, 0.6);
   }
-
+  
   d-appendix > * {
     grid-column: text;
   }
-
+  
   d-appendix > d-footnote-list,
   d-appendix > d-citation-list,
   d-appendix > distill-appendix {
     grid-column: screen;
   }
-
+  
   /* Include footnote styles here so they can be overridden */
-
+  
   d-footnote-list {
     contain: layout style;
   }
-
+  
   d-footnote-list > * {
     grid-column: text;
   }
-
+  
   d-footnote-list a.footnote-backlink {
     color: rgba(0,0,0,0.3);
     padding-left: 0.5em;
   }
-
-
-
+  
+  
+  
   /* Anchor.js */
-
+  
   .anchorjs-link {
     /*transition: all .25s linear; */
     text-decoration: none;
@@ -1235,86 +1235,86 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-decoration: none;
     border-bottom: none;
   }
-
+  
   /* Social footer */
-
+  
   .social_footer {
     margin-top: 30px;
     margin-bottom: 0;
     color: rgba(0,0,0,0.67);
   }
-
+  
   .disqus-comments {
     margin-right: 30px;
   }
-
+  
   .disqus-comment-count {
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
     cursor: pointer;
   }
-
+  
   #disqus_thread {
     margin-top: 30px;
   }
-
+  
   .article-sharing a {
     border-bottom: none;
     margin-right: 8px;
   }
-
+  
   .article-sharing a:hover {
     border-bottom: none;
   }
-
+  
   .sidebar-section.subscribe {
     font-size: 12px;
     line-height: 1.6em;
   }
-
+  
   .subscribe p {
     margin-bottom: 0.5em;
   }
-
-
+  
+  
   .article-footer .subscribe {
     font-size: 15px;
     margin-top: 45px;
   }
-
-
+  
+  
   .sidebar-section.custom {
     font-size: 12px;
     line-height: 1.6em;
   }
-
+  
   .custom p {
     margin-bottom: 0.5em;
   }
-
+  
   /* Styles for listing layout (hide title) */
   .layout-listing d-title, .layout-listing .d-title {
     display: none;
   }
-
+  
   /* Styles for posts lists (not auto-injected) */
-
-
+  
+  
   .posts-with-sidebar {
     padding-left: 45px;
     padding-right: 45px;
   }
-
+  
   .posts-list .description h2,
   .posts-list .description p {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
   }
-
+  
   .posts-list .description h2 {
     font-weight: 700;
     border-bottom: none;
     padding-bottom: 0;
   }
-
+  
   .posts-list h2.post-tag {
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding-bottom: 12px;
@@ -1323,7 +1323,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     margin-top: 60px;
     margin-bottom: 24px;
   }
-
+  
   .posts-list .post-preview {
     text-decoration: none;
     overflow: hidden;
@@ -1331,29 +1331,29 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding: 24px 0;
   }
-
+  
   .post-preview-last {
     border-bottom: none !important;
   }
-
+  
   .posts-list .posts-list-caption {
     grid-column: screen;
     font-weight: 400;
   }
-
+  
   .posts-list .post-preview h2 {
     margin: 0 0 6px 0;
     line-height: 1.2em;
     font-style: normal;
     font-size: 24px;
   }
-
+  
   .posts-list .post-preview p {
     margin: 0 0 12px 0;
     line-height: 1.4em;
     font-size: 16px;
   }
-
+  
   .posts-list .post-preview .thumbnail {
     box-sizing: border-box;
     margin-bottom: 24px;
@@ -1364,32 +1364,32 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     width: 100%;
     display: block;
   }
-
+  
   .posts-list .metadata {
     font-size: 12px;
     line-height: 1.4em;
     margin-bottom: 18px;
   }
-
+  
   .posts-list .metadata > * {
     display: inline-block;
   }
-
+  
   .posts-list .metadata .publishedDate {
     margin-right: 2em;
   }
-
+  
   .posts-list .metadata .dt-authors {
     display: block;
     margin-top: 0.3em;
     margin-right: 2em;
   }
-
+  
   .posts-list .dt-tags {
     display: block;
     line-height: 1em;
   }
-
+  
   .posts-list .dt-tags .dt-tag {
     display: inline-block;
     color: rgba(0,0,0,0.6);
@@ -1402,24 +1402,24 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     text-transform: uppercase;
     font-weight: 500;
   }
-
+  
   .posts-list img {
     opacity: 1;
   }
-
+  
   .posts-list img[data-src] {
     opacity: 0;
   }
-
+  
   .posts-more {
     clear: both;
   }
-
-
+  
+  
   .posts-sidebar {
     font-size: 16px;
   }
-
+  
   .posts-sidebar h3 {
     font-size: 16px;
     margin-top: 0;
@@ -1427,39 +1427,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     font-weight: 400;
     text-transform: uppercase;
   }
-
+  
   .sidebar-section {
     margin-bottom: 30px;
   }
-
+  
   .categories ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
   }
-
+  
   .categories li {
     color: rgba(0, 0, 0, 0.8);
     margin-bottom: 0;
   }
-
+  
   .categories li>a {
     border-bottom: none;
   }
-
+  
   .categories li>a:hover {
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
   }
-
+  
   .categories .active {
     font-weight: 600;
   }
-
+  
   .categories .category-count {
     color: rgba(0, 0, 0, 0.4);
   }
-
-
+  
+  
   @media(min-width: 768px) {
     .posts-list .post-preview h2 {
       font-size: 26px;
@@ -1495,55 +1495,55 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       padding-bottom: 24px;
     }
   }
-
-
+  
+  
   /* Improve display for browsers without grid (IE/Edge <= 15) */
-
+  
   .downlevel {
     line-height: 1.6em;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
     margin: 0;
   }
-
+  
   .downlevel .d-title {
     padding-top: 6rem;
     padding-bottom: 1.5rem;
   }
-
+  
   .downlevel .d-title h1 {
     font-size: 50px;
     font-weight: 700;
     line-height: 1.1em;
     margin: 0 0 0.5rem;
   }
-
+  
   .downlevel .d-title p {
     font-weight: 300;
     font-size: 1.2rem;
     line-height: 1.55em;
     margin-top: 0;
   }
-
+  
   .downlevel .d-byline {
     padding-top: 0.8em;
     padding-bottom: 0.8em;
     font-size: 0.8rem;
     line-height: 1.8em;
   }
-
+  
   .downlevel .section-separator {
     border: none;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
   }
-
+  
   .downlevel .d-article {
     font-size: 1.06rem;
     line-height: 1.7em;
     padding-top: 1rem;
     padding-bottom: 2rem;
   }
-
-
+  
+  
   .downlevel .d-appendix {
     padding-left: 0;
     padding-right: 0;
@@ -1555,11 +1555,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-top: 40px;
     padding-bottom: 48px;
   }
-
+  
   .downlevel .footnotes ol {
     padding-left: 13px;
   }
-
+  
   .downlevel .base-grid,
   .downlevel .distill-header,
   .downlevel .d-title,
@@ -1576,7 +1576,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     padding-left: 40px;
     padding-right: 40px;
   }
-
+  
   @media(min-width: 768px) {
     .downlevel .base-grid,
     .downlevel .distill-header,
@@ -1596,14 +1596,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     max-width: 900px;
   }
   }
-
+  
   .downlevel pre code {
     display: block;
     border-left: 2px solid rgba(0, 0, 0, .1);
     padding: 0 0 0 20px;
     font-size: 14px;
   }
-
+  
   .downlevel code, .downlevel pre {
     color: black;
     background: none;
@@ -1614,27 +1614,27 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     word-break: normal;
     word-wrap: normal;
     line-height: 1.5;
-
+  
     -moz-tab-size: 4;
     -o-tab-size: 4;
     tab-size: 4;
-
+  
     -webkit-hyphens: none;
     -moz-hyphens: none;
     -ms-hyphens: none;
     hyphens: none;
   }
-
+  
   .downlevel .posts-list .post-preview {
     color: inherit;
   }
-
-
-
+  
+  
+  
   </style>
-
+  
   <script type="application/javascript">
-
+  
   function is_downlevel_browser() {
     if (bowser.isUnsupportedBrowser({ msie: "12", msedge: "16"},
                                    window.navigator.userAgent)) {
@@ -1643,20 +1643,20 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       return window.load_distill_framework === undefined;
     }
   }
-
+  
   // show body when load is complete
   function on_load_complete() {
-
+  
     // add anchors
     if (window.anchors) {
       window.anchors.options.placement = 'left';
       window.anchors.add('d-article > h2, d-article > h3, d-article > h4, d-article > h5');
     }
-
-
+  
+  
     // set body to visible
     document.body.style.visibility = 'visible';
-
+  
     // force redraw for leaflet widgets
     if (window.HTMLWidgets) {
       var maps = window.HTMLWidgets.findAll(".leaflet");
@@ -1669,39 +1669,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
         });
       });
     }
-
+  
     // trigger 'shown' so htmlwidgets resize
     $('d-article').trigger('shown');
   }
-
+  
   function init_distill() {
-
+  
     init_common();
-
+  
     // create front matter
     var front_matter = $('<d-front-matter></d-front-matter>');
     $('#distill-front-matter').wrap(front_matter);
-
+  
     // create d-title
     $('.d-title').changeElementType('d-title');
-
+  
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
-
+  
     // create d-article
     var article = $('<d-article></d-article>');
     $('.d-article').wrap(article).children().unwrap();
-
+  
     // move posts container into article
     $('.posts-container').appendTo($('d-article'));
-
+  
     // create d-appendix
     $('.d-appendix').changeElementType('d-appendix');
-
+  
     // flag indicating that we have appendix items
     var appendix = $('.appendix-bottom').children('h3').length > 0;
-
+  
     // replace footnotes with <d-footnote>
     $('.footnote-ref').each(function(i, val) {
       appendix = true;
@@ -1717,10 +1717,10 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     });
     // remove footnotes
     $('.footnotes').remove();
-
+  
     // move refs into #references-listing
     $('#references-listing').replaceWith($('#refs'));
-
+  
     $('h1.appendix, h2.appendix').each(function(i, val) {
       $(this).changeElementType('h3');
     });
@@ -1730,16 +1730,16 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       appendix = true;
       $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('d-appendix'));
     });
-
+  
     // show d-appendix if we have appendix content
     $("d-appendix").css('display', appendix ? 'grid' : 'none');
-
+  
     // localize layout chunks to just output
     $('.layout-chunk').each(function(i, val) {
-
+  
       // capture layout
       var layout = $(this).attr('data-layout');
-
+  
       // apply layout to markdown level block elements
       var elements = $(this).children().not('details, div.sourceCode, pre, script');
       elements.each(function(i, el) {
@@ -1752,40 +1752,40 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           $(this).wrap(layout_div);
         }
       });
-
-
+  
+  
       // unwrap the layout-chunk div
       $(this).children().unwrap();
     });
-
+  
     // remove code block used to force  highlighting css
     $('.distill-force-highlighting-css').parent().remove();
-
+  
     // remove empty line numbers inserted by pandoc when using a
     // custom syntax highlighting theme
     $('code.sourceCode a:empty').remove();
-
+  
     // load distill framework
     load_distill_framework();
-
+  
     // wait for window.distillRunlevel == 4 to do post processing
     function distill_post_process() {
-
+  
       if (!window.distillRunlevel || window.distillRunlevel < 4)
         return;
-
+  
       // hide author/affiliations entirely if we have no authors
       var front_matter = JSON.parse($("#distill-front-matter").html());
       var have_authors = front_matter.authors && front_matter.authors.length > 0;
       if (!have_authors)
         $('d-byline').addClass('hidden');
-
+  
       // article with toc class
       $('.d-contents').parent().addClass('d-article-with-toc');
-
+  
       // strip links that point to #
       $('.authors-affiliations').find('a[href="#"]').removeAttr('href');
-
+  
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
@@ -1800,12 +1800,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           $(this).append(a);
         }
       });
-
+  
       // hide elements of author/affiliations grid that have no value
       function hide_byline_column(caption) {
         $('d-byline').find('h3:contains("' + caption + '")').parent().css('visibility', 'hidden');
       }
-
+  
       // affiliations
       var have_affiliations = false;
       for (var i = 0; i<front_matter.authors.length; ++i) {
@@ -1817,11 +1817,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       }
       if (!have_affiliations)
         $('d-byline').find('h3:contains("Affiliations")').css('visibility', 'hidden');
-
+  
       // published date
       if (!front_matter.publishedDate)
         hide_byline_column("Published");
-
+  
       // document object identifier
       var doi = $('d-byline').find('h3:contains("DOI")');
       var doi_p = doi.next().empty();
@@ -1841,22 +1841,22 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
            .html(front_matter.doi)
            .appendTo(doi_p);
       }
-
+  
        // change plural form of authors/affiliations
       if (front_matter.authors.length === 1) {
         var grid = $('.authors-affiliations');
         grid.children('h3:contains("Authors")').text('Author');
         grid.children('h3:contains("Affiliations")').text('Affiliation');
       }
-
+  
       // remove d-appendix and d-footnote-list local styles
       $('d-appendix > style:first-child').remove();
       $('d-footnote-list > style:first-child').remove();
-
+  
       // move appendix-bottom entries to the bottom
       $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
       $('.appendix-bottom').remove();
-
+  
       // hoverable references
       $('span.citation[data-cites]').each(function() {
         var refHtml = $('#ref-' + $(this).attr('data-cites')).html();
@@ -1870,39 +1870,39 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           placement: 'bottom-start'
         });
       });
-
+  
       // clear polling timer
       clearInterval(tid);
-
+  
       // show body now that everything is ready
       on_load_complete();
     }
-
+  
     var tid = setInterval(distill_post_process, 50);
     distill_post_process();
-
+  
   }
-
+  
   function init_downlevel() {
-
+  
     init_common();
-
+  
      // insert hr after d-title
     $('.d-title').after($('<hr class="section-separator"/>'));
-
+  
     // check if we have authors
     var front_matter = JSON.parse($("#distill-front-matter").html());
     var have_authors = front_matter.authors && front_matter.authors.length > 0;
-
+  
     // manage byline/border
     if (!have_authors)
       $('.d-byline').remove();
     $('.d-byline').after($('<hr class="section-separator"/>'));
     $('.d-byline a').remove();
-
+  
     // remove toc
     $('.d-contents').remove();
-
+  
     // move appendix elements
     $('h1.appendix, h2.appendix').each(function(i, val) {
       $(this).changeElementType('h3');
@@ -1910,62 +1910,62 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('h3.appendix').each(function(i, val) {
       $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('.d-appendix'));
     });
-
-
+  
+  
     // inject headers into references and footnotes
     var refs_header = $('<h3></h3>');
     refs_header.text('References');
     $('#refs').prepend(refs_header);
-
+  
     var footnotes_header = $('<h3></h3');
     footnotes_header.text('Footnotes');
     $('.footnotes').children('hr').first().replaceWith(footnotes_header);
-
+  
     // move appendix-bottom entries to the bottom
     $('.appendix-bottom').appendTo('.d-appendix').children().unwrap();
     $('.appendix-bottom').remove();
-
+  
     // remove appendix if it's empty
     if ($('.d-appendix').children().length === 0)
       $('.d-appendix').remove();
-
+  
     // prepend separator above appendix
     $('.d-appendix').before($('<hr class="section-separator" style="clear: both"/>'));
-
+  
     // trim code
     $('pre>code').each(function(i, val) {
       $(this).html($.trim($(this).html()));
     });
-
+  
     // move posts-container right before article
     $('.posts-container').insertBefore($('.d-article'));
-
+  
     $('body').addClass('downlevel');
-
+  
     on_load_complete();
   }
-
-
+  
+  
   function init_common() {
-
+  
     // jquery plugin to change element types
     (function($) {
       $.fn.changeElementType = function(newType) {
         var attrs = {};
-
+  
         $.each(this[0].attributes, function(idx, attr) {
           attrs[attr.nodeName] = attr.nodeValue;
         });
-
+  
         this.replaceWith(function() {
           return $("<" + newType + "/>", attrs).append($(this).contents());
         });
       };
     })(jQuery);
-
+  
     // prevent underline for linked images
     $('a > img').parent().css({'border-bottom' : 'none'});
-
+  
     // mark non-body figures created by knitr chunks as 100% width
     $('.layout-chunk').each(function(i, val) {
       var figures = $(this).find('img, .html-widget');
@@ -1977,35 +1977,35 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
           var fig = $(this);
           fig.css('width', fig.attr('width') + 'px');
         });
-
+  
       }
     });
-
+  
     // auto-append index.html to post-preview links in file: protocol
     // and in rstudio ide preview
     $('.post-preview').each(function(i, val) {
       if (window.location.protocol === "file:")
         $(this).attr('href', $(this).attr('href') + "index.html");
     });
-
+  
     // get rid of index.html references in header
     if (window.location.protocol !== "file:") {
       $('.distill-site-header a[href]').each(function(i,val) {
         $(this).attr('href', $(this).attr('href').replace("index.html", "./"));
       });
     }
-
+  
     // add class to pandoc style tables
     $('tr.header').parent('thead').parent('table').addClass('pandoc-table');
     $('.kable-table').children('table').addClass('pandoc-table');
-
+  
     // add figcaption style to table captions
     $('caption').parent('table').addClass("figcaption");
-
+  
     // initialize posts list
     if (window.init_posts_list)
       window.init_posts_list();
-
+  
     // implmement disqus comment link
     $('.disqus-comment-count').click(function() {
       window.headroom_prevent_pin = true;
@@ -2019,18 +2019,17 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       }
     });
   }
-
+  
   document.addEventListener('DOMContentLoaded', function() {
     if (is_downlevel_browser())
       init_downlevel();
     else
       window.addEventListener('WebComponentsReady', init_distill);
   });
-
+  
   </script>
-
+  
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
   <script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
   <script src="site_libs/viz-1.8.2/viz.js"></script>
   <link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
@@ -2095,7 +2094,6 @@ Model evaluation
 <a href="co-2_eneval.html">Model 2 Endogeneity evaluation</a>
 <hr/>
 <span class="nav-dropdown-header">Model 3-a-1</span>
-<a href="co-3-a-1_mmeval.html">Model 3-a-1 Measurement evaluation</a>
 <a href="co-3-a-1_smeval.html">Model 3-a-1 Structural evaluation</a>
 <a href="co-3-a-1_eneval.html">Model 3-a-1 Endogeneity evaluation</a>
 <hr/>
@@ -2108,7 +2106,6 @@ Model evaluation
 <a href="co-3-b-2_eneval.html">Model 3-b-2 Endogeneity evaluation</a>
 <a href="co-3-b-2-cop_mmeval.html">Model 3-b-2 with copula Measurement evaluation</a>
 <a href="co-3-b-2-cop_smeval.html">Model 3-b-2 with copula Structural evaluation</a>
-<hr/>
 </div>
 </div>
 <a href="Additional-Analysis.html">Additional Analysis</a>
@@ -2148,48 +2145,48 @@ Model evaluation
 <h2 id="structural-model-only">Structural Model Only</h2>
 <p>This is a path model showing only the structural model components.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div id="htmlwidget-3bf154a613aa83b56d2b" style="width:624px;height:384px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3bf154a613aa83b56d2b">{"x":{"diagram":"digraph G {\n\n// ----------------------\n// General graph settings\n// ----------------------\ngraph [\ncharset = \"UTF-8\",\nlayout = dot,\nlabel = \"\",\nfontsize = 24,\nfontcolor = black,\nfontname = helvetica,\nrankdir = LR,\nlabelloc = t,\nsplines = TRUE\nbgcolor = transparent\n]\n\n// --------------------\n// The structural model\n// --------------------\nsubgraph sm {\nrankdir = LR;\nnode [\nshape = ellipse,\ncolor = black,\nfillcolor = white,\nstyle = filled,\nfontsize = 12,\nfontcolor = black,\nheight = 1.03860677083333,\nwidth = 1.97454427083333,\nfontname = helvetica,\nfixedsize = true\n]\n\"Distrusting Beliefs\" [label=<<B>Distrusting Beliefs <\/B>>, shape = oval]\n\"Knowledge\" [label=<<B>Knowledge <\/B>>, shape = oval]\n\"Response Beliefs\" [label=<<B>Response Beliefs <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.552<\/FONT>>, shape = oval]\n\"Threat Beliefs\" [label=<<B>Threat Beliefs <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.444<\/FONT>>, shape = oval]\n\"Personal Moral Norm\" [label=<<B>Personal Moral Norm <\/B>>, shape = oval]\n\"Subjective Norm\" [label=<<B>Subjective Norm <\/B>>, shape = oval]\n\"Behavioral Intention\" [label=<<B>Behavioral Intention <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.685<\/FONT>>, shape = oval]\nedge [\ncolor = black,\nfontsize = 9,\nfontcolor = black,\nfontname = helvetica,\ndir = both,\narrowhead = normal,\narrowtail = none\n]\n\"Distrusting Beliefs\" -> {\"Response Beliefs\"}[weight = 1, label = < 𝛽 = -0.706***<BR /><FONT POINT-SIZE=\"7\">95% CI [-0.765, -0.648]   <\/FONT> >, penwidth = 4.03, style = dashed, color = black]\n\"Knowledge\" -> {\"Response Beliefs\"}[weight = 1, label = < 𝛽 = 0.103**<BR /><FONT POINT-SIZE=\"7\">95% CI [0.035, 0.174]   <\/FONT> >, penwidth = 1.015, style = solid, color = black]\n\"Distrusting Beliefs\" -> {\"Threat Beliefs\"}[weight = 1, label = < 𝛽 = -0.608***<BR /><FONT POINT-SIZE=\"7\">95% CI [-0.683, -0.535]   <\/FONT> >, penwidth = 3.54, style = dashed, color = black]\n\"Knowledge\" -> {\"Threat Beliefs\"}[weight = 1, label = < 𝛽 = 0.147***<BR /><FONT POINT-SIZE=\"7\">95% CI [0.076, 0.217]   <\/FONT> >, penwidth = 1.235, style = solid, color = black]\n\"Response Beliefs\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.476***<BR /><FONT POINT-SIZE=\"7\">95% CI [0.354, 0.596]   <\/FONT> >, penwidth = 2.88, style = solid, color = black]\n\"Threat Beliefs\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.089<BR /><FONT POINT-SIZE=\"7\">95% CI [-0.024, 0.187]   <\/FONT> >, penwidth = 0.945, style = solid, color = black]\n\"Personal Moral Norm\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.191**<BR /><FONT POINT-SIZE=\"7\">95% CI [0.044, 0.334]   <\/FONT> >, penwidth = 1.455, style = solid, color = black]\n\"Subjective Norm\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.149**<BR /><FONT POINT-SIZE=\"7\">95% CI [0.043, 0.28]   <\/FONT> >, penwidth = 1.245, style = solid, color = black]\n}\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-2b9f7240e3931b258d89" style="width:624px;height:384px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2b9f7240e3931b258d89">{"x":{"diagram":"digraph G {\n\n// ----------------------\n// General graph settings\n// ----------------------\ngraph [\ncharset = \"UTF-8\",\nlayout = dot,\nlabel = \"\",\nfontsize = 24,\nfontcolor = black,\nfontname = helvetica,\nrankdir = LR,\nlabelloc = t,\nsplines = TRUE\nbgcolor = transparent\n]\n\n// --------------------\n// The structural model\n// --------------------\nsubgraph sm {\nrankdir = LR;\nnode [\nshape = ellipse,\ncolor = black,\nfillcolor = white,\nstyle = filled,\nfontsize = 12,\nfontcolor = black,\nheight = 1.00833333333333,\nwidth = 2.37916666666667,\nfontname = helvetica,\nfixedsize = true\n]\n\"Distrusting Beliefs\" [label=<<B>Distrusting Beliefs <\/B>>, shape = oval]\n\"Knowledge\" [label=<<B>Knowledge <\/B>>, shape = oval]\n\"Response Beliefs\" [label=<<B>Response Beliefs <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.552<\/FONT>>, shape = oval]\n\"Threat Beliefs\" [label=<<B>Threat Beliefs <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.444<\/FONT>>, shape = oval]\n\"Personal Moral Norm\" [label=<<B>Personal Moral Norm <\/B>>, shape = oval]\n\"Subjective Norm\" [label=<<B>Subjective Norm <\/B>>, shape = oval]\n\"Behavioral Intention\" [label=<<B>Behavioral Intention <\/B><BR /><FONT POINT-SIZE=\"10\">r² = 0.685<\/FONT>>, shape = oval]\nedge [\ncolor = black,\nfontsize = 9,\nfontcolor = black,\nfontname = helvetica,\ndir = both,\narrowhead = normal,\narrowtail = none\n]\n\"Distrusting Beliefs\" -> {\"Response Beliefs\"}[weight = 1, label = < 𝛽 = -0.706***<BR /><FONT POINT-SIZE=\"7\">95% CI [-0.765, -0.648]   <\/FONT> >, penwidth = 4.03, style = dashed, color = black]\n\"Knowledge\" -> {\"Response Beliefs\"}[weight = 1, label = < 𝛽 = 0.103**<BR /><FONT POINT-SIZE=\"7\">95% CI [0.035, 0.174]   <\/FONT> >, penwidth = 1.015, style = solid, color = black]\n\"Distrusting Beliefs\" -> {\"Threat Beliefs\"}[weight = 1, label = < 𝛽 = -0.608***<BR /><FONT POINT-SIZE=\"7\">95% CI [-0.683, -0.535]   <\/FONT> >, penwidth = 3.54, style = dashed, color = black]\n\"Knowledge\" -> {\"Threat Beliefs\"}[weight = 1, label = < 𝛽 = 0.147***<BR /><FONT POINT-SIZE=\"7\">95% CI [0.076, 0.217]   <\/FONT> >, penwidth = 1.235, style = solid, color = black]\n\"Response Beliefs\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.476***<BR /><FONT POINT-SIZE=\"7\">95% CI [0.354, 0.596]   <\/FONT> >, penwidth = 2.88, style = solid, color = black]\n\"Threat Beliefs\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.089<BR /><FONT POINT-SIZE=\"7\">95% CI [-0.024, 0.187]   <\/FONT> >, penwidth = 0.945, style = solid, color = black]\n\"Personal Moral Norm\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.191**<BR /><FONT POINT-SIZE=\"7\">95% CI [0.044, 0.334]   <\/FONT> >, penwidth = 1.455, style = solid, color = black]\n\"Subjective Norm\" -> {\"Behavioral Intention\"}[weight = 1, label = < 𝛽 = 0.149**<BR /><FONT POINT-SIZE=\"7\">95% CI [0.043, 0.28]   <\/FONT> >, penwidth = 1.245, style = solid, color = black]\n}\n\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 </div>
 <h1 id="collinearity">Collinearity</h1>
 <p>Collinearity is assessed using the variance inflation factor (VIF). VIF should be &lt; 5, ideally <span class="math inline">\(\leq\)</span> 3.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div id="htmlwidget-eba1ee136f4da389d472" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-eba1ee136f4da389d472">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"1.09555949413486\" data-max=\"4.43156307850907\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Results of the structural collinearity assessment<\/caption>","data":[["Distrusting Beliefs","Knowledge","Distrusting Beliefs","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Descriptive Norm","Injunctive Norm","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity"],["Response Beliefs","Response Beliefs","Threat Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Response Costs","Perceived Response Costs","Perceived Response Costs","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Severity","Perceived Severity","Perceived Severity","Perceived Severity"],[1.09555949413486,1.09555949413486,1.09555949413486,1.09555949413486,3.25272220728289,2.57256656540447,3.508648956482,2.39650018782657,1.70662507793198,2.97129538128356,1.35184119786083,1.43947293992866,2.92463898941288,2.50193200212235,2.11259868622257,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>VIF<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":35,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,25,35,50,100],"rowCallback":"function(row, data) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 3 ? \"#00\" : value <= 5 ? \"#ffe5e5\" : \"#ff9999\"});\n}"}},"evals":["options.columnDefs.0.render","options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-7640cd4b2da2dd19c8fd" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7640cd4b2da2dd19c8fd">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"1.09555949413486\" data-max=\"4.43156307850907\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Results of the structural collinearity assessment<\/caption>","data":[["Distrusting Beliefs","Knowledge","Distrusting Beliefs","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Descriptive Norm","Injunctive Norm","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity"],["Response Beliefs","Response Beliefs","Threat Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Response Costs","Perceived Response Costs","Perceived Response Costs","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Severity","Perceived Severity","Perceived Severity","Perceived Severity"],[1.09555949413486,1.09555949413486,1.09555949413486,1.09555949413486,3.25272220728289,2.57256656540447,3.508648956482,2.39650018782657,1.70662507793198,2.97129538128356,1.35184119786083,1.43947293992866,2.92463898941288,2.50193200212235,2.11259868622257,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907,1.11984712252523,4.0615186289205,3.8150200186664,4.43156307850907]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>VIF<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":35,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,25,35,50,100],"rowCallback":"function(row, data) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 3 ? \"#00\" : value <= 5 ? \"#ffe5e5\" : \"#ff9999\"});\n}"}},"evals":["options.columnDefs.0.render","options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <p>VIF is above 3 for some constructs, specifically lower-order constructs. But it is not above 5 for any constructs.</p>
 <h1 id="in-sample-predictive-power">In-sample predictive power</h1>
 <p>In-sample predictive power is assessed using variance explained R². R² <span class="math inline">\(\geq\)</span> 0.75 indicates substantial in-sample predictive power, R² <span class="math inline">\(\geq\)</span> 0.5 moderate and R² <span class="math inline">\(\geq\)</span> 0.25 weak in-sample predictive power. R² <span class="math inline">\(\leq\)</span> 0.10 indicates a lack of model predictiveness.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div id="htmlwidget-ffae73f966f781eea660" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-ffae73f966f781eea660">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.137522639579696\" data-max=\"0.684621022606056\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.129536738094323\" data-max=\"0.681700846889445\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>In-sample predictive power<\/caption>","data":[["Response Beliefs","Threat Beliefs","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity"],[0.552224482686183,0.443670926956937,0.684621022606056,0.240810110942516,0.463399984374988,0.340264112100746,0.137522639579697,0.449008419622033],[0.550161001039576,0.441107198509734,0.681700846889445,0.233780574932725,0.458431465711793,0.334155446472049,0.129536738094323,0.443906645729644]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Construct<\/th>\n      <th>R²<\/th>\n      <th>R²adj<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[8,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.1 ? \"#ff9999\" : value <= 0.249 ? \"#ffe5e5\" : value <= 0.9 ? \"#00\" : \"#ff9999\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-191904a1adcff5493706" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-191904a1adcff5493706">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.137522639579696\" data-max=\"0.684621022606056\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.129536738094323\" data-max=\"0.681700846889445\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>In-sample predictive power<\/caption>","data":[["Response Beliefs","Threat Beliefs","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity"],[0.552224482686183,0.443670926956937,0.684621022606056,0.240810110942516,0.463399984374988,0.340264112100746,0.137522639579697,0.449008419622033],[0.550161001039576,0.441107198509734,0.681700846889445,0.233780574932725,0.458431465711793,0.334155446472049,0.129536738094323,0.443906645729644]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Construct<\/th>\n      <th>R²<\/th>\n      <th>R²adj<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[8,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.1 ? \"#ff9999\" : value <= 0.249 ? \"#ffe5e5\" : value <= 0.9 ? \"#00\" : \"#ff9999\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <p>R² is below 0.25 for the Threat Beliefs lower-order constructs, but not below 0.1. All other R² values are above 0.25, indicating weak in-sample predictive power at a minimum. For Response Beliefs and Behavioral Intention, R² is above 0.5, indicating moderate in-sample predictive power.</p>
 <h1 id="effect-size">Effect size</h1>
 <p>Effect size f2² measures the impact of a predictor construct on an endogenous construct. f² <span class="math inline">\(\geq\)</span> 0.35 indicates a large effect, f² <span class="math inline">\(\geq\)</span> 0.15 a medium and f² <span class="math inline">\(\geq\)</span> 0.02 a small effect.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div id="htmlwidget-3577857afcf105bf00e5" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-3577857afcf105bf00e5">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.000162999652293\" data-max=\"0.9950687740623\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Effect sizes<\/caption>","data":[["Distrusting Beliefs","Knowledge","Distrusting Beliefs","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm","Knowledge","Knowledge","Knowledge","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Benevolence","Competence","Integrity","Benevolence","Competence","Integrity","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Perceived Susceptibility","Perceived Severity","Descriptive Norm","Injunctive Norm"],["Response Beliefs","Response Beliefs","Threat Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Response Costs","Perceived Response Costs","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Severity","Perceived Severity","Perceived Severity","Perceived Severity","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],[0.9950687740623,0.0151247009098147,0.605364849122584,0.0343513791338131,0.201586340931497,0.00965039593158975,0.0301231182595595,0.0272975653433557,0.00766824944983385,0.0281406497306875,0.00153723498514523,0.00224911960546646,0.19333649128561,0.029204057644326,0.000863647530491314,0.0693503444274909,0.000386206902488153,0.0133547942593294,0.0461386859902734,0.0146011146086494,0.0563446819410818,0.0242158048415115,0.000162999652293704,0.0110931157178612,0.00799826168112481,0.00362721747283294,0.00106964535315984,0.0389635631087276,0.0814304181719079,0.0340411157364973,0.00154837637922984,0.00171564231454556,0.00634834729423065,0.0119481909617375,0.00806589193754243]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>f²<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":35,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,25,35,50,100],"rowCallback":"function(row, data) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.019 ? \"#ff9999\" : \"#00\"});\n}"}},"evals":["options.columnDefs.0.render","options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-12494093976c259de33f" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-12494093976c259de33f">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.000162999652293\" data-max=\"0.9950687740623\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Effect sizes<\/caption>","data":[["Distrusting Beliefs","Knowledge","Distrusting Beliefs","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm","Knowledge","Knowledge","Knowledge","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Benevolence","Competence","Integrity","Benevolence","Competence","Integrity","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Knowledge","Benevolence","Competence","Integrity","Perceived Susceptibility","Perceived Severity","Descriptive Norm","Injunctive Norm"],["Response Beliefs","Response Beliefs","Threat Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Response Costs","Perceived Response Costs","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Susceptibility","Perceived Severity","Perceived Severity","Perceived Severity","Perceived Severity","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],[0.9950687740623,0.0151247009098147,0.605364849122584,0.0343513791338131,0.201586340931497,0.00965039593158975,0.0301231182595595,0.0272975653433557,0.00766824944983385,0.0281406497306875,0.00153723498514523,0.00224911960546646,0.19333649128561,0.029204057644326,0.000863647530491314,0.0693503444274909,0.000386206902488153,0.0133547942593294,0.0461386859902734,0.0146011146086494,0.0563446819410818,0.0242158048415115,0.000162999652293704,0.0110931157178612,0.00799826168112481,0.00362721747283294,0.00106964535315984,0.0389635631087276,0.0814304181719079,0.0340411157364973,0.00154837637922984,0.00171564231454556,0.00634834729423065,0.0119481909617375,0.00806589193754243]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>f²<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":35,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":2}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,25,35,50,100],"rowCallback":"function(row, data) {\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.019 ? \"#ff9999\" : \"#00\"});\n}"}},"evals":["options.columnDefs.0.render","options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <p>The effect sizes of the relationships including many lower-order constructs are below 0.2. Benevolence has only an effect on Perceived Response Costs and Perceived Severity. Competence has an effect on all its descendant lower-order constructs except Perceived Susceptibility. Integrity only has an effect on any of Perceived Response Efficacy. Knowledge has a discernible effect only on Perceived Response Efficacy, Threat Beliefs and Perceived Severity. From the lower-order constructs, only Perceived Response Efficacy and Perceived Response Costs have a discernible effect on Behavioral Intention. Apart from that, there is only a negligible effect of Threat Beliefs on Behavioral Intention. If this is mirrored in non-significant and irrelevant path coefficients, these structural relationships can be removed. Other than that, all effects are small at a minimum. The effects of Perceived Response Efficacy and Response Beliefs on Behavioral Intention are medium. The effect of Distrusting Beliefs on both Threat Beliefs and Response Beliefs is large.</p>
 <h1 id="out-of-sample-predictive-performance">Out-of-sample predictive performance</h1>
 <p>Out-of-sample predictive performance has to be evaluated using a simplified model without HOCs as an approximation as seminr as of now does not support plspredict for HOC. If the root mean square error (RMSE) or the mean absolute deviation (MAD) of the naive LM model is below the ones for the PLS model, this indicates a lack of predictive performance. However, a lack of predictive performance does not imply a lack of explanatory power.</p>
 <div class="layout-chunk" data-layout="l-page">
-<div id="htmlwidget-0716bc1408fe4a5afd35" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-0716bc1408fe4a5afd35">{"x":{"filter":"none","caption":"<caption>Out-of-sample predictive performance<\/caption>","data":[["PLS RMSE","LM RMSE","RMSE Difference","PLS MAD","LM MAD","MAD Difference"],[1.08366239018265,0.906081631495794,-0.177580758686856,0.814498454885798,0.681170475223864,-0.133327979661934],[1.32875894313621,1.14182572286996,-0.186933220266252,1.07181333041341,0.916295803692619,-0.155517526720792],[1.16477049693345,0.922898868638477,-0.241871628294971,0.873367846114557,0.708395065349138,-0.164972780765419],[1.52342357205353,1.45969116607685,-0.06373240597668,1.27831044011511,1.12646760035797,-0.151842839757137],[1.5128919510007,1.45929871279083,-0.0535932382098765,1.22137818478715,1.1152581188487,-0.106120065938458],[1.39419651824736,1.32363281554302,-0.0705637027043426,1.11309638880042,0.982965466946204,-0.13013092185422],[0.990597647685426,0.88541523504102,-0.105182412644406,0.761808928506631,0.667398782174682,-0.0944101463319491],[1.18444593554125,1.19029865121121,0.00585271566995993,0.95025887927852,0.959598719087137,0.00933983980861675],[1.25896699057664,1.23672457418101,-0.0222424163956385,1.00593321751249,0.980944358589365,-0.0249888589231283],[1.32808762994935,1.35335408151372,0.025266451564369,1.08094825905818,1.10202392995213,0.021075670893941],[1.03780942450705,0.967534743116367,-0.0702746813906864,0.824799578267877,0.759497946612295,-0.0653016316555824],[0.82616491120627,0.783773148165195,-0.0423917630410753,0.600061295129793,0.551201406458957,-0.0488598886708358],[0.930663631246976,0.815818060846161,-0.114845570400815,0.708892736468523,0.605765322979501,-0.103127413489022],[0.946351340858384,0.930333406248963,-0.0160179346094207,0.641124009538052,0.653747255273058,0.0126232457350056],[1.79166218437345,1.58385317496237,-0.207809009411077,1.56952025547749,1.255790359394,-0.313729896083489],[0.869293843783328,0.892461105157701,0.023167261374373,0.606720303476795,0.628594808760576,0.0218745052837812]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Prediction Errors<\/th>\n      <th>CORB4<\/th>\n      <th>CORB5<\/th>\n      <th>CORB6<\/th>\n      <th>CORB7<\/th>\n      <th>CORB8<\/th>\n      <th>CORB9<\/th>\n      <th>CORB10<\/th>\n      <th>COTB1<\/th>\n      <th>COTB2<\/th>\n      <th>COTB3<\/th>\n      <th>COTB4<\/th>\n      <th>COTB5<\/th>\n      <th>COTB6<\/th>\n      <th>COBI1<\/th>\n      <th>COBI2<\/th>\n      <th>COBI3<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":9,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":10,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":11,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":12,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":13,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":14,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":15,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":16,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[13]; $(this.api().cell(row, 13).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[14]; $(this.api().cell(row, 14).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[15]; $(this.api().cell(row, 15).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[16]; $(this.api().cell(row, 16).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render","options.columnDefs.7.render","options.columnDefs.8.render","options.columnDefs.9.render","options.columnDefs.10.render","options.columnDefs.11.render","options.columnDefs.12.render","options.columnDefs.13.render","options.columnDefs.14.render","options.columnDefs.15.render","options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-941b0934ecf4579a8acf" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-941b0934ecf4579a8acf">{"x":{"filter":"none","caption":"<caption>Out-of-sample predictive performance<\/caption>","data":[["PLS RMSE","LM RMSE","RMSE Difference","PLS MAD","LM MAD","MAD Difference"],[1.0793106271955,0.907502071224382,-0.171808555971122,0.811588712232705,0.680376040684719,-0.131212671547986],[1.32590519578077,1.14075081756432,-0.185154378216451,1.06820729740147,0.911970648948906,-0.156236648452565],[1.15636869154806,0.914720183846666,-0.241648507701395,0.87018694182668,0.69910503297198,-0.171081908854701],[1.51531954358549,1.44985474937521,-0.0654647942102795,1.268733475411,1.12373415982649,-0.144999315584508],[1.50790178725312,1.4518951382764,-0.0560066489767233,1.21558088151129,1.10615284173886,-0.109428039772433],[1.39293111030365,1.33597857503762,-0.0569525352660298,1.11381432177471,0.979328667216593,-0.134485654558119],[0.988890277173684,0.886705398094266,-0.102184879079417,0.76055654263867,0.668191851973289,-0.0923646906653809],[1.18894954878398,1.19161056072443,0.00266101194045598,0.953491740930074,0.959357861194131,0.00586612026405731],[1.2599850014032,1.22620146955341,-0.0337835318497872,1.00627134972755,0.969992484263566,-0.036278865463988],[1.32732925812442,1.34185402515015,0.0145247670257294,1.08232495994748,1.08877484976744,0.0064498898199612],[1.04128610731889,0.968064741858038,-0.0732213654608522,0.824801513792992,0.757412680873882,-0.0673888329191104],[0.833813148845511,0.795345691466163,-0.038467457379348,0.605569168946579,0.558354524938012,-0.0472146440085673],[0.935401710450845,0.830278111656561,-0.105123598794284,0.711596852564612,0.616551188361266,-0.0950456642033466],[0.951296866738658,0.928704523055537,-0.0225923436831215,0.64158195632884,0.645935585519095,0.00435362919025573],[1.79332134765115,1.6003756451134,-0.192945702537753,1.57193046286573,1.26668756792711,-0.305242894938628],[0.868282038996099,0.885541645575388,0.0172596065792894,0.607648830700302,0.625388126346011,0.0177392956457089]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Prediction Errors<\/th>\n      <th>CORB4<\/th>\n      <th>CORB5<\/th>\n      <th>CORB6<\/th>\n      <th>CORB7<\/th>\n      <th>CORB8<\/th>\n      <th>CORB9<\/th>\n      <th>CORB10<\/th>\n      <th>COTB1<\/th>\n      <th>COTB2<\/th>\n      <th>COTB3<\/th>\n      <th>COTB4<\/th>\n      <th>COTB5<\/th>\n      <th>COTB6<\/th>\n      <th>COBI1<\/th>\n      <th>COBI2<\/th>\n      <th>COBI3<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":6,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":9,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":10,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":11,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":12,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":13,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":14,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":15,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":16,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[6,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[0]; $(this.api().cell(row, 0).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[1]; $(this.api().cell(row, 1).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[2]; $(this.api().cell(row, 2).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[10]; $(this.api().cell(row, 10).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[11]; $(this.api().cell(row, 11).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[12]; $(this.api().cell(row, 12).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[13]; $(this.api().cell(row, 13).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[14]; $(this.api().cell(row, 14).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[15]; $(this.api().cell(row, 15).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\nvar value=data[16]; $(this.api().cell(row, 16).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0 ? \"#ff9999\" : \"#00\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render","options.columnDefs.7.render","options.columnDefs.8.render","options.columnDefs.9.render","options.columnDefs.10.render","options.columnDefs.11.render","options.columnDefs.12.render","options.columnDefs.13.render","options.columnDefs.14.render","options.columnDefs.15.render","options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <p>Only COTB1, COTB3 and COBI3 are predicted better by the model than the LM in terms of both RMSE and MAD.</p>
 <h1 id="significance-and-relevance-of-path-coefficients">Significance and relevance of path coefficients</h1>
 <p>Significance is denoted by t-test and p values. A t of <span class="math inline">\(\geq\)</span> 1.65 signifies significance at the 10 % level, t <span class="math inline">\(\geq\)</span> 1.96 at the 5 % level and t <span class="math inline">\(\geq\)</span> 2.57 at the 1 % level.</p>
 <div class="layout-chunk" data-layout="l-page">
-<div id="htmlwidget-4c9386fa497865b5749a" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-4c9386fa497865b5749a">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.706107641215964\" data-max=\"0.476144849082257\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.709285842461597\" data-max=\"0.474772128961045\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.030308945461193\" data-max=\"0.10095150202783\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.765205459017301\" data-max=\"0.353559470597272\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.647532493158661\" data-max=\"0.595720825490319\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"logical\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;true&quot;,&quot;false&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.254110930449723\" data-max=\"23.2970045797221\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0\" data-max=\"0.399764690172775\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Relevance and significance of path coefficients<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs","Knowledge","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm","Knowledge","Knowledge","Knowledge","Knowledge","Knowledge","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Benevolence","Benevolence","Benevolence","Benevolence","Benevolence","Competence","Competence","Competence","Competence","Competence","Integrity","Integrity","Integrity","Integrity","Integrity","Perceived Susceptibility","Perceived Severity","Descriptive Norm","Injunctive Norm"],["Response Beliefs","Threat Beliefs","Response Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],[-0.706107641215964,-0.60766550280693,0.103109427725726,0.147063395863921,0.476144849082257,0.0893682624979154,0.191453075832343,0.149169612043802,0.0807425931134537,0.132747884112164,-0.0326686076781751,0.105274051734609,0.156817835155023,-0.0377181339925061,0.439242402952761,0.109795845384046,-0.0515954456920351,-0.172091318179339,-0.393088326327003,-0.162701053073574,-0.427866561834975,-0.448170749149658,-0.303052854998774,-0.248188543190093,-0.122347900641051,-0.266721829582333,0.03592259653894,-0.190860962911552,0.0242479150453155,-0.0599383073949913,0.0623940981627559,0.0270524202883786,0.0765157406586293,0.104892193073813,0.0716651366804098],[-0.709285842461596,-0.611755966470531,0.103109204964002,0.145960164592977,0.474772128961045,0.0856765880160298,0.189573572595094,0.158593078072794,0.0791997902773443,0.133190426995272,-0.0321371777119383,0.104617320941191,0.156022465916335,-0.0365013716377914,0.435213094370685,0.109548402725421,-0.0532098527783873,-0.174645893327706,-0.393864729695534,-0.164145618514329,-0.428419184154492,-0.446918312495319,-0.304702490610301,-0.248269555088767,-0.120316533256668,-0.264782869445387,0.0350255540998705,-0.188250012623261,0.022312955016509,-0.0633628227793636,0.0591228398971111,0.0263621802840169,0.0742687588480679,0.10714085103032,0.0768482887643863],[0.0303089454611932,0.038234503335371,0.0354902598149822,0.0362940031081102,0.0625927774867617,0.0543813587887203,0.0743369304370109,0.0596216602648919,0.0470905802538283,0.038507110556724,0.0409397277151749,0.0499870874403155,0.0361261510645224,0.0433238060978233,0.0577428505604861,0.0482609597554947,0.0919244055866716,0.0895532000039373,0.0883969973398731,0.0910715537035906,0.0770943039458772,0.100951502027829,0.0838094145355337,0.0923726470661007,0.0862591396081902,0.0890771250239473,0.0976406005053053,0.0914691654201071,0.0954225581811919,0.0955476299906248,0.0859049591224842,0.0317933872770823,0.0576698209224824,0.0610530380937808,0.043012928610833],[-0.7652054590173,-0.683387910612705,0.0349141310443401,0.0756123652565912,0.353559470597271,-0.0243841070567615,0.0440057583633376,0.043046894631078,-0.0139019977590999,0.0573554341649841,-0.112533616627486,0.00541681653409683,0.0848889015503699,-0.118805142896578,0.318925870941227,0.0189884326753231,-0.238517852864133,-0.35233699198001,-0.564952960289208,-0.344057730224249,-0.581260727079601,-0.642666041682408,-0.468907589110774,-0.430029754416621,-0.293199842519597,-0.441103721193961,-0.154292444111931,-0.362795409300037,-0.164160680258038,-0.247551814653469,-0.109728884663928,-0.0345799044181871,-0.0405090690883643,-0.0100987365956887,-0.00422963409705519],[-0.647532493158661,-0.534872613357076,0.174001381178353,0.21746046592769,0.595720825490318,0.187454826354139,0.333778648688899,0.280113484040602,0.169870187351944,0.210217461079324,0.0470328862390668,0.204727982840739,0.227761888462897,0.049954379538821,0.546343513859538,0.207323951229968,0.121070201138903,-0.00202133150885443,-0.218391823758362,0.0163768190245274,-0.281563071782352,-0.248171865174697,-0.141530213992199,-0.0659843503308154,0.0489649377173864,-0.0879787500958371,0.228227668064305,-0.00703709323338602,0.206908761178876,0.128223760001892,0.229800594701295,0.0900523721021805,0.184769353842204,0.230897606199751,0.165581224892148],[false,false,false,false,false,true,false,false,true,false,true,false,false,true,false,false,true,false,false,true,false,false,false,false,true,false,true,false,true,true,true,true,true,true,true],[23.2970045797221,15.8931187748625,2.90528804982708,4.05200262494765,7.60702541412164,1.64336207274858,2.57547728574252,2.50193656770139,1.71462302393034,3.44736029769402,0.797968367192292,2.10602491814123,4.34083982196006,0.870609888414241,7.60687078468097,2.27504479687736,0.561281254556364,1.9216657603723,4.44685156912783,1.78651891240502,5.54991147122039,4.43946588358943,3.61597627997132,2.68681856667475,1.41837608393481,2.99427972681682,0.367906345854439,2.08661533135182,0.254110930449723,0.627313387060176,0.726315439761676,0.850881979092515,1.32678998191236,1.71805034358312,1.66613013795951],[6.22804461798975e-79,1.62074386656448e-45,0.0019277234141999,3.00510982728455e-05,8.68489151344107e-14,0.0505136435293952,0.00516893657377111,0.00635806942439826,0.0435616738739998,0.000310460294836618,0.212661123848362,0.0178859885392619,8.82721071016738e-06,0.192222592394438,8.69406777914361e-14,0.0116934261179561,0.287446760725311,0.0276489232228183,5.53260354747671e-06,0.0373541948445024,2.48222011352927e-08,5.71737599015948e-06,0.000167053363328479,0.00374435714236883,0.0783968633048252,0.00145357382425329,0.356560599093183,0.0187510123498737,0.399764690172774,0.265390724844154,0.234017126984995,0.197650449968582,0.0926355173623454,0.0432478909703221,0.0482020395068433]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>Original Estimate<\/th>\n      <th>Bootstrap Mean<\/th>\n      <th>Bootstrap SD<\/th>\n      <th>2.5% CI<\/th>\n      <th>97.5% CI<\/th>\n      <th>0 in CI<\/th>\n      <th>t(437)<\/th>\n      <th>p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":35,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":9,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[2,3,4,5,6,8,9]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,25,35,50,100],"rowCallback":"function(row, data) {\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 1.649 ? \"#ff9999\" : \"#00\"});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.049 ? \"#00\" : \"#ff9999\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':value == 1 ? \"#ff9999\" : value == 0 ? \"#00\" : null});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render","options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-ad8a138809e8172d17d9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ad8a138809e8172d17d9">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.706107641215964\" data-max=\"0.476144849082257\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.709285842461597\" data-max=\"0.474772128961045\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.030308945461193\" data-max=\"0.10095150202783\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.765205459017301\" data-max=\"0.353559470597272\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.647532493158661\" data-max=\"0.595720825490319\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"logical\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;true&quot;,&quot;false&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.254110930449723\" data-max=\"23.2970045797221\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0\" data-max=\"0.399764690172775\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Relevance and significance of path coefficients<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs","Knowledge","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm","Knowledge","Knowledge","Knowledge","Knowledge","Knowledge","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Benevolence","Benevolence","Benevolence","Benevolence","Benevolence","Competence","Competence","Competence","Competence","Competence","Integrity","Integrity","Integrity","Integrity","Integrity","Perceived Susceptibility","Perceived Severity","Descriptive Norm","Injunctive Norm"],["Response Beliefs","Threat Beliefs","Response Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Behavioral Intention","Behavioral Intention","Behavioral Intention","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Perceived Self-Efficacy","Perceived Response Efficacy","Perceived Response Costs","Perceived Susceptibility","Perceived Severity","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],[-0.706107641215964,-0.60766550280693,0.103109427725726,0.147063395863921,0.476144849082257,0.0893682624979154,0.191453075832343,0.149169612043802,0.0807425931134537,0.132747884112164,-0.0326686076781751,0.105274051734609,0.156817835155023,-0.0377181339925061,0.439242402952761,0.109795845384046,-0.0515954456920351,-0.172091318179339,-0.393088326327003,-0.162701053073574,-0.427866561834975,-0.448170749149658,-0.303052854998774,-0.248188543190093,-0.122347900641051,-0.266721829582333,0.03592259653894,-0.190860962911552,0.0242479150453155,-0.0599383073949913,0.0623940981627559,0.0270524202883786,0.0765157406586293,0.104892193073813,0.0716651366804098],[-0.709285842461596,-0.611755966470531,0.103109204964002,0.145960164592977,0.474772128961045,0.0856765880160298,0.189573572595094,0.158593078072794,0.0791997902773443,0.133190426995272,-0.0321371777119383,0.104617320941191,0.156022465916335,-0.0365013716377914,0.435213094370685,0.109548402725421,-0.0532098527783873,-0.174645893327706,-0.393864729695534,-0.164145618514329,-0.428419184154492,-0.446918312495319,-0.304702490610301,-0.248269555088767,-0.120316533256668,-0.264782869445387,0.0350255540998705,-0.188250012623261,0.022312955016509,-0.0633628227793636,0.0591228398971111,0.0263621802840169,0.0742687588480679,0.10714085103032,0.0768482887643863],[0.0303089454611932,0.038234503335371,0.0354902598149822,0.0362940031081102,0.0625927774867617,0.0543813587887203,0.0743369304370109,0.0596216602648919,0.0470905802538283,0.038507110556724,0.0409397277151749,0.0499870874403155,0.0361261510645224,0.0433238060978233,0.0577428505604861,0.0482609597554947,0.0919244055866716,0.0895532000039373,0.0883969973398731,0.0910715537035906,0.0770943039458772,0.100951502027829,0.0838094145355337,0.0923726470661007,0.0862591396081902,0.0890771250239473,0.0976406005053053,0.0914691654201071,0.0954225581811919,0.0955476299906248,0.0859049591224842,0.0317933872770823,0.0576698209224824,0.0610530380937808,0.043012928610833],[-0.7652054590173,-0.683387910612705,0.0349141310443401,0.0756123652565912,0.353559470597271,-0.0243841070567615,0.0440057583633376,0.043046894631078,-0.0139019977590999,0.0573554341649841,-0.112533616627486,0.00541681653409683,0.0848889015503699,-0.118805142896578,0.318925870941227,0.0189884326753231,-0.238517852864133,-0.35233699198001,-0.564952960289208,-0.344057730224249,-0.581260727079601,-0.642666041682408,-0.468907589110774,-0.430029754416621,-0.293199842519597,-0.441103721193961,-0.154292444111931,-0.362795409300037,-0.164160680258038,-0.247551814653469,-0.109728884663928,-0.0345799044181871,-0.0405090690883643,-0.0100987365956887,-0.00422963409705519],[-0.647532493158661,-0.534872613357076,0.174001381178353,0.21746046592769,0.595720825490318,0.187454826354139,0.333778648688899,0.280113484040602,0.169870187351944,0.210217461079324,0.0470328862390668,0.204727982840739,0.227761888462897,0.049954379538821,0.546343513859538,0.207323951229968,0.121070201138903,-0.00202133150885443,-0.218391823758362,0.0163768190245274,-0.281563071782352,-0.248171865174697,-0.141530213992199,-0.0659843503308154,0.0489649377173864,-0.0879787500958371,0.228227668064305,-0.00703709323338602,0.206908761178876,0.128223760001892,0.229800594701295,0.0900523721021805,0.184769353842204,0.230897606199751,0.165581224892148],[false,false,false,false,false,true,false,false,true,false,true,false,false,true,false,false,true,false,false,true,false,false,false,false,true,false,true,false,true,true,true,true,true,true,true],[23.2970045797221,15.8931187748625,2.90528804982708,4.05200262494765,7.60702541412164,1.64336207274858,2.57547728574252,2.50193656770139,1.71462302393034,3.44736029769402,0.797968367192292,2.10602491814123,4.34083982196006,0.870609888414241,7.60687078468097,2.27504479687736,0.561281254556364,1.9216657603723,4.44685156912783,1.78651891240502,5.54991147122039,4.43946588358943,3.61597627997132,2.68681856667475,1.41837608393481,2.99427972681682,0.367906345854439,2.08661533135182,0.254110930449723,0.627313387060176,0.726315439761676,0.850881979092515,1.32678998191236,1.71805034358312,1.66613013795951],[6.22804461798975e-79,1.62074386656448e-45,0.0019277234141999,3.00510982728455e-05,8.68489151344107e-14,0.0505136435293952,0.00516893657377111,0.00635806942439826,0.0435616738739998,0.000310460294836618,0.212661123848362,0.0178859885392619,8.82721071016738e-06,0.192222592394438,8.69406777914361e-14,0.0116934261179561,0.287446760725311,0.0276489232228183,5.53260354747671e-06,0.0373541948445024,2.48222011352927e-08,5.71737599015948e-06,0.000167053363328479,0.00374435714236883,0.0783968633048252,0.00145357382425329,0.356560599093183,0.0187510123498737,0.399764690172774,0.265390724844154,0.234017126984995,0.197650449968582,0.0926355173623454,0.0432478909703221,0.0482020395068433]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>Original Estimate<\/th>\n      <th>Bootstrap Mean<\/th>\n      <th>Bootstrap SD<\/th>\n      <th>2.5% CI<\/th>\n      <th>97.5% CI<\/th>\n      <th>0 in CI<\/th>\n      <th>t(437)<\/th>\n      <th>p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":35,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":8,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":9,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[2,3,4,5,6,8,9]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,25,35,50,100],"rowCallback":"function(row, data) {\nvar value=data[8]; $(this.api().cell(row, 8).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 1.649 ? \"#ff9999\" : \"#00\"});\nvar value=data[9]; $(this.api().cell(row, 9).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.049 ? \"#00\" : \"#ff9999\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':value == 1 ? \"#ff9999\" : value == 0 ? \"#00\" : null});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render","options.columnDefs.6.render","options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <p>Concerning higher-order and regular constructs, only the path from Threat Beliefs to Behavioral Intention is non-significant. With lower-order constructs, non-significant paths are those from Knowledge to Perceived Response Costs and Perceived Self-Efficacy, all from Benevolence except those from Perceived Response Costs and Perceived Severity, the path from Competence to Perceived Susceptibility, all from Integrity except to Perceived Response Efficacy, all from the Threat Beliefs lower-order constructs and the one from Perceived Self-Efficacy,and both the paths from Descriptive and from Injunctive Norm to Behavioral Intention.</p>
 <h1 id="summary-table">Summary table</h1>
 <div class="layout-chunk" data-layout="l-page">
-<div id="htmlwidget-bcb891a33567584529ca" style="width:100%;height:auto;" class="datatables html-widget"></div>
-<script type="application/json" data-for="htmlwidget-bcb891a33567584529ca">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.709285842461597\" data-max=\"0.474772128961045\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"logical\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;true&quot;,&quot;false&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"1.64336207274858\" data-max=\"23.2970045797221\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0\" data-max=\"0.050513643529396\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.009650395931589\" data-max=\"0.9950687740623\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"1.09555949413486\" data-max=\"3.508648956482\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Structural Model Summary<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs","Knowledge","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm"],["Response Beliefs","Threat Beliefs","Response Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],[-0.709285842461596,-0.611755966470531,0.103109204964002,0.145960164592977,0.474772128961045,0.0856765880160298,0.189573572595094,0.158593078072794],[false,false,false,false,false,true,false,false],[23.2970045797221,15.8931187748625,2.90528804982708,4.05200262494765,7.60702541412164,1.64336207274858,2.57547728574252,2.50193656770139],[6.22804461798975e-79,1.62074386656448e-45,0.0019277234141999,3.00510982728455e-05,8.68489151344107e-14,0.0505136435293952,0.00516893657377111,0.00635806942439826],[0.9950687740623,0.605364849122584,0.0151247009098147,0.0343513791338131,0.201586340931497,0.00965039593158975,0.0301231182595595,0.0272975653433557],[1.09555949413486,1.09555949413486,1.09555949413486,1.09555949413486,3.25272220728289,2.57256656540447,3.508648956482,2.39650018782657]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>Path Coefficient Bootstrap Mean<\/th>\n      <th>0 in Path Coefficient CI<\/th>\n      <th>Path Coefficient t(437)<\/th>\n      <th>Path Coefficient p<\/th>\n      <th>f²<\/th>\n      <th>VIF<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[2,4,5,6,7]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[8,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 1.649 ? \"#ff9999\" : \"#00\"});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.049 ? \"#00\" : \"#ff9999\"});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background-color':value == 1 ? \"#ff9999\" : value == 0 ? \"#00\" : null});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.019 ? \"#ff9999\" : \"#00\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 3 ? \"#00\" : value <= 5 ? \"#ffe5e5\" : \"#ff9999\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.rowCallback"],"jsHooks":[]}</script>
+<div id="htmlwidget-3aba90b89f1ea4c565df" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3aba90b89f1ea4c565df">{"x":{"filter":"top","filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"-0.709285842461597\" data-max=\"0.474772128961045\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"logical\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;true&quot;,&quot;false&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"1.64336207274858\" data-max=\"23.2970045797221\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0\" data-max=\"0.050513643529396\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"0.009650395931589\" data-max=\"0.9950687740623\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none; position: absolute; width: 200px;\">\n      <div data-min=\"1.09555949413486\" data-max=\"3.508648956482\" data-scale=\"15\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","caption":"<caption>Structural Model Summary<\/caption>","data":[["Distrusting Beliefs","Distrusting Beliefs","Knowledge","Knowledge","Response Beliefs","Threat Beliefs","Personal Moral Norm","Subjective Norm"],["Response Beliefs","Threat Beliefs","Response Beliefs","Threat Beliefs","Behavioral Intention","Behavioral Intention","Behavioral Intention","Behavioral Intention"],[-0.709285842461596,-0.611755966470531,0.103109204964002,0.145960164592977,0.474772128961045,0.0856765880160298,0.189573572595094,0.158593078072794],[false,false,false,false,false,true,false,false],[23.2970045797221,15.8931187748625,2.90528804982708,4.05200262494765,7.60702541412164,1.64336207274858,2.57547728574252,2.50193656770139],[6.22804461798975e-79,1.62074386656448e-45,0.0019277234141999,3.00510982728455e-05,8.68489151344107e-14,0.0505136435293952,0.00516893657377111,0.00635806942439826],[0.9950687740623,0.605364849122584,0.0151247009098147,0.0343513791338131,0.201586340931497,0.00965039593158975,0.0301231182595595,0.0272975653433557],[1.09555949413486,1.09555949413486,1.09555949413486,1.09555949413486,3.25272220728289,2.57256656540447,3.508648956482,2.39650018782657]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Exogenous Construct<\/th>\n      <th>Endogenous Construct<\/th>\n      <th>Path Coefficient Bootstrap Mean<\/th>\n      <th>0 in Path Coefficient CI<\/th>\n      <th>Path Coefficient t(437)<\/th>\n      <th>Path Coefficient p<\/th>\n      <th>f²<\/th>\n      <th>VIF<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":8,"columnDefs":[{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":7,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[2,4,5,6,7]}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[8,10,25,50,100],"rowCallback":"function(row, data) {\nvar value=data[4]; $(this.api().cell(row, 4).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 1.649 ? \"#ff9999\" : \"#00\"});\nvar value=data[5]; $(this.api().cell(row, 5).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.049 ? \"#00\" : \"#ff9999\"});\nvar value=data[3]; $(this.api().cell(row, 3).node()).css({'background-color':value == 1 ? \"#ff9999\" : value == 0 ? \"#00\" : null});\nvar value=data[6]; $(this.api().cell(row, 6).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 0.019 ? \"#ff9999\" : \"#00\"});\nvar value=data[7]; $(this.api().cell(row, 7).node()).css({'background-color':isNaN(parseFloat(value)) ? '' : value <= 3 ? \"#00\" : value <= 5 ? \"#ffe5e5\" : \"#ff9999\"});\n}"}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.rowCallback"],"jsHooks":[]}</script>
 </div>
 <h1 id="results-summary">Results summary</h1>
 <p>Concerning higher-order and regular constructs, the path from Threat Beliefs to Behavioral Intention is non-significant and the effect size is negligible. Therefore the path and the Threat Beliefs construct can be removed. All other paths are significant and the effects, with the exception of the effect of Knowledge on Response Beliefs, are at least weak. Concerning the remaining lower-order constructs, Benevolence only has a significant path with a discernible effect to Perceived Response Costs, and Integrity only to Perceived Response Efficacy. Knowledge only has a significant path with a discernible effect to Perceived Response Efficacy. Perceived Self-Efficacy has no significant path to or discernible effect on Behavioral Intention. Therefore, Perceived Self-Efficacy could be removed as a lower-order construct. Neither Descriptive nor Injunctive Norm have a significant path to or a discernible effect on Behavioral Intention, though Subjective Norm has both. As Injunctive Norm is the comparatively weaker construct, it should be removed for the next model iteration and Descriptive Norm should replace the Subjective Norm HOC to assess wether it has a significant effect on its own. To differentiate the influence of Distrusting Beliefs and Knowledge on the Response Beliefs lower-order construct, an alternative model with the Response Beliefs lower-order constructs split up should be estimated.</p>
@@ -2217,6 +2214,9 @@ Model evaluation
 <div class="appendix-bottom"></div>
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
+<div class="distill-site-nav distill-site-footer">
+<p>© Copyright 2021 Lilian Kojan, Laura Burbach, André Calero Valdez and Martina Ziefle | <a href="https://www.comm.rwth-aachen.de/cms/~plea/COMM/?lidx=1">Chair of Communication Science, RWTH Aachen University</a></p>
+</div>
 <!--/radix_placeholder_navigation_after_body-->
 
 </body>
