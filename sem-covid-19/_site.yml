@@ -3,8 +3,8 @@ title: "Covid 19 Model"
 description: |
   Covid 19 Model
 output_dir: "../docs"
-include: [".html"]
-exclude: ["paper", "archive", ".gitignore", ".RMD", "Models"]
+include: [".html", "_footer.html"]
+exclude: ["paper", "archive", ".gitignore", ".RMD", "models"]
 navbar:
   right:
     - text: "Home"
@@ -27,8 +27,6 @@ navbar:
           href: co-2_eneval.html
         - text: "---------"
         - text: "Model 3-a-1"
-        - text: "Model 3-a-1 Measurement evaluation"
-          href: co-3-a-1_mmeval.html
         - text: "Model 3-a-1 Structural evaluation"
           href: co-3-a-1_smeval.html
         - text: "Model 3-a-1 Endogeneity evaluation"
@@ -49,7 +47,6 @@ navbar:
           href: co-3-b-2-cop_mmeval.html
         - text: "Model 3-b-2 with copula Structural evaluation"
           href: co-3-b-2-cop_smeval.html
-        - text: "---------"
     - text: "Additional Analysis"
       href: Additional-Analysis.html
 output: distill::distill_article

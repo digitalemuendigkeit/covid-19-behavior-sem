@@ -86,29 +86,26 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 </style>
 
   <!--radix_placeholder_meta_tags-->
-  <title>Covid 19 Model: Predictors for COVID-19 protective behaviour - accompanying website</title>
+  <title>Covid 19 Model: COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation</title>
   
-  <meta property="description" itemprop="description" content="This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."/>
   
   
   
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Covid 19 Model: Predictors for COVID-19 protective behaviour - accompanying website"/>
+  <meta property="og:title" content="Covid 19 Model: COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Covid 19 Model"/>
   
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Covid 19 Model: Predictors for COVID-19 protective behaviour - accompanying website"/>
-  <meta property="twitter:description" content="This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."/>
+  <meta property="twitter:title" content="Covid 19 Model: COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation"/>
   
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
   
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description","site"]}},"value":[{"type":"character","attributes":{},"value":["Predictors for COVID-19 protective behaviour - accompanying website"]},{"type":"character","attributes":{},"value":["This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis."]},{"type":"character","attributes":{},"value":["distill::distill_website"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","output"]}},"value":[{"type":"character","attributes":{},"value":["COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation"]},{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["distill::distill_article"]}},"value":[{"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["toc","toc_depth"]}},"value":[{"type":"logical","attributes":{},"value":[true]},{"type":"integer","attributes":{},"value":[1]}]}]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2033,6 +2030,15 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
   
   <!--/radix_placeholder_distill-->
+  <script src="site_libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+  <script src="site_libs/jquery-3.5.1/jquery.min.js"></script>
+  <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/datatables-binding-0.17/datatables.js"></script>
+  <link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+  <link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+  <script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+  <link href="site_libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+  <script src="site_libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2052,7 +2058,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Predictors for COVID-19 protective behaviour - accompanying website","description":"This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.","authors":[]}
+{"title":"COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2105,14 +2111,49 @@ Model evaluation
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Predictors for COVID-19 protective behaviour - accompanying website</h1>
+<h1>COVID-19 Model Iteration 3-a-1 Endogeneity Evaluation</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p>This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany. Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.</p>
+
 </div>
 
 
 <div class="d-article">
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#test-of-non-normality">Test of non-normality</a></li>
+<li><a href="#regression-of-response-beliefs-on-distrusting-beliefs-and-knowledge">Regression of Response Beliefs on Distrusting Beliefs and Knowledge</a></li>
+<li><a href="#regression-of-behavioral-intention-on-its-predictors">Regression of Behavioral Intention on its predictors</a></li>
+</ul>
+</nav>
+</div>
+<p>The code for the assessment of endogeneity using the Gaussian Copula approach comes from</p>
+<p>Hult, G. T. M., J. F. Hair, D. Proksch, M. Sarstedt, A. Pinkwart, &amp; C. M. Ringle (2018). Addressing Endogeneity in International Marketing Applications of Partial Least Squares Structural Equation Modeling. Journal of International Marketing, 26(3), 1–21. <a href="https://doi.org/10.1509/jim.17.0151" class="uri">https://doi.org/10.1509/jim.17.0151</a></p>
+<h1 id="test-of-non-normality">Test of non-normality</h1>
+<p>The Gaussian Copula approach can only be used if the independent variable in question is non-normally distributed. So we first test the distribution of the construct scores.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-e940b1328f5b29304976" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e940b1328f5b29304976">{"x":{"filter":"none","caption":"<caption>Results of normality tests<\/caption>","data":[["Distrusting Beliefs","Knowledge","Response Beliefs","Personal Moral Norm","Descriptive Norm"],[0.953868375417917,0.94117661511811,0.908968555553606,0.747047467432807,0.841049955677149],[1.90252699378522e-10,3.89139708968974e-12,1.56307817813135e-15,2.64604042723133e-25,1.52111672031417e-20],[0.0576363303531519,0.190551420205387,0.0966407860756325,0.229552975304236,0.17281264892267],[0.00141450002833212,8.90437442297965e-44,1.65321848031325e-10,1.77081918442685e-64,1.06733207884456e-35]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Variable<\/th>\n      <th>Shapiro-Wilk W<\/th>\n      <th>Shapiro Wilk p<\/th>\n      <th>Lilliefors D<\/th>\n      <th>Lilliefors p<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":5,"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2,3,4]}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render"],"jsHooks":[]}</script>
+</div>
+<p>All independent (or endogenous) variables are non-normally distributed. Therefore, the Gaussian Copula approach can be used for all of them.</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="co-3-a-1_eneval_files/figure-html5/distribution%20graph-1.png" width="624" /><img src="co-3-a-1_eneval_files/figure-html5/distribution%20graph-2.png" width="624" /><img src="co-3-a-1_eneval_files/figure-html5/distribution%20graph-3.png" width="624" /><img src="co-3-a-1_eneval_files/figure-html5/distribution%20graph-4.png" width="624" /><img src="co-3-a-1_eneval_files/figure-html5/distribution%20graph-5.png" width="624" /></p>
+</div>
+<h1 id="regression-of-response-beliefs-on-distrusting-beliefs-and-knowledge">Regression of Response Beliefs on Distrusting Beliefs and Knowledge</h1>
+<div class="layout-chunk" data-layout="l-body">
+<div id="htmlwidget-22d8f1e12026de2fa842" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-22d8f1e12026de2fa842">{"x":{"filter":"none","caption":"<caption>Results of the copula procedure for the regression of Response Beliefs<\/caption>","data":[["Original model value","Original model p","DI copula model value","DI copula model p","KN copula model value","KN copula model p","DI &amp; KN copula model value","DI &amp; KN copula model p"],[-0.702506338839679,3.03016074459173e-55,-0.93941238384998,3.20403411317964e-08,-0.697682249431533,2.86474360563207e-57,-0.944652905854207,1.56552463275031e-08],[0.0961291449173196,0.00711530181298897,0.0936574925870406,0.0101131815256112,0.157788712715926,0.0168622708132792,0.162954042274883,0.0117691740302609],[null,null,0.211336875716225,0.16825631029793,null,null,0.225181220385551,0.130350596047855],[null,null,null,null,-0.0447764165705976,0.212857710574898,-0.0512819393920451,0.149280955429738]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Distrusting Beliefs<\/th>\n      <th>Knowledge<\/th>\n      <th>Copula Distrusting Beliefs<\/th>\n      <th>Copula Knowledge<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render"],"jsHooks":[]}</script>
+</div>
+<p>Neither the Distrusting Beliefs nor the Knowledge copula is significant, indicating that there is no endogeneity in the regression of Response Beliefs on its predictors.</p>
+<h1 id="regression-of-behavioral-intention-on-its-predictors">Regression of Behavioral Intention on its predictors</h1>
+<div class="layout-chunk" data-layout="l-page">
+<div id="htmlwidget-21c0fab3a5376e18409a" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-21c0fab3a5376e18409a">{"x":{"filter":"none","caption":"<caption>Results of the copula procedure for the regression of Behavioral Intention<\/caption>","data":[["Original model value","Original model p","RB copula model value","RB copula model p","PN copula model value","PN copula model p","DN copula model value","DN copula model p","RB &amp; PN copula model value","RB &amp; PN copula model p","RB &amp; DN copula model value","RB &amp; DN copula model p","PN &amp; DN copula model value","PN &amp; DN copula model p","RB &amp; PN &amp; DN copula model value","RB &amp; PN &amp; DN copula model p"],[0.510502679581846,1.20194539818133e-20,0.564687676106868,2.06940645288676e-14,0.511001408208233,6.39982528695632e-20,0.510080083444946,4.33560861315376e-21,0.577730580553586,6.97922885562251e-14,0.564280300306484,9.78072722572273e-13,0.510626081301911,1.73718337193316e-20,0.567841026195737,1.47785715537839e-13],[0.243781005966392,0.00024572128252133,0.23870112672417,0.000546312596561887,0.234105808065945,0.0033616904039668,0.245045440343308,0.000226941370660422,0.215712145790888,0.00730856973074112,0.238483022401522,0.000368681346519229,0.218013925410947,0.010656880026151,0.202521823043601,0.0197492938581391],[0.143678185448542,0.014326583807812,0.141342460419224,0.0116708527150945,0.145950521715386,0.0132814183482986,0.161436826413141,0.0384945844814811,0.146214671659287,0.0138799384700825,0.158243019964016,0.0462960877642219,0.183027328334181,0.0331175551717192,0.178704202568339,0.0357245794199004],[null,null,-0.0457955124880026,0.0810282716746437,null,null,null,null,-0.0575678900546791,0.0671054996357422,-0.0405005916295013,0.169623838912935,null,null,-0.0474277228218447,0.105868924848943],[null,null,null,null,0.00408636295096573,0.691758545509192,null,null,0.00688895203848696,0.511142645314949,null,null,0.0116889290243351,0.394401264609747,0.0129750121297127,0.308948245896348],[null,null,null,null,null,null,-0.0110343764173051,0.532582741630293,null,null,-0.00778686977429028,0.708135695685664,-0.0189463275605956,0.343815760726899,-0.0165673882445354,0.405854393770656]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Response Beliefs<\/th>\n      <th>Personal Moral Norm<\/th>\n      <th>Descriptive Norm<\/th>\n      <th>Copula Response Beliefs<\/th>\n      <th>Copula Personal Moral Norm<\/th>\n      <th>Copula Descriptive Norm<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"targets":1,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":2,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":3,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":4,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":5,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"targets":6,"render":"function(data, type, row, meta) {\n    return type !== 'display' ? data : DTWidget.formatRound(data, 3, 3, \",\", \".\");\n  }"},{"className":"dt-right","targets":[1,2,3,4,5,6]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":["options.columnDefs.0.render","options.columnDefs.1.render","options.columnDefs.2.render","options.columnDefs.3.render","options.columnDefs.4.render","options.columnDefs.5.render"],"jsHooks":[]}</script>
+</div>
+<p>The copula for Response Beliefs achieves a significant p-value in almost all constellations (p &lt; 0.1). Further, adding the single copula increases the Response Belief path coefficient by about 0.06. Both of this indicates that Response Beliefs might be endogenous. There is nothing pointing to endogeneity in any of the other predictors.</p>
+<p>The copula will be integrated in the final model to improve the model.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
@@ -2129,7 +2170,7 @@ Model evaluation
 <!--/radix_placeholder_appendices-->
 <!--radix_placeholder_navigation_after_body-->
 <div class="distill-site-nav distill-site-footer">
-<p>© Copyright 2021 Lilian Kojan, Laura Burbach, André Calero Valdez and Martina Ziefle <a href="https://www.comm.rwth-aachen.de/cms/~plea/COMM/?lidx=1">Chair of Communication Science, RWTH Aachen University</a></p>
+<p>© Copyright 2021 Lilian Kojan, Laura Burbach, André Calero Valdez and Martina Ziefle | <a href="https://www.comm.rwth-aachen.de/cms/~plea/COMM/?lidx=1">Chair of Communication Science, RWTH Aachen University</a></p>
 </div>
 <!--/radix_placeholder_navigation_after_body-->
 
