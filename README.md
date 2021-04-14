@@ -20,9 +20,10 @@ paper XXX.
     our documents
 -   `data` contains all data required for this project and code to
     handle data perparation, anonymization, and OSF up/downloads
+-   `external-data` contains external data used in the project analysis  
 -   `Figures` contains generated figures
 -   `renv` contains information for libraries used
--   `SEM COVID-19` The Covid-19 model
+-   `sem-covid-19` The Covid-19 model
 -   `templates` contains template documents to conduct our analyses
 -   `R` contains scripts with helper functions
 
