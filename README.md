@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# CC-CO-Behavior
+# covid-19-behavior-sem
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -14,7 +14,7 @@ This repository contains all materials to reproduce our analysis for the
 paper 'Perceptions of behaviour efficacy, not perceptions of threat, 
 drive COVID-19 protective behaviour in Germany'.
 
-## Folder strucutre
+## Folder structure
 
 -   `additional analyses` contains descriptive analyses and inference
     statiscs (except structural model). Also generates some figures for
