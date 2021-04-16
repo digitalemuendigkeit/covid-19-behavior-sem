@@ -11,8 +11,8 @@ January-February 2021 study on predictors for behavioral change in the
 contexts of the climate crisis and the COVID-19 pandemic.
 
 This repository contains all materials to reproduce our analysis for the
-paper 'Perceptions of behaviour efficacy, not perceptions of threat, 
-drive COVID-19 protective behaviour in Germany'.
+paper 'Perceptions of behaviour efficacy, not perceptions of threat, are 
+drivers of COVID-19 protective behaviour in Germany'.
 
 ## Folder structure
 
