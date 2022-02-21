@@ -49,4 +49,6 @@ navbar:
           href: co-3-b-2-cop_smeval.html
     - text: "Additional Analysis"
       href: Additional-Analysis.html
+    - text: "Site notice"
+      href: site-notice.html
 output: distill::distill_article

@@ -1,0 +1,35 @@
+---
+title: "Site notice"
+description:
+site: distill::distill_website
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Learn more about creating websites with Distill at:
+# https://rstudio.github.io/distill/website.html
+
+```
+
+Lilian Kojan, M.Sc.
+
+📞 +49 (241) 80 49226
+
+[kojan@comm.rwth-aachen.de](mailto:kojan@comm.rwth-aachen.de)
+
+[www.comm.rwth-aachen.de](https://www.comm.rwth-aachen.de)
+
+RWTH Aachen University
+
+Chair for Communication Science
+
+Human-Computer Interaction Center (HCIC)
+
+Campus-Boulevard 57
+
+52074 Aachen
+
+Germany
+
+This website was created using [distill for R Markdown](https://pkgs.rstudio.com/distill/).

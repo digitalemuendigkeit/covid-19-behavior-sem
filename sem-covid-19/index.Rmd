@@ -1,8 +1,7 @@
 ---
 title: "Predictors for COVID-19 protective behaviour - accompanying website"
 description:
-  This website contains supplementary material for our paper on predictors for COVID-19 protective behaviour in Germany.
-  Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis.
+  This website contains supplementary material for our paper on predictors of COVID-19 protective behaviour in Germany.
 site: distill::distill_website
 ---
 
@@ -14,3 +13,6 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```
 
+This website contains supplementary material for our paper "Perceptions of behaviour efficacy, not perceptions of threat, are drivers of COVID-19 protective behaviour in Germany". Specifically, we detail the process of model evaluation and provide the full results of the additional exploratory data analysis. We also present the survey design.
+
+We plan to publish the paper in Humanities and Social Sciences Communications. Once it is published, a DOI will be added to this site.
