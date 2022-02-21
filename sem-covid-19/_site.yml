@@ -1,14 +1,16 @@
 name: "covid19"
-title: "Covid 19 Model"
+title: "Drivers of COVID-19 protective behaviour in Germany"
 description: |
-  Covid 19 Model
+  Drivers of COVID-19 protective behaviour in Germany
 output_dir: "../docs"
 include: [".html", "_footer.html"]
-exclude: ["paper", "archive", ".gitignore", ".RMD", "models"]
+exclude: ["paper", "archive", ".gitignore", "models"]
 navbar:
   right:
     - text: "Home"
       href: index.html
+    - text: "Survey design"
+      href: survey.html
     - text: "Model evaluation"
       icon: fa-graduation-cap
       menu:

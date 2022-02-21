@@ -1,0 +1,264 @@
+﻿Variable;Abbreviation;Item (translated);Scale (translated);Reference
+Subjective Knowledge;COSKN;How would you rate your level of knowledge about the coronavirus?;"no knowledge at all
+little knowledge
+rather little knowledge
+rather a lot of knowledge
+a lot of knowledge
+very much knowledge";
+(Intro Knowledge);;Please rate the following statements about coronavirus.;;
+Knowledge;COKN1;Fever is a symptom of coronavirus disease.;"true
+false
+don't know";"(Sohrabi et al., 2020; Roy et al., 2020; Abdelhafiz et al., 2020)"
+Knowledge;COKN2;An effective vaccine against the virus is currently available.;"true
+false
+don't know";(Rawat et al., 2021)
+Knowledge;COKN3;The disease could be transmitted from asymptomatic persons.;"true
+false
+don't know";(Sohrabi et al., 2020)
+Knowledge;COKN3;More than 1% of people reported to have coronavirus infection in Germany have died in association with coronavirus disease.;"true
+false
+don't know";(Robert-Koch-Institut, 2021)
+Knowledge;COKN4;Less than 5% of people reported to be infected with coronavirus in Germany required hospitalization.;"true
+false
+don't know";(Robert-Koch-Institut, 2021)
+Knowledge;COKN5;The health effects of COVID-19 coronavirus appear to be more severe in children.;"true
+false
+don't know";(Zickfeld et al., 2020)
+Knowledge;COKN6;Antibiotics can treat the coronavirus disease.;"true
+false
+don't know";(Abdelhafiz et al., 2020)
+(Intro Distrusting Beliefs);;"To find a way to deal with the novel coronavirus, the government and society are also relying on the results of scientific research. Important disciplines here include virology and epidemiology. Virology researches viruses, but also how to prevent or treat viral diseases. Epidemiology studies the spread of diseases in the population and develops countermeasures.
+
+The following questions ask about your opinion on science and scientists researching the coronavirus.  There are no wrong or right answers. We are only interested in your personal opinion.";;
+Distrusting Beliefs in Science (Benevolence);CODI1;Scientists who study the coronavirus are more interested in their own advancement than in the welfare of people.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Nadelson et al., 2014; McKnight and Choudhury, 2006)"
+Distrusting Beliefs in Science (Benevolence);CODI2;Coronavirus research acts in the interest of mankind.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Grimmelikhuijsen & Knies, 2017)
+Distrusting Beliefs in Science (Benevolence);CODI3;Coronavirus research is not interested in the well-being of mankind.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(McKnight and Choudhury, 2006)
+Distrusting Beliefs in Science (Benevolence);CODI4;When it concerns the topic of coronavirus, scientists are generally capable.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Grimmelikhuijsen & Knies, 2017; McKnight et al., 2002)"
+Distrusting Beliefs in Science (Competence);CODI5;It is questionable how good scientists are at researching coronavirus.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(McKnight and Choudhury, 2006)
+Distrusting Beliefs in Science (Competence);CODI6;The scientific theories and recommendations on coronavirus are dubious.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Nadelson et al., 2014)
+Distrusting Beliefs in Science (Integrity);CODI7;Scientists researching the coronavirus ignore evidence that contradicts their work.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Nadelson et al., 2014)
+Distrusting Beliefs in Science (Integrity);CODI8;Scientific research about the coronavirus is often biased.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Nadelson et al., 2014)
+Distrusting Beliefs in Science (Integrity);CODI9;When it comes to the coronavirus, science is honest.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Grimmelikhuijsen & Knies, 2017)
+(Intro Beliefs);;The following questions concern your attitudes towards coronavirus. There are no wrong or right answers, we are only asking your personal opinion.;;
+Threat Beliefs (Susceptibility);COTB1;I will probably get sick with the coronavirus (again).;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Dryhurst et al., 2020)
+Threat Beliefs (Susceptibility);COTB2;I feel vulnerable to contracting the coronavirus.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Tang and Wong, 2004)
+Threat Beliefs (Susceptibility);COTB3;The change that I will be infected with coronavirus (again) is small.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Ji et al., 2004)
+Threat Beliefs (Severity);COTB4;The coronavirus affect very many people in the country I’m currently living in.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Dryhurst et al., 2020)
+Threat Beliefs (Severity);COTB5;The negative impacts of climate change are severe.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Dryhurst et al., 2020)
+Threat Beliefs (Severity);COTB6;I think that the coronavirus disease is dangerous.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Abdelhafiz et al., 2020)
+(Intro 2 Beliefs);;In the first part of the survey, we mentioned protective measures against the coronavirus that can be taken by individuals.Examples include limiting private meetings so that no more than one person from another household may be a guest, using the Corona Warning app, and wearing an everyday mask in public. Please rate the following statements about protection against the coronavirus;;
+Response Beliefs (Self-Efficacy);CORB1;I am able to abide by the contact restrictions in place when meeting privately. ;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2021; Bubeck et al., 2018)"
+Response Beliefs (Self-Efficacy);CORB2;I have the ability to  use the Corona warning app.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2020; Bubeck et al., 2018)"
+Response Beliefs (Self-Efficacy);CORB3;I have the ability to wear a mask in public.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2020; Bubeck et al., 2018)"
+Response Beliefs (Response Efficacy);CORB4;Abiding by the contact restrictions in place when meeting privately  is effective.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2021; Bubeck et al., 2018)"
+Response Beliefs (Response Efficacy);CORB5;Using the Corona warning app is effective.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2020; Bubeck et al., 2018)"
+Response Beliefs (Response Efficacy);CORB6;Wearing a mask in public is effective.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2020; Bubeck et al., 2018)"
+Response Beliefs (Response Costs);CORB7;Abiding by the contact restrictions in place when meeting privately costs me much time, financial and/or emotional effort.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2021; Bubeck et al., 2018)"
+Response Beliefs (Response Costs);CORB8;Using the Corona warning app costs me much time, financial and/or emotional effort.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2020; Bubeck et al., 2018)"
+Response Beliefs (Response Costs);CORB9;Wearing a mask in public me much time, financial and/or emotional effort.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Bundesregierung, 2020; Bubeck et al., 2018)"
+Response Beliefs (Self-Efficacy);CORB10;I have the ability to take protective measures against the coronavirus.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Bubeck et al., 2018)
+Response Beliefs (Response Efficacy);CORB11;Protective measures against the coronavirus are effective.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Bubeck et al., 2018)
+Response Beliefs (Response Costs);CORB12;Protective measures against the coronavirus cost me much time, financial and/or emotional effort.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Bubeck et al., 2018)
+Personal Moral Norm;COPN1;I have a moral obligation to combat the spread of coronavirus.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Brody et al., 2012; Chen, 2020)"
+Perceived Moral Obligation;COPN1;I think that I should contribute to the protection against the coronavirus;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Brody et al., 2012; Chen, 2020)"
+Perceived Moral Obligation;COPN1;I think it's important for everyone to do something against the spread of the coronavirus.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Chen, 2020)
+Subjective Norm (Injunctive);COIN1;My friends think I should adhere to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Injunctive);COIN2;My family thinks I should adhere to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Injunctive);COIN3;My colleagues  think I should adhere to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely
+I don't have colleagues.";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Injunctive);COIN4;People who are important to me think I should adhere to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Descriptive);CODN1;My friends adhere to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Descriptive);CODN2;My family adheres to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Descriptive);CODN3;My colleagues are adhering to the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely
+I don't have colleagues.";"(Rhodes et al., 2006; Niemic et al., 2020)"
+Subjective Norm (Descriptive);CODN4;People who are important to me adhere to  the Corona protections.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";"(Rhodes et al., 2006; Niemic et al., 2020)"

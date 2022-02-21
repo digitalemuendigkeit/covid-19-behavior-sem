@@ -9,7 +9,7 @@ library(patchwork)
 # Data Loading ----
 # Load data and crop to relevant section -c(1:43,48:96,143:145)
 datafull <- read_rds(here::here("data",
-                                "open",
+                                "anonymized",
                                 "S1-data-nm.RDS"))
 
 dataco <- datafull %>% filter(!is.na(COSKN))

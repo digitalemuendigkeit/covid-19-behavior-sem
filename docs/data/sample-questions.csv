@@ -1,0 +1,166 @@
+﻿Variable;Abbreviation;Item (translated);Scale (translated);Reference
+(Intro Demographic);;First of all we ask you for some information about yourself. Like all data collected in this study, this information will be completely anonymized, so that a trace back to your identity is impossible. The collection of this data serves only to provide context for the overall results of the study.;;
+Age;SD1;How old are you (in years)?;(Numerical entry);
+Gender;SD2;What is your gender?;"female
+male
+another gender, namely (entry)";
+Education;SD3;What is the highest educational level you have achieved?;"still a student
+dropped out of school without a diploma
+secondary school leaving certificate (Hauptschulabschluss) or equivalent
+Secondary school leaving certificate (Mittlere Reife) or equivalent
+(Specialist) university entrance qualification (Abitur)
+(Specialist) university degree (e.g. Bachelor's degree, Master's degree, Diploma)
+Doctorate
+a different level of education, namely (entry)";
+Occupation;SD4;What best describes your occupational situation?;"employed full-time
+employed part-time
+in vocational training/teaching
+student (school)
+student (university)
+not in paid employment";
+Household income;SD5;What is your average monthly net household income?;"up to 450 euros
+between 451 and 1000 euros
+between 1001 and 1500 euros
+between 1501 and 2000 euros
+between 2001 and 2500 euros
+between 2501 and 3000 euros
+between 3001 and 3500 euros
+between 3501 and 4000 euros
+between 4001 and 4500 euros
+between 4501 and 5000 euros
+more than 5000 euros
+not specified";
+Household size 1;SD6;How many persons live in your household, including yourself? Consider also children living in the household.;(Numerical entry);
+Household size 2;SD7; have indicated that x persons live in your household. How many of them are younger than 14?;(Numerical entry);
+Administrative District;SD8;In which administrative district do you currently live?;(Choice from drop-down menu);
+(Intro COVID-19 specific variables);;"Some of the following questions deal with the novel coronavirus SARS-CoV-2. The disease caused by an infection with the SARS-CoV-2 pathogen is called COVID-19. When we talk about ""corona"" and ""coronavirus"" hereafter, we are referring to this pathogen and this disease.";;
+Own risk 1;COS1;Are you at increased risk for becoming severely ill from a infection with the coronavirus (e.g. due to age or underlying medica conditions)?;"yes
+no
+don't know";
+Own infection history 1;COS2;Are you or have you been infected with the coronavirus?;"yes
+no
+don't know";
+Own infection history 2;COS3;Did you become so seriously ill with coronavirus that you had to be treated in hospital?;"yes
+no";
+Others' risk;COS4;Do you live with someone who is at increased risk for becoming severely ill from a infection with the coronavirus (e.g. due to age or underlying medica conditions)?;"yes
+no
+don't know";
+Others' infection history 1;COS5;How many people do you know personally who are infected or have been infected with the coronavirus?;(Numerical entry);
+Others' infection history 2;COS6;You have indicated that you know x people who are or have been infected with the coronavirus. In how many of them has the coronavirus disease been so severe that they had to be treated in hospital?;(Numerical entry);
+Own risk 2;COS7;Is it currently necessary for you to work or attend your education outside of your home?;"yes
+no";
+(Intro Big Five and Control Convictions);;The following questions are related to your personality. There are no wrong or right answers.;;
+Extraversion*;BFE1;I tend to be quiet.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Agreeableness;BFA1;I am compassionate, I have a soft heart.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Conscientiousness*;BFC1;I tend to be disorganized.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Neuroticism;BFN1;I worry a lot.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Openness to experience;BFO1;I am fascinated by art, music, or literature.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Extraversion;BFE2;I tend to act as a leader.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Agreeableness*;BFA2;I am sometimes rude to others.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Conscientiousness*;BFC2;I have difficulty getting started on tasks.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Neuroticism;BFN2;I tend to feel depressed, blue.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Openness to experience*;BFO2;I have little interest in abstract ideas.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Extraversion;BFE3;I am full of energy.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Agreeableness;BFA3;I trust easily, I assume the best about people.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Conscientiousness;BFC3;I am reliable, I can always be counted on.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Neuroticism*;BFN3;I am emotionally stable, not easily upset.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Openness to experience;BFO3;I am original, I come up with new ideas.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Rammstedt et al., 2020)
+Internal Control Conviction;IC1;I'm my own boss.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Kovaleva et al., 2014)
+Internal Control Conviction;IC2;If I work hard, I will succeed.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Kovaleva et al., 2014)
+External Control Conviction;EC1;Whether at work or in my private life: What I do is mainly determined by others.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Kovaleva et al., 2014)
+External Control Conviction;EC2;Fate often gets in the way of my plans.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Kovaleva et al., 2014)

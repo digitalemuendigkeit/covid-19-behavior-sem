@@ -1,0 +1,26 @@
+﻿Variable;Abbreviation;Item (translated);Scale (translated);Reference
+(Intro COVID-19 Behavior );;In the last survey, we asked you about your behavioral intentions regarding coronavirus protection measures. One example was the restriction to a maximum of one guest from another household at private gatherings. Looking back on the meantime, how do you rate the following statements?;;
+COVID-19 Behavior;COB1;I abided by the contact restrictions in place when meeting privately.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Sorrell et al., 2020)
+COVID-19 Behavior;COB2;I used the Corona warning app.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Sorrell et al., 2020)
+COVID-19 Behavior;COB3;I wore a mask in public.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";(Sorrell et al., 2020)
+COVID-19 Current Behavior;COB4;In general, I adhered to the Corona protections recommended by the government.;"Do not agree at all
+Do not agree
+Rather not agree
+Rather agree
+Agree
+Agree completely";

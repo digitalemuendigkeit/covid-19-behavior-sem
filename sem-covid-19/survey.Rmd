@@ -1,0 +1,143 @@
+---
+title: "Survey"
+output: 
+  distill::distill_article:
+    toc: true
+    toc_depth: 1
+bibliography: biblio.bib
+nocite: |
+  @*
+---
+
+```{r setup, include=FALSE}
+# libraries
+library(bibtex)
+library(distill)
+library(DT)
+library(here)
+library(tidyverse)
+library(RefManageR)
+# load bibliography
+bib <- ReadBib(here::here("sem-covid-19", "biblio.bib"))
+invisible(data_frame(citation = RefManageR::TextCite(bib = bib)))
+# load survey data
+# socio-demographics and psychological questions
+sample <- read.csv2(here::here("sem-covid-19","data", "sample-questions.csv"), 
+                    allowEscapes = TRUE) %>% 
+  as_tibble()
+# add breaks between scale points
+sample$Scale..translated. <- gsub(pattern = "\n", replacement = "<br/>", x = sample$Scale..translated.)
+# add citations
+# sample$Reference[grep("(Rammstedt et al., 2020)", sample$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "rammstedt_validation_2020",
+#                                            .opts = list(max.names = 1))
+# sample$Reference[grep("(Kovaleva et al., 2014)", sample$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "kovaleva_internale-externale-kontrolluberzeugung-4_2014",
+#                                            .opts = list(max.names = 1))
+# survey 1 questions
+survey1 <- read.csv2(here::here("sem-covid-19","data", "survey-1.csv"), 
+                    allowEscapes = TRUE) %>% 
+  as_tibble()
+# add breaks between scale points
+survey1$Scale..translated. <- gsub(pattern = "\n", replacement = "<br/>", x = survey1$Scale..translated.)
+# correct special characters
+survey1$Reference <- gsub(pattern = "Ã¶", replacement = "ö", x = survey1$Reference)
+# add citations
+# survey1$Reference[grep("(Sohrabi et al., 2020; Roy et al., 2020; Abdelhafiz et al., 2020)", 
+#                        survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            c("sohrabi_world_2020", "roy_study_2020", "abdelhafiz_knowledge_2020"),
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Sohrabi et al., 2020)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "sohrabi_world_2020",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Rawat et al., 2021)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "rawat_covid-19_2021",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Robert-Koch-Institut, 2021)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "robert_koch-institut_epidemiologischer_2021",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Zickfeld et al., 2020)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "zickfeld_correlates_2020",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Abdelhafiz et al., 2020)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "abdelhafiz_knowledge_2020",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Nadelson et al., 2014; McKnight and Choudhury, 2006)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            c("nadelson_i_2014", "mcknight_distrust_2006"),
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Grimmelikhuijsen & Knies, 2017)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "grimmelikhuijsen_validating_2017",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(McKnight and Choudhury, 2006)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            "mcknight_distrust_2006",
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Grimmelikhuijsen & Knies, 2017; McKnight et al., 2002)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            c("grimmelikhuijsen_validating_2017", "mcknight_distrust_2006"),
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Nadelson et al., 2014)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            c("nadelson_i_2014"),
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Dryhurst et al., 2020)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            c("dryhurst_risk_2020"),
+#                                            .opts = list(max.names = 1))
+# survey1$Reference[grep("(Tang and Wong, 2004)", survey1$Reference)] <- RefManageR::Cite(bib = bib,
+#                                            c("tang_factors_2004"),
+#                                            .opts = list(max.names = 1))
+survey2 <- read.csv2(here::here("sem-covid-19","data", "survey-2.csv"), 
+                    allowEscapes = TRUE) %>% 
+  as_tibble()
+survey2$Scale..translated. <- gsub(pattern = "\n", replacement = "<br/>", x = survey2$Scale..translated.)
+```
+
+
+This is the design of the survey with all survey questions and the associated item names.
+
+# Sample questions
+<!-- These are questions describing the sample and asking for socio-demographic information.[@nadelson_i_2014] -->
+
+```{r echo = FALSE}
+sample %>% datatable(colnames = c("Variable",
+                                  "Abbreviation",
+                                  "Item (translated)",
+                                  "Scale (translated)",
+                                  "Reference"),
+                     escape = FALSE,
+                     rownames = FALSE,
+                     caption = 'Socio-demographic questions, * denotes items that are reversed for analysis',
+                     options = list(pageLength = nrow(sample),
+                           ordering = FALSE))
+```
+
+
+# Survey 1
+These are the items from survey 1 which form the basis for the structural equation model.
+
+```{r echo = FALSE}
+survey1 %>% datatable(colnames = c("Variable",
+                                  "Abbreviation",
+                                  "Item (translated)",
+                                  "Scale (translated)",
+                                  "Reference"),
+                     escape = FALSE,
+                     rownames = FALSE,
+                     caption = 'Survey 1 questions, * denotes items that are reversed for analysis',
+                     options = list(pageLength = nrow(survey1),
+                           ordering = FALSE))
+```
+
+# Survey 2
+These are the items from survey 2 which was conducted two weeks after survey 1.
+The results are used to measure self-reported behavior change.
+
+```{r echo = FALSE}
+survey2 %>% datatable(colnames = c("Variable",
+                                  "Abbreviation",
+                                  "Item (translated)",
+                                  "Scale (translated)",
+                                  "Reference"),
+                     escape = FALSE,
+                     rownames = FALSE,
+                     caption = 'Survey 2 questions',
+                     options = list(pageLength = nrow(survey2),
+                           ordering = FALSE))
+```
