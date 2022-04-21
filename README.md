@@ -12,7 +12,7 @@ contexts of the climate crisis and the COVID-19 pandemic.
 
 This repository contains all materials to reproduce our analysis for the
 paper 'Perceptions of behaviour efficacy, not perceptions of threat, 
-drive COVID-19 protective behaviour in Germany'.
+drive COVID-19 protective behaviour in Germany', https://doi.org/10.1057/s41599-022-01098-4.
 
 ## Folder structure
 
